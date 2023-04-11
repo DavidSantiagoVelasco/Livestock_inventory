@@ -1,18 +1,17 @@
 package models.interfaces;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 
 public class Task {
 
     private final int id;
     private final String name;
     private final String description;
-    private final Timestamp creationDate;
+    private final Date creationDate;
     private Date assignedDate;
     private StateTask state;
 
-    public Task(int id, String name, String description, Timestamp creationDate, Date assignedDate, StateTask state) {
+    public Task(int id, String name, String description, Date creationDate, Date assignedDate, StateTask state) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -33,7 +32,7 @@ public class Task {
         return description;
     }
 
-    public Timestamp getCreationDate() {
+    public Date getCreationDate() {
         return creationDate;
     }
 

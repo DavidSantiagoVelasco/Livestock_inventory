@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="550.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.inventory.BuyAnimalModuleController">
+   <AnchorPane layoutY="-1.0" prefHeight="100.0" prefWidth="760.0" style="-fx-background-color: darkslategrey;">
+      <Label layoutX="215.0" layoutY="24.0" text="Inventario ganadero" textFill="WHITE">
+         <font>
+            <Font size="36.0"/>
+         </font>
+      </Label>
+   </AnchorPane>
+   <TextField fx:id="txtNumber" layoutX="66.0" layoutY="166.0"/>
+   <TextField fx:id="txtColor" layoutX="66.0" layoutY="227.0"/>
+   <TextField fx:id="txtOwner" layoutX="306.0" layoutY="166.0"/>
+   <TextField fx:id="txtWeight" layoutX="306.0" layoutY="227.0" onKeyPressed="#checkInputNumbers"/>
+   <TextField fx:id="txtAgeMonths" layoutX="546.0" layoutY="166.0" onKeyPressed="#checkInputNumbers"/>
+   <TextField fx:id="txtIronBrand" layoutX="546.0" layoutY="227.0"/>
+   <Label layoutX="66.0" layoutY="149.0" text="Número"/>
+   <Label layoutX="306.0" layoutY="149.0" text="Dueño"/>
+   <Label layoutX="546.0" layoutY="149.0" text="Edad en meses"/>
+   <Label layoutX="66.0" layoutY="210.0" text="Color"/>
+   <Label layoutX="305.0" layoutY="210.0" text="Peso"/>
+   <Label layoutX="546.0" layoutY="210.0" text="Hierro"/>
+   <ComboBox fx:id="cbSex" layoutX="305.0" layoutY="287.0" onAction="#selectSex" prefWidth="150.0"/>
+   <Label layoutX="304.0" layoutY="270.0" text="Sexo"/>
+   <TextArea fx:id="txtObservations" layoutX="66.0" layoutY="348.0" prefHeight="83.0" prefWidth="630.0"/>
+   <Label layoutX="67.0" layoutY="331.0" text="Observaciones"/>
+   <Button fx:id="btnAddAnimal" layoutX="260.0" layoutY="451.0" mnemonicParsing="false" onAction="#addAnimal"
+           prefHeight="53.0" prefWidth="242.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Agregar"
+           textFill="DARKSLATEGRAY">
+      <font>
+         <Font size="20.0"/>
+      </font>
+   </Button>
+</AnchorPane>

@@ -32,8 +32,10 @@ public class TasksModel {
                     case "complete" -> stateTask = StateTask.complete;
                     case "canceled" -> stateTask = StateTask.canceled;
                 }
+                Timestamp creationDateTS = resultSet.getTimestamp("creation_date");
+                Date creationDate = new Date(creationDateTS.getTime());
                 tasks.add(new Task(resultSet.getInt("id"), resultSet.getString("name"),
-                        resultSet.getString("description"), resultSet.getTimestamp("creation_date"),
+                        resultSet.getString("description"), creationDate,
                         resultSet.getDate("assigned_date"), stateTask));
             }
             return tasks;

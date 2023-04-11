@@ -10,4 +10,8 @@ module com.example.livestock_inventory {
     exports com.example.livestock_inventory;
     exports controllers;
     exports models.interfaces;
+    exports controllers.inventory;
+    opens controllers.inventory to javafx.fxml;
+    exports controllers.components;
+    opens controllers.components to javafx.fxml;
 }
