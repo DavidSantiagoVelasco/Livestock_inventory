@@ -12,9 +12,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import models.TasksModel;
+import models.Model;
 import models.interfaces.Task;
 
 import java.net.URL;
@@ -23,10 +22,8 @@ import java.util.ResourceBundle;
 
 public class Dashboard implements Initializable {
 
-    private TasksModel tasksModel;
+    private Model model;
 
-    @FXML
-    private BorderPane dashboardPane;
     @FXML
     private Button btnInventory, btnVeterinaryAssistance, btnFinance, btnTasks;
     @FXML
@@ -49,8 +46,8 @@ public class Dashboard implements Initializable {
         this.colTaskCreationDate.setCellValueFactory(new PropertyValueFactory("creationDate"));
         this.colTaskAssignedDate.setCellValueFactory(new PropertyValueFactory("assignedDate"));
 
-        this.tasksModel = new TasksModel();
-        ObservableList<Task> tasks = tasksModel.getTasksMonth();
+        this.model = new Model();
+        ObservableList<Task> tasks = model.getTasksMonth();
         if(tasks == null){
             return;
         }

@@ -5,7 +5,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyEvent;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -83,12 +82,5 @@ public class BuyAnimalModuleController implements Initializable {
 
         this.txtWeight.setTextFormatter(textFormatterWeight);
         this.txtAgeMonths.setTextFormatter(textFormatterAge);
-    }
-
-    @FXML
-    private void checkInputNumbers(KeyEvent keyEvent) {
-        if(!keyEvent.getCharacter().matches("[0-9]")){
-            keyEvent.consume();
-        }
     }
 }

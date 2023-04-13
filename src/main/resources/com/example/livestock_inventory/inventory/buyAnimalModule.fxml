@@ -20,8 +20,8 @@
    <TextField fx:id="txtNumber" layoutX="66.0" layoutY="166.0"/>
    <TextField fx:id="txtColor" layoutX="66.0" layoutY="227.0"/>
    <TextField fx:id="txtOwner" layoutX="306.0" layoutY="166.0"/>
-   <TextField fx:id="txtWeight" layoutX="306.0" layoutY="227.0" onKeyPressed="#checkInputNumbers"/>
-   <TextField fx:id="txtAgeMonths" layoutX="546.0" layoutY="166.0" onKeyPressed="#checkInputNumbers"/>
+   <TextField fx:id="txtWeight" layoutX="306.0" layoutY="227.0" />
+   <TextField fx:id="txtAgeMonths" layoutX="546.0" layoutY="166.0" />
    <TextField fx:id="txtIronBrand" layoutX="546.0" layoutY="227.0"/>
    <Label layoutX="66.0" layoutY="149.0" text="Número"/>
    <Label layoutX="306.0" layoutY="149.0" text="Dueño"/>

@@ -62,6 +62,21 @@ public class MenuController implements Initializable {
 
     @FXML
     private void openOwners(ActionEvent event) {
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/livestock_inventory/owners/owners.fxml"));
+            Parent inventoryParent = loader.load();
+            Scene inventoryScene = new Scene(inventoryParent);
+            Stage stage = new Stage();
+
+            stage.setScene(inventoryScene);
+            stage.show();
+
+            Stage currentStage = (Stage) this.btnFinance.getScene().getWindow();
+            currentStage.close();
+
+        }catch (java.io.IOException e){
+            e.printStackTrace();
+        }
     }
 
     @Override

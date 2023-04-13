@@ -8,17 +8,17 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="dashboardPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Dashboard">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Dashboard">
    <top>
-      <fx:include source="components/header.fxml"/>
+      <fx:include source="components/header.fxml" />
    </top>
    <left>
-      <fx:include source="components/menu.fxml"/>
+      <fx:include source="components/menu.fxml" />
    </left>
    <center>
-      <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: dimgray;" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
          <VBox prefHeight="450.0" prefWidth="613.0">
-            <Label fx:id="lblTasks" alignment="CENTER" prefHeight="80.0" prefWidth="613.0" style="-fx-border-color: white; -fx-border-width: 0px 0px 2px 0px;" text="Bienvenido" textAlignment="CENTER" textFill="WHITE">
+            <Label fx:id="lblTasks" alignment="CENTER" prefHeight="80.0" prefWidth="613.0" style="-fx-border-color: #2f4f4f; -fx-border-width: 0px 0px 1px 0px;" text="Bienvenido" textAlignment="CENTER" textFill="DARKSLATEGRAY">
                <font>
                   <Font size="24.0" />
                </font>
