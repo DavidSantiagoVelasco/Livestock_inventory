@@ -37,6 +37,9 @@ public class Model {
                         resultSet.getString("description"), creationDate,
                         resultSet.getDate("assigned_date"), stateTask));
             }
+            resultSet.close();
+            statement.close();
+            connection.close();
             return tasks;
         }catch (SQLException e){
             e.printStackTrace();
@@ -59,6 +62,9 @@ public class Model {
                 owners.add(new Owner(resultSet.getInt("id"), resultSet.getString("name"),
                         resultSet.getDouble("percentage"), resultSet.getBoolean("active")));
             }
+            resultSet.close();
+            statement.close();
+            connection.close();
             return owners;
         }catch (SQLException e){
             e.printStackTrace();
@@ -81,6 +87,9 @@ public class Model {
                 owners.add(new Owner(resultSet.getInt("id"), resultSet.getString("name"),
                         resultSet.getDouble("percentage"), resultSet.getBoolean("active")));
             }
+            resultSet.close();
+            statement.close();
+            connection.close();
             return owners;
         }catch (SQLException e){
             e.printStackTrace();
@@ -108,6 +117,9 @@ public class Model {
             if(id == -1){
                 return null;
             }
+            resultSet.close();
+            statement.close();
+            connection.close();
             return new Owner(id, name, percentage, true);
         }catch (SQLException e){
             e.printStackTrace();
@@ -115,7 +127,7 @@ public class Model {
         }
     }
 
-    public ObservableList<Animal> getAnimalsByOwnerId(int id){
+    public ObservableList<Animal> getAnimalsByOwnerId(int idOwner){
         Connection connection = JDBC.connection();
         if(connection == null){
             return null;
@@ -123,7 +135,7 @@ public class Model {
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM animals WHERE " +
                     "id_owner = ? AND STATE = 'active'");
-            statement.setInt(1, id);
+            statement.setInt(1, idOwner);
             ResultSet resultSet = statement.executeQuery();
 
             ObservableList<Animal> animals = FXCollections.observableArrayList();
@@ -140,6 +152,9 @@ public class Model {
                         resultSet.getDate("purchase_date"), resultSet.getString("sex").charAt(0),
                         resultSet.getString("observations"), stateAnimal));
             }
+            resultSet.close();
+            statement.close();
+            connection.close();
             return animals;
         }catch (SQLException e){
             e.printStackTrace();
@@ -147,7 +162,7 @@ public class Model {
         }
     }
 
-    public int deleteOwner(int id) {
+    public int deleteOwner(int idOwner) {
         Connection connection = JDBC.connection();
         if(connection == null){
             return -1;
@@ -155,13 +170,14 @@ public class Model {
         try {
             PreparedStatement statement = connection.prepareStatement("UPDATE owners SET active = FALSE " +
                     "WHERE id = ?");
-            statement.setInt(1, id);
+            statement.setInt(1, idOwner);
 
             int rowsAffected = statement.executeUpdate();
-
+            statement.close();
+            connection.close();
             if(rowsAffected == 1){
                 return 0;
-            }else{
+            }else {
                 return 1;
             }
         }catch (SQLException e){
@@ -169,4 +185,76 @@ public class Model {
             return -1;
         }
     }
+
+    public boolean modifyOwnerName(int idOwner, String name) {
+        Connection connection = JDBC.connection();
+        if (connection == null) {
+            return false;
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement("UPDATE owners SET name = ? WHERE id = ?");
+
+            statement.setString(1, name);
+            statement.setInt(2, idOwner);
+
+            int rowsAffected = statement.executeUpdate();
+
+            statement.close();
+            connection.close();
+
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean modifyOwnerPercentage(int idOwner, double percentage) {
+        Connection connection = JDBC.connection();
+        if (connection == null) {
+            return false;
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement("UPDATE owners SET percentage = ? WHERE id = ?");
+
+            statement.setDouble(1, percentage);
+            statement.setInt(2, idOwner);
+
+            int rowsAffected = statement.executeUpdate();
+
+            statement.close();
+            connection.close();
+
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean modifyOwnerNameAndPercentage(int idOwner, String name, double percentage) {
+        Connection connection = JDBC.connection();
+        if (connection == null) {
+            return false;
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement("UPDATE owners SET percentage = ?, " +
+                    "name = ? WHERE id = ?");
+
+            statement.setDouble(1, percentage);
+            statement.setString(2, name);
+            statement.setInt(3, idOwner);
+
+            int rowsAffected = statement.executeUpdate();
+
+            statement.close();
+            connection.close();
+
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }
