@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/19"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.inventory.ShowInventoryController">
+   <ComboBox fx:id="cbOwnerFiltrer" layoutX="53.0" layoutY="43.0" prefWidth="150.0"/>
+   <ComboBox fx:id="cbSexFilter" layoutX="283.0" layoutY="43.0" prefWidth="150.0"/>
+   <Label layoutX="53.0" layoutY="26.0" text="Filtrar por dueño"/>
+   <ComboBox fx:id="cbStateFilter" layoutX="504.0" layoutY="43.0" prefWidth="150.0"/>
+   <Label layoutX="283.0" layoutY="26.0" text="Filtrar por sexo"/>
+   <Label layoutX="504.0" layoutY="26.0" text="Filtrar por estado"/>
+   <DatePicker fx:id="dpDateFrom" layoutX="736.0" layoutY="43.0"/>
+   <DatePicker fx:id="dpDateTo" layoutX="964.0" layoutY="43.0"/>
+   <Label layoutX="736.0" layoutY="26.0" text="Desde"/>
+   <Label layoutX="964.0" layoutY="26.0" text="Hasta"/>
+   <RadioButton fx:id="rbPurchaseDateFilter" layoutX="775.0" layoutY="98.0" mnemonicParsing="false"
+                text="Fecha compra"/>
+   <RadioButton fx:id="rbSaleDateFilter" layoutX="1009.0" layoutY="98.0" mnemonicParsing="false" text="Fecha venta"/>
+</AnchorPane>

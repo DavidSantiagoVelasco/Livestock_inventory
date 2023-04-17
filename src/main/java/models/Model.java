@@ -2,6 +2,7 @@ package models;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.ComboBox;
 import models.interfaces.*;
 
 import java.sql.*;
@@ -60,7 +61,8 @@ public class Model {
 
             while (resultSet.next()) {
                 owners.add(new Owner(resultSet.getInt("id"), resultSet.getString("name"),
-                        resultSet.getDouble("percentage"), resultSet.getBoolean("active")));
+                        resultSet.getDouble("percentage"), resultSet.getString("iron_brand"),
+                        resultSet.getBoolean("active")));
             }
             resultSet.close();
             statement.close();
@@ -85,7 +87,8 @@ public class Model {
 
             while (resultSet.next()) {
                 owners.add(new Owner(resultSet.getInt("id"), resultSet.getString("name"),
-                        resultSet.getDouble("percentage"), resultSet.getBoolean("active")));
+                        resultSet.getDouble("percentage"), resultSet.getString("iron_brand"),
+                        resultSet.getBoolean("active")));
             }
             resultSet.close();
             statement.close();
@@ -97,17 +100,17 @@ public class Model {
         }
     }
 
-    public Owner createOwner(String name, double percentage){
+    public Owner createOwner(String name, double percentage, String ironBrand){
         Connection connection = JDBC.connection();
         if(connection == null){
             return null;
         }
         try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO owners(name, percentage) " +
-                    "VALUES(?, ?)",
-                    Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO owners(name, percentage, " +
+                            "iron_brand) VALUES(?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, name);
             statement.setDouble(2, percentage);
+            statement.setString(3, ironBrand);
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             int id = -1;
@@ -120,7 +123,7 @@ public class Model {
             resultSet.close();
             statement.close();
             connection.close();
-            return new Owner(id, name, percentage, true);
+            return new Owner(id, name, percentage, ironBrand, true);
         }catch (SQLException e){
             e.printStackTrace();
             return null;
@@ -144,13 +147,14 @@ public class Model {
                 StateAnimal stateAnimal = StateAnimal.active;
                 String state = resultSet.getString("state");
                 if(!state.equals("active")){
-                    return null;
+                    continue;
                 }
                 animals.add(new Animal(resultSet.getInt("id"), resultSet.getInt("id_owner"),
-                        resultSet.getInt("months"), resultSet.getString("Color"),
-                        resultSet.getDouble("weight"), resultSet.getString("iron_brand"),
-                        resultSet.getDate("purchase_date"), resultSet.getString("sex").charAt(0),
-                        resultSet.getString("observations"), stateAnimal));
+                        resultSet.getString("number"), resultSet.getInt("months"),
+                        resultSet.getString("color"), resultSet.getDouble("purchase_weight"),
+                        resultSet.getString("iron_brand"), resultSet.getString("sex").charAt(0),
+                        resultSet.getDouble("purchase_price"), resultSet.getDate("purchase_date"),
+                         resultSet.getString("observations"), stateAnimal));
             }
             resultSet.close();
             statement.close();
@@ -185,20 +189,42 @@ public class Model {
             return -1;
         }
     }
-
-    public boolean modifyOwnerName(int idOwner, String name) {
+    
+    public boolean modifyOwner(int idOwner, String name, String percentage, String ironBrand){
         Connection connection = JDBC.connection();
         if (connection == null) {
             return false;
         }
-        try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE owners SET name = ? WHERE id = ?");
 
-            statement.setString(1, name);
-            statement.setInt(2, idOwner);
+        String query = "UPDATE owners SET ";
+        if(name.length() > 0){
+            query += "name = ?, ";
+        }
+        if(percentage.length() > 0){
+            query += "percentage = ?, ";
+        }
+        if(ironBrand.length() > 0){
+            query += "iron_brand = ?, ";
+        }
+        query = query.substring(0, query.length()-2);
+        query += " WHERE id = ?";
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            int cont = 1;
+            if(name.length() > 0){
+                statement.setString(cont++, name);
+            }
+            if(percentage.length() > 0){
+                statement.setDouble(cont++, Double.parseDouble(percentage));
+            }
+            if(ironBrand.length() > 0){
+                statement.setString(cont++, ironBrand);
+            }
+
+            statement.setInt(cont, idOwner);
 
             int rowsAffected = statement.executeUpdate();
-
             statement.close();
             connection.close();
 
@@ -209,51 +235,65 @@ public class Model {
         }
     }
 
-    public boolean modifyOwnerPercentage(int idOwner, double percentage) {
-        Connection connection = JDBC.connection();
-        if (connection == null) {
-            return false;
+
+    public void getOwnersInformation(ComboBox cbOwners){
+        ObservableList<Owner> owners = getActiveOwners();
+        ObservableList<String> ownersInformation = FXCollections.observableArrayList();
+        for (Owner owner: owners) {
+            ownersInformation.add("Id: " + owner.getId() + " | Nombre: " + owner.getName() + " | Porcentaje: "
+                    + owner.getPercentage() + " | Marca hierro: " + owner.getIronBrand());
         }
-        try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE owners SET percentage = ? WHERE id = ?");
-
-            statement.setDouble(1, percentage);
-            statement.setInt(2, idOwner);
-
-            int rowsAffected = statement.executeUpdate();
-
-            statement.close();
-            connection.close();
-
-            return rowsAffected > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
+        cbOwners.setItems(ownersInformation);
     }
 
-    public boolean modifyOwnerNameAndPercentage(int idOwner, String name, double percentage) {
+    public int getOwnerIdFromOwnerInformation(String ownerInformation){
+        String[] ownerSplit = ownerInformation.split(" ");
+        return Integer.parseInt(ownerSplit[1]);
+    }
+
+    public String getOwnerIronBrandFromOwnerInformation(String ownerInformation){
+        String[] ownerSplit = ownerInformation.split("Marca hierro: ");
+        return ownerSplit[1];
+    }
+
+    public Animal createAnimal(int idOwner, String number, int months, String color, double purchaseWeight,
+                               String iron_brand, char sex, double purchasePrice, String observations, Date purchaseDate){
         Connection connection = JDBC.connection();
-        if (connection == null) {
-            return false;
+        if(connection == null){
+            return null;
         }
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE owners SET percentage = ?, " +
-                    "name = ? WHERE id = ?");
-
-            statement.setDouble(1, percentage);
-            statement.setString(2, name);
-            statement.setInt(3, idOwner);
-
-            int rowsAffected = statement.executeUpdate();
-
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO animals(id_owner, number, " +
+                            "months, color, purchase_weight, iron_brand, sex, purchase_price, purchase_date, " +
+                            "observations, state) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active')",
+                    Statement.RETURN_GENERATED_KEYS);
+            statement.setInt(1, idOwner);
+            statement.setString(2, number);
+            statement.setInt(3, months);
+            statement.setString(4, color);
+            statement.setDouble(5, purchaseWeight);
+            statement.setString(6, iron_brand);
+            statement.setString(7, sex+"");
+            statement.setDouble(8, purchasePrice);
+            statement.setDate(9, purchaseDate);
+            statement.setString(10, observations);
+            statement.executeUpdate();
+            ResultSet resultSet = statement.getGeneratedKeys();
+            int id = -1;
+            if (resultSet.next()) {
+                id = resultSet.getInt(1); // Retorna el id generado
+            }
+            if(id == -1){
+                return null;
+            }
+            resultSet.close();
             statement.close();
             connection.close();
-
-            return rowsAffected > 0;
-        } catch (SQLException e) {
+            return new Animal(id, idOwner, number, months, color, purchaseWeight, iron_brand, sex, purchasePrice,
+                    purchaseDate, observations, StateAnimal.active);
+        }catch (SQLException e){
             e.printStackTrace();
-            return false;
+            return null;
         }
     }
 

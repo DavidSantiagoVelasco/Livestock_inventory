@@ -17,10 +17,11 @@
         </Label>
     </AnchorPane>
     <TextField fx:id="txtName" layoutX="106.0" layoutY="317.0" />
-    <TextField fx:id="txtPercentage" layoutX="501.0" layoutY="317.0" />
+    <TextField fx:id="txtPercentage" layoutX="304.0" layoutY="317.0" />
+   <TextField fx:id="txtIronBrand" layoutX="501.0" layoutY="318.0" />
     <Label layoutX="361.0" layoutY="232.0" text="Dueño" />
     <Label layoutX="105.0" layoutY="300.0" text="Nombre" />
-    <Label layoutX="501.0" layoutY="300.0" text="Porcentaje para el dueño" />
+    <Label layoutX="304.0" layoutY="300.0" text="Porcentaje para el dueño" />
     <ComboBox fx:id="cbOwners" layoutX="107.0" layoutY="250.0" onAction="#selectOwner" prefHeight="26.0" prefWidth="548.0" />
     <Button fx:id="btnModify" layoutX="259.0" layoutY="443.0" mnemonicParsing="false" onAction="#modifyOwner" prefHeight="53.0" prefWidth="242.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Modificar" textFill="DARKSLATEGRAY">
         <font>
@@ -28,4 +29,5 @@
         </font>
     </Button>
    <RadioButton fx:id="rbDelete" layoutX="338.0" layoutY="379.0" mnemonicParsing="false" text="Eliminar" />
+   <Label layoutX="501.0" layoutY="301.0" text="Marca hierro" />
 </AnchorPane>

@@ -26,9 +26,9 @@
              <TableView fx:id="tblOwners" layoutY="80.0" prefHeight="160.0" prefWidth="613.0">
                  <columns>
                      <TableColumn fx:id="colOwnerId" editable="false" prefWidth="71.0" resizable="false" sortable="false" text="Id" />
-                     <TableColumn fx:id="colOwnerName" editable="false" prefWidth="357.0" resizable="false" sortable="false" text="Nombre" />
-                     <TableColumn fx:id="colOwnerPercentage" editable="false" minWidth="0.0" prefWidth="125.0" resizable="false" sortable="false" text="Porcentaje del dueño" />
-               <TableColumn fx:id="colOwnerState" editable="false" minWidth="0.0" prefWidth="59.0" resizable="false" sortable="false" text="Estado" />
+                     <TableColumn fx:id="colOwnerName" editable="false" prefWidth="332.0" resizable="false" sortable="false" text="Nombre" />
+                     <TableColumn fx:id="colOwnerPercentage" editable="false" minWidth="0.0" prefWidth="127.0" resizable="false" sortable="false" text="Porcentaje del dueño" />
+               <TableColumn fx:id="colOwnerIronBrand" editable="false" minWidth="0.0" prefWidth="82.0" resizable="false" sortable="false" text="Marca Hierro" />
                  </columns>
              </TableView>
          <Button fx:id="btnNewOwner" layoutX="210.0" layoutY="305.0" mnemonicParsing="false" onAction="#newOwner" prefHeight="51.0" prefWidth="193.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Crear nuevo" textFill="DARKSLATEGRAY">
@@ -36,15 +36,17 @@
                <Font size="18.0" />
             </font>
          </Button>
-         <TextField fx:id="txtName" layoutX="99.0" layoutY="263.0" />
-         <Label layoutX="99.0" layoutY="246.0" text="Nombre" />
-         <TextField fx:id="txtPercentage" layoutX="367.0" layoutY="263.0" />
-         <Label layoutX="367.0" layoutY="246.0" text="Porcentaje para el dueño" />
+         <TextField fx:id="txtName" layoutX="40.0" layoutY="263.0" />
+         <Label layoutX="40.0" layoutY="246.0" text="Nombre" />
+         <TextField fx:id="txtPercentage" layoutX="232.0" layoutY="263.0" />
+         <Label layoutX="232.0" layoutY="246.0" text="Porcentaje para el dueño" />
          <Button fx:id="btnModifyOwners" layoutX="210.0" layoutY="374.0" mnemonicParsing="false" onAction="#modifyOwners" prefHeight="51.0" prefWidth="193.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Modificar dueños" textFill="DARKSLATEGRAY">
             <font>
                <Font size="18.0" />
             </font>
          </Button>
+         <TextField fx:id="txtIronBrand" layoutX="424.0" layoutY="263.0" />
+         <Label layoutX="424.0" layoutY="246.0" text="Marca hierro" />
         </AnchorPane>
     </center>
 </BorderPane>

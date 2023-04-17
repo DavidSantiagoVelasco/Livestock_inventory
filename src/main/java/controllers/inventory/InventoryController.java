@@ -23,12 +23,6 @@ public class InventoryController implements Initializable {
     private Button btnDeleteAnimals;
 
     @FXML
-    private Button btnFinance;
-
-    @FXML
-    private Button btnInventory;
-
-    @FXML
     private Button btnModifyInventory;
 
     @FXML
@@ -36,15 +30,6 @@ public class InventoryController implements Initializable {
 
     @FXML
     private Button btnShowInventory;
-
-    @FXML
-    private Button btnTasks;
-
-    @FXML
-    private Button btnVeterinaryAssistance;
-
-    @FXML
-    private Label lblTasks;
 
     @FXML
     void buyAnimals(ActionEvent event) {
@@ -68,33 +53,24 @@ public class InventoryController implements Initializable {
     }
 
     @FXML
-    void openFinance(ActionEvent event) {
-
-    }
-
-    @FXML
-    void openInventory(ActionEvent event) {
-
-    }
-
-    @FXML
-    void openTasks(ActionEvent event) {
-
-    }
-
-    @FXML
-    void openVeterinaryAssistance(ActionEvent event) {
-
-    }
-
-    @FXML
     void sellAnimals(ActionEvent event) {
 
     }
 
     @FXML
     void showInventory(ActionEvent event) {
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/livestock_inventory/inventory/showInventory.fxml"));
+            Parent inventoryParent = loader.load();
+            Scene inventoryScene = new Scene(inventoryParent);
+            Stage stage = new Stage();
 
+            stage.setScene(inventoryScene);
+            stage.show();
+
+        }catch (java.io.IOException e){
+            e.printStackTrace();
+        }
     }
 
     @FXML

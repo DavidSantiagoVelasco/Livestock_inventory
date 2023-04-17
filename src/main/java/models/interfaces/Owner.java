@@ -5,13 +5,14 @@ public class Owner {
     private final int id;
     private String name;
     private double percentage;
-
+    private String ironBrand;
     private boolean active;
 
-    public Owner(int id, String name, double percentage, boolean active) {
+    public Owner(int id, String name, double percentage, String ironBrand, boolean active) {
         this.id = id;
         this.name = name;
         this.percentage = percentage;
+        this.ironBrand = ironBrand;
         this.active = active;
     }
 
@@ -33,6 +34,14 @@ public class Owner {
 
     public void setPercentage(double percentage) {
         this.percentage = percentage;
+    }
+
+    public String getIronBrand() {
+        return ironBrand;
+    }
+
+    public void setIronBrand(String ironBrand) {
+        this.ironBrand = ironBrand;
     }
 
     public boolean isActive() {

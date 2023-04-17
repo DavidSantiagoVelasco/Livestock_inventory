@@ -25,6 +25,8 @@ public class OwnersController implements Initializable {
     @FXML
     private TextField txtPercentage;
     @FXML
+    private TextField txtIronBrand;
+    @FXML
     private Button btnNewOwner;
     @FXML
     private Button btnModifyOwners;
@@ -37,25 +39,26 @@ public class OwnersController implements Initializable {
     @FXML
     private TableColumn<Owner, String> colOwnerPercentage;
     @FXML
-    private TableColumn<Owner, String> colOwnerState;
+    private TableColumn<Owner, String> colOwnerIronBrand;
+
 
     @FXML
     public void newOwner(ActionEvent event) {
-        if(this.txtName.getLength() == 0 || this.txtPercentage.getLength() == 0){
+        if(txtName.getLength() == 0 || txtPercentage.getLength() == 0 || txtIronBrand.getLength() == 0){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error");
             alert.setTitle("Llena los campos");
             alert.setHeaderText("Faltan campos por llenar");
             alert.showAndWait();
             return;
         }
-        Owner owner = this.model.createOwner(this.txtName.getText(), Double.parseDouble(this.txtPercentage.getText()));
+        Owner owner = model.createOwner(txtName.getText(), Double.parseDouble(txtPercentage.getText()), txtIronBrand.getText());
         if(owner == null){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error");
             alert.setHeaderText("Ocurrió un error. Intente más tarde");
             alert.showAndWait();
             return;
         }
-        Alert alert = new Alert(Alert.AlertType.ERROR, "Éxito");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Éxito");
         alert.setHeaderText("Éxito creando el dueño");
         alert.showAndWait();
         this.getOwners();
@@ -79,16 +82,16 @@ public class OwnersController implements Initializable {
 
     @FXML
     private void getOwners(){
-        ObservableList<Owner> owners = this.model.getAllOwners();
-        this.tblOwners.setItems(owners);
+        ObservableList<Owner> owners = model.getActiveOwners();
+        tblOwners.setItems(owners);
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        this.colOwnerId.setCellValueFactory(new PropertyValueFactory("id"));
-        this.colOwnerName.setCellValueFactory(new PropertyValueFactory("name"));
-        this.colOwnerPercentage.setCellValueFactory(new PropertyValueFactory("percentage"));
-        this.colOwnerState.setCellValueFactory(new PropertyValueFactory("active"));
+        colOwnerId.setCellValueFactory(new PropertyValueFactory("id"));
+        colOwnerName.setCellValueFactory(new PropertyValueFactory("name"));
+        colOwnerPercentage.setCellValueFactory(new PropertyValueFactory("percentage"));
+        colOwnerIronBrand.setCellValueFactory(new PropertyValueFactory("ironBrand"));
 
         TextFormatter<String> textFormatter = new TextFormatter<>(change -> {
             String newText = change.getControlNewText();
@@ -99,9 +102,9 @@ public class OwnersController implements Initializable {
             }
         });
 
-        this.txtPercentage.setTextFormatter(textFormatter);
+        txtPercentage.setTextFormatter(textFormatter);
 
-        this.model = new Model();
-        this.getOwners();
+        model = new Model();
+        getOwners();
     }
 }
