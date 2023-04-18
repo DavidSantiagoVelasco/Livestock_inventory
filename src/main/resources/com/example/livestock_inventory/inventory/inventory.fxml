@@ -15,7 +15,7 @@
     </left>
     <center>
         <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
-            <Label fx:id="lblTasks" alignment="CENTER" prefHeight="80.0" prefWidth="613.0" style="-fx-border-color: #2f4f4f; -fx-border-width: 0px 0px 1px 0px;" text="Inventario" textAlignment="CENTER" textFill="DARKSLATEGRAY">
+            <Label alignment="CENTER" prefHeight="80.0" prefWidth="613.0" style="-fx-border-color: #2f4f4f; -fx-border-width: 0px 0px 1px 0px;" text="Inventario" textAlignment="CENTER" textFill="DARKSLATEGRAY">
                 <font>
                     <Font size="24.0" />
                 </font>

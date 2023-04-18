@@ -1,24 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/19"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.inventory.ShowInventoryController">
-   <ComboBox fx:id="cbOwnerFiltrer" layoutX="53.0" layoutY="43.0" prefWidth="150.0"/>
-   <ComboBox fx:id="cbSexFilter" layoutX="283.0" layoutY="43.0" prefWidth="150.0"/>
-   <Label layoutX="53.0" layoutY="26.0" text="Filtrar por dueño"/>
-   <ComboBox fx:id="cbStateFilter" layoutX="504.0" layoutY="43.0" prefWidth="150.0"/>
-   <Label layoutX="283.0" layoutY="26.0" text="Filtrar por sexo"/>
-   <Label layoutX="504.0" layoutY="26.0" text="Filtrar por estado"/>
-   <DatePicker fx:id="dpDateFrom" layoutX="736.0" layoutY="43.0"/>
-   <DatePicker fx:id="dpDateTo" layoutX="964.0" layoutY="43.0"/>
-   <Label layoutX="736.0" layoutY="26.0" text="Desde"/>
-   <Label layoutX="964.0" layoutY="26.0" text="Hasta"/>
-   <RadioButton fx:id="rbPurchaseDateFilter" layoutX="775.0" layoutY="98.0" mnemonicParsing="false"
-                text="Fecha compra"/>
-   <RadioButton fx:id="rbSaleDateFilter" layoutX="1009.0" layoutY="98.0" mnemonicParsing="false" text="Fecha venta"/>
+<AnchorPane prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.inventory.ShowInventoryController">
+   <ComboBox fx:id="cbOwnerFiltrer" layoutX="53.0" layoutY="43.0" prefWidth="150.0" />
+   <ComboBox fx:id="cbSexFilter" layoutX="289.0" layoutY="43.0" prefWidth="150.0" />
+   <ComboBox fx:id="cbStateFilter" layoutX="525.0" layoutY="43.0" prefWidth="150.0" />
+   <DatePicker fx:id="dpDateFrom" layoutX="761.0" layoutY="43.0" prefHeight="25.0" prefWidth="150.0" />
+   <DatePicker fx:id="dpDateTo" layoutX="997.0" layoutY="43.0" prefHeight="25.0" prefWidth="150.0" />
+   <RadioButton fx:id="rbPurchaseDateFilter" layoutX="788.0" layoutY="98.0" mnemonicParsing="false" onAction="#selectPurchaseDateFilter" text="Fecha compra" />
+   <RadioButton fx:id="rbSaleDateFilter" layoutX="1030.0" layoutY="98.0" mnemonicParsing="false" onAction="#selectSaleDateFilter" text="Fecha venta" />
+   <Button layoutX="525.0" layoutY="94.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Filtrar" textFill="DARKSLATEGRAY" />
+   <Label layoutX="53.0" layoutY="26.0" text="Filtrar por dueño" />
+   <Label layoutX="289.0" layoutY="26.0" text="Filtrar por sexo" />
+   <Label layoutX="525.0" layoutY="26.0" text="Filtrar por estado" />
+   <Label layoutX="761.0" layoutY="26.0" text="Desde" />
+   <Label layoutX="997.0" layoutY="26.0" text="Hasta" />
+   <AnchorPane layoutY="146.0" prefHeight="62.0" prefWidth="1200.0" />
+   <TableView fx:id="tblAnimals" layoutY="208.0" prefHeight="392.0" prefWidth="1200.0">
+     <columns>
+       <TableColumn fx:id="colNumber" editable="false" prefWidth="75.0" resizable="false" sortable="false" text="Número" />
+       <TableColumn fx:id="colOwner" editable="false" prefWidth="120.0" resizable="false" sortable="false" text="Dueño" />
+         <TableColumn fx:id="colAgeMonths" editable="false" prefWidth="54.0" resizable="false" text="E. meses" />
+         <TableColumn fx:id="colColor" editable="false" prefWidth="76.0" resizable="false" text="Color" />
+         <TableColumn fx:id="colIronBrand" editable="false" prefWidth="77.0" resizable="false" text="Marca hierro" />
+         <TableColumn fx:id="colSex" editable="false" prefWidth="63.0" resizable="false" text="Sexo" />
+         <TableColumn fx:id="colPurchaseWeight" editable="false" prefWidth="77.0" resizable="false" text="Peso compra" />
+         <TableColumn fx:id="colPurchasePrice" editable="false" prefWidth="103.0" resizable="false" text="Precio compra" />
+         <TableColumn fx:id="colPurchaseDate" editable="false" prefWidth="95.0" resizable="false" text="Fecha compra" />
+         <TableColumn fx:id="colObservations" editable="false" prefWidth="129.0" resizable="false" text="Observaciones" />
+         <TableColumn fx:id="colSaleWeight" editable="false" prefWidth="66.0" resizable="false" text="Peso venta" />
+         <TableColumn fx:id="colSalePrice" editable="false" prefWidth="92.0" resizable="false" text="Precio venta" />
+         <TableColumn fx:id="colSaleDate" editable="false" prefWidth="96.0" resizable="false" text="Fecha venta" />
+         <TableColumn fx:id="colState" editable="false" prefWidth="76.0" resizable="false" text="Estado" />
+     </columns>
+   </TableView>
 </AnchorPane>
