@@ -235,7 +235,7 @@ public class Model {
         }
     }
 
-    public void getOwnersInformation(ComboBox cbOwners){
+    public void setOwnersInformation(ComboBox cbOwners){
         ObservableList<Owner> owners = getActiveOwners();
         ObservableList<String> ownersInformation = FXCollections.observableArrayList();
         for (Owner owner: owners) {
@@ -338,4 +338,140 @@ public class Model {
         }
     }
 
+    public ObservableList<Animal> getAllAnimals(){
+        Connection connection = JDBC.connection();
+        if(connection == null){
+            return null;
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement("""
+                    SELECT a.id, a.id_owner, o.name, o.percentage, o.active, a.number, a.months, a.color, a.purchase_weight, a.iron_brand, a.sex, a.purchase_price, a.purchase_date, a.observations, a.sale_weight, a.sale_price, a.sale_date, a.state
+                    FROM animals a
+                    INNER JOIN owners o ON a.id_owner = o.id;""");
+            ResultSet resultSet = statement.executeQuery();
+
+            ObservableList<Animal> animals = FXCollections.observableArrayList();
+
+            while (resultSet.next()) {
+                StateAnimal stateAnimal = StateAnimal.active;
+                String state = resultSet.getString("state");
+                if(!state.equals("active")){
+                    continue;
+                }
+                Animal animal = new Animal(resultSet.getInt("id"), resultSet.getInt("id_owner"),
+                        resultSet.getString("number"), resultSet.getInt("months"),
+                        resultSet.getString("color"), resultSet.getDouble("purchase_weight"),
+                        resultSet.getString("iron_brand"), resultSet.getString("sex").charAt(0),
+                        resultSet.getDouble("purchase_price"), resultSet.getDate("purchase_date"),
+                        resultSet.getString("observations"), stateAnimal);
+                animal.setOwnerInformation(new Owner(resultSet.getInt("id_owner"),
+                        resultSet.getString("name"), resultSet.getDouble("percentage"),
+                        resultSet.getString("iron_brand"), resultSet.getBoolean("active")));
+                animals.add(animal);
+            }
+            resultSet.close();
+            statement.close();
+            connection.close();
+            return animals;
+        }catch (SQLException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public ObservableList<Animal> getFilterAnimals(int idOwner, String sex, StateAnimal stateAnimal, String purchaseOrSale, String dateFrom, String dateTo){
+        Connection connection = JDBC.connection();
+        if (connection == null) {
+            return null;
+        }
+
+        String query = "SELECT a.id, a.id_owner, o.name, o.percentage, o.active, a.number, a.months, a.color, " +
+                "a.purchase_weight, a.iron_brand, a.sex, a.purchase_price, a.purchase_date, a.observations, " +
+                "a.sale_weight, a.sale_price, a.sale_date, a.state " +
+                "FROM animals a " +
+                "INNER JOIN owners o ON a.id_owner = o.id " +
+                "WHERE ";
+        if(idOwner > 0){
+            query += "a.id_owner = ? AND ";
+        }
+        if(sex.length() > 0){
+            query += "a.sex = ? AND ";
+        }
+        if(stateAnimal != null){
+            query += "a.state = ? AND ";
+        }
+        if(purchaseOrSale.length() > 0){
+            if(purchaseOrSale.equals("purchase")){
+                query += "a.purchase_date BETWEEN ? AND ? AND ";
+            } else if (purchaseOrSale.equals("sale")) {
+                query += "a.sale_date BETWEEN ? AND ? AND ";
+            } else {
+                return null;
+            }
+            if(dateFrom.length() < 1){
+                return null;
+            }
+            if(dateTo.length() < 1){
+                return null;
+            }
+        }
+
+        query = query.substring(0, query.length()-5);
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            int cont = 1;
+            if(idOwner > 0){
+                statement.setInt(cont++, idOwner);
+            }
+            if(sex.length() > 0){
+                statement.setString(cont++, sex);
+            }
+            if(stateAnimal != null){
+                switch (stateAnimal){
+                    case active -> statement.setString(cont++, "active");
+                    case sold -> statement.setString(cont++, "sold");
+                    case death -> statement.setString(cont++, "death");
+                }
+            }
+            if(purchaseOrSale.length() > 0){
+                statement.setString(cont++, dateFrom);
+                statement.setString(cont, dateTo);
+            }
+
+            ResultSet resultSet = statement.executeQuery();
+
+            ObservableList<Animal> animals = FXCollections.observableArrayList();
+
+            while (resultSet.next()) {
+                StateAnimal stateAnimalResultSet = StateAnimal.active;
+                String state = resultSet.getString("state");
+                switch (state){
+                    case "death":
+                        stateAnimalResultSet = StateAnimal.death;
+                        break;
+                    case "sold":
+                        stateAnimalResultSet = StateAnimal.sold;
+                        break;
+                }
+                Animal animal = new Animal(resultSet.getInt("id"), resultSet.getInt("id_owner"),
+                        resultSet.getString("number"), resultSet.getInt("months"),
+                        resultSet.getString("color"), resultSet.getDouble("purchase_weight"),
+                        resultSet.getString("iron_brand"), resultSet.getString("sex").charAt(0),
+                        resultSet.getDouble("purchase_price"), resultSet.getDate("purchase_date"),
+                        resultSet.getString("observations"), stateAnimalResultSet);
+                animal.setOwnerInformation(new Owner(resultSet.getInt("id_owner"),
+                        resultSet.getString("name"), resultSet.getDouble("percentage"),
+                        resultSet.getString("iron_brand"), resultSet.getBoolean("active")));
+                animals.add(animal);
+            }
+            resultSet.close();
+            statement.close();
+            connection.close();
+            return animals;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

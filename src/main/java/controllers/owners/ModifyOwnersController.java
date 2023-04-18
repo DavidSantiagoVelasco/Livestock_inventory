@@ -96,7 +96,7 @@ public class ModifyOwnersController implements Initializable {
         alert.setHeaderText(response);
         alert.showAndWait();
         restartValues();
-        model.getOwnersInformation(cbOwners);
+        model.setOwnersInformation(cbOwners);
     }
 
     private void confirmDeleteOwner(){
@@ -121,7 +121,7 @@ public class ModifyOwnersController implements Initializable {
                 alert.setTitle("Éxito");
                 alert.setHeaderText("Exito eliminando el dueño");
                 alert.showAndWait();
-                model.getOwnersInformation(cbOwners);
+                model.setOwnersInformation(cbOwners);
             }else if (status == -1){
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Error");
                 alert.setTitle("Error");
@@ -152,6 +152,6 @@ public class ModifyOwnersController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         model = new Model();
-        model.getOwnersInformation(cbOwners);
+        model.setOwnersInformation(cbOwners);
     }
 }

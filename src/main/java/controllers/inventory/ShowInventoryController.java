@@ -7,20 +7,29 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import models.Model;
 import models.interfaces.Animal;
 import models.interfaces.Owner;
+import models.interfaces.ShowInventoryFilterCard;
 import models.interfaces.StateAnimal;
 
 import java.net.URL;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class ShowInventoryController implements Initializable {
+
     private Model model;
 
     @FXML
-    private ComboBox cbOwnerFiltrer;
+    private ComboBox cbOwnerFilter;
     @FXML
     private ComboBox cbSexFilter;
     @FXML
@@ -63,6 +72,11 @@ public class ShowInventoryController implements Initializable {
     private TableColumn<Animal, Date> colSaleDate;
     @FXML
     private TableColumn<Animal, String> colState;
+
+    private List<ShowInventoryFilterCard> filters = new ArrayList<>();
+
+    @FXML
+    private HBox hbFiltersContainer;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -111,7 +125,7 @@ public class ShowInventoryController implements Initializable {
 
         model = new Model();
 
-        model.getOwnersInformation(cbOwnerFiltrer);
+        model.setOwnersInformation(cbOwnerFilter);
         cbSexFilter.setItems(FXCollections.observableArrayList("Macho", "Hembra"));
         cbStateFilter.setItems(FXCollections.observableArrayList(StateAnimal.active.toString(), StateAnimal.sold.toString(), StateAnimal.death.toString()));
 
@@ -120,14 +134,241 @@ public class ShowInventoryController implements Initializable {
     }
 
     public void selectPurchaseDateFilter(ActionEvent event) {
+        if(dpDateFrom.getValue() == null || dpDateTo.getValue() == null){
+            rbPurchaseDateFilter.setSelected(false);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("Debes seleccionar primero el rango de fechas");
+            alert.showAndWait();
+            return;
+        }
         if(rbSaleDateFilter.isSelected()){
+            removeFilterDate(false);
             rbSaleDateFilter.setSelected(false);
+        }
+        if(rbPurchaseDateFilter.isSelected()){
+            addFilter("FilterDate", "Filtrar por fecha compra", "Desde: " +
+                    dpDateFrom.getValue().toString() + " | Hasta: " + dpDateTo.getValue().toString());
+        } else {
+            removeFilterDate(true);
         }
     }
 
     public void selectSaleDateFilter(ActionEvent event) {
+        if(dpDateFrom.getValue() == null || dpDateTo.getValue() == null){
+            rbSaleDateFilter.setSelected(false);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("Debes seleccionar primero el rango de fechas");
+            alert.showAndWait();
+            return;
+        }
         if(rbPurchaseDateFilter.isSelected()){
+            removeFilterDate(false);
             rbPurchaseDateFilter.setSelected(false);
         }
+        if(rbSaleDateFilter.isSelected()){
+            addFilter("FilterDate", "Filtrar por fecha venta", "Desde: " +
+                    dpDateFrom.getValue().toString() + " | Hasta: " + dpDateTo.getValue().toString());
+        } else {
+            removeFilterDate(true);
+        }
+    }
+
+    private void removeFilterDate(boolean setDatesNull){
+        ShowInventoryFilterCard currentFilterCard = null;
+        for (ShowInventoryFilterCard filterCard: filters
+             ) {
+            if(filterCard.getType().equals("FilterDate")){
+                hbFiltersContainer.getChildren().remove(filterCard.getCard());
+                currentFilterCard = filterCard;
+            }
+        }
+        if(currentFilterCard == null){
+            return;
+        }
+        filters.remove(currentFilterCard);
+        if(setDatesNull){
+            dpDateFrom.setValue(null);
+            dpDateTo.setValue(null);
+        }
+    }
+
+    private void addFilter(String filterType, String tittle, String information){
+
+        AnchorPane filterCardOwner = new AnchorPane();
+        filterCardOwner.setPrefSize(200, 200);
+
+        Pane contentPane = new Pane();
+        contentPane.setPrefSize(200, 62);
+        contentPane.setStyle("-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 5; -fx-background-insets: 10 10 10 10;");
+
+        Label filterLabelName = new Label(tittle);
+        filterLabelName.setLayoutX(14);
+        filterLabelName.setLayoutY(14);
+        contentPane.getChildren().add(filterLabelName);
+
+        Label filterLabelInformation = new Label(information);
+        filterLabelInformation.setLayoutX(14);
+        filterLabelInformation.setLayoutY(31);
+        filterLabelInformation.setStyle("-fx-text-fill: #000000b2; -fx-font-size: 10;");
+        contentPane.getChildren().add(filterLabelInformation);
+
+        Button closeButton = new Button("X");
+        closeButton.setLayoutX(166);
+        closeButton.setLayoutY(12);
+        closeButton.setStyle("-fx-background-color: transparent; -fx-cursor: hand");
+        closeButton.setTextFill(Color.RED);
+        closeButton.setFont(new Font(10));
+
+        closeButton.setOnAction(e -> {
+            removeFilter(filterType, filterCardOwner);
+        });
+
+        contentPane.getChildren().add(closeButton);
+        filterCardOwner.getChildren().add(contentPane);
+
+        hbFiltersContainer.getChildren().add(filterCardOwner);
+        filters.add(new ShowInventoryFilterCard(filterType, filterCardOwner));
+    }
+
+    private void removeFilter(String filterType, AnchorPane filterCard){
+        hbFiltersContainer.getChildren().remove(filterCard);
+        switch (filterType){
+            case "FilterOwner":
+                cbOwnerFilter.setValue(null);
+                break;
+            case "FilterSex":
+                cbSexFilter.setValue(null);
+                break;
+            case "FilterState":
+                cbStateFilter.setValue(null);
+                break;
+            case "FilterDate":
+                dpDateTo.setValue(null);
+                dpDateFrom.setValue(null);
+                rbSaleDateFilter.setSelected(false);
+                rbPurchaseDateFilter.setSelected(false);
+                break;
+        }
+    }
+
+    public void selectOwnerFilter(ActionEvent event) {
+        if(cbOwnerFilter.getValue() == null){
+            return;
+        }
+        ShowInventoryFilterCard currentFilterCard = null;
+        for (ShowInventoryFilterCard filterCard: filters
+             ) {
+            if(filterCard.getType().equals("FilterOwner")){
+                hbFiltersContainer.getChildren().remove(filterCard.getCard());
+                currentFilterCard = filterCard;
+            }
+        }
+        if(currentFilterCard != null){
+            filters.remove(currentFilterCard);
+        }
+        String[] split = cbOwnerFilter.getValue().toString().split(" \\| Porcentaje:");
+        String ownerInformation = split[0];
+        if(ownerInformation.length() > 35){
+            ownerInformation = ownerInformation.substring(0, 35);
+        }
+        addFilter("FilterOwner", "Filtrar por dueño", ownerInformation);
+    }
+
+    public void selectSexFilter(ActionEvent event) {
+        if(cbSexFilter.getValue() == null){
+            return;
+        }
+        ShowInventoryFilterCard currentFilterCard = null;
+        for (ShowInventoryFilterCard filterCard: filters
+        ) {
+            if(filterCard.getType().equals("FilterSex")){
+                hbFiltersContainer.getChildren().remove(filterCard.getCard());
+                currentFilterCard = filterCard;
+            }
+        }
+        if(currentFilterCard != null){
+            filters.remove(currentFilterCard);
+        }
+        addFilter("FilterSex", "Filtrar por sexo", cbSexFilter.getValue().toString());
+    }
+
+    public void selectStateFilter(ActionEvent event) {
+        if(cbStateFilter.getValue() == null){
+            return;
+        }
+        ShowInventoryFilterCard currentFilterCard = null;
+        for (ShowInventoryFilterCard filterCard: filters
+        ) {
+            if(filterCard.getType().equals("FilterState")){
+                hbFiltersContainer.getChildren().remove(filterCard.getCard());
+                currentFilterCard = filterCard;
+            }
+        }
+        if(currentFilterCard != null){
+            filters.remove(currentFilterCard);
+        }
+        addFilter("FilterState", "Filtrar por estado", cbStateFilter.getValue().toString());
+    }
+
+    public void filter(ActionEvent event) {
+        if(cbOwnerFilter.getValue() == null && cbSexFilter.getValue() == null && cbStateFilter.getValue() == null &&
+                (!rbPurchaseDateFilter.isSelected() && !rbSaleDateFilter.isSelected())){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("No hay filtros");
+            alert.setHeaderText("Debes agregar filtros para poder completar la acción");
+            alert.showAndWait();
+            return;
+        }
+        int idOwner = cbOwnerFilter.getValue() != null ? model.getOwnerIdFromOwnerInformation(cbOwnerFilter.getValue().toString()) : -1;
+        String sex = cbSexFilter.getValue() != null ? cbSexFilter.getValue().toString().charAt(0)+"" : "";
+        String stateString = cbStateFilter.getValue() != null ? cbStateFilter.getValue().toString() : "";
+        StateAnimal stateAnimal = null;
+        if(stateString.length() > 0){
+            switch (stateString){
+                case "Activo":
+                    stateAnimal = StateAnimal.active;
+                    break;
+                case "Vendido":
+                    stateAnimal = StateAnimal.sold;
+                    break;
+                case "Muerto":
+                    stateAnimal = StateAnimal.death;
+                    break;
+            }
+        }
+        String purchaseOrSale = "";
+        if (rbPurchaseDateFilter.isSelected()) {
+            purchaseOrSale = "purchase";
+        } else if (rbSaleDateFilter.isSelected()) {
+            purchaseOrSale = "sale";
+        }
+        String dateFrom = dpDateFrom.getValue() != null ? dpDateFrom.getValue().toString() : "";
+        String dateTo = dpDateTo.getValue() != null ? dpDateTo.getValue().toString() : "";
+        ObservableList<Animal> animals = model.getFilterAnimals(idOwner, sex, stateAnimal, purchaseOrSale, dateFrom, dateTo);
+        tblAnimals.setItems(animals);
+    }
+
+    public void getAllAnimals(ActionEvent event) {
+        ObservableList<Animal> animals = model.getAllAnimals();
+        tblAnimals.setItems(animals);
+        clearFilters();
+    }
+
+    public void getAnimals(ActionEvent event) {
+        ObservableList<Animal> animals = model.getActiveAnimals();
+        tblAnimals.setItems(animals);
+        clearFilters();
+    }
+
+    private void clearFilters(){
+        filters.clear();
+        hbFiltersContainer.getChildren().clear();
+        cbOwnerFilter.setValue(null);
+        cbSexFilter.setValue(null);
+        cbStateFilter.setValue(null);
+        dpDateTo.setValue(null);
+        dpDateFrom.setValue(null);
+        rbSaleDateFilter.setSelected(false);
+        rbPurchaseDateFilter.setSelected(false);
     }
 }

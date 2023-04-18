@@ -71,6 +71,7 @@ public class BuyAnimalModuleController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Éxito");
         alert.setHeaderText("Éxito agregando el nuevo animal para el dueño");
         alert.showAndWait();
+        restartValues();
     }
 
     @FXML
@@ -82,6 +83,17 @@ public class BuyAnimalModuleController implements Initializable {
     private void selectOwner(ActionEvent event) {
         String ironBrand = model.getOwnerIronBrandFromOwnerInformation(cbOwners.getSelectionModel().getSelectedItem().toString());
         txtIronBrand.setText(ironBrand);
+    }
+
+    private void restartValues(){
+        txtNumber.setText("");
+        txtAgeMonths.setText("");
+        txtColor.setText("");
+        txtWeight.setText("");
+        txtIronBrand.setText("");
+        txtPurchasePrice.setText("");
+        dpPurchaseDate.setValue(null);
+        txtObservations.setText("");
     }
 
     @Override
@@ -119,6 +131,6 @@ public class BuyAnimalModuleController implements Initializable {
         txtWeight.setTextFormatter(textFormatterWeight);
         txtAgeMonths.setTextFormatter(textFormatterAge);
         txtPurchasePrice.setTextFormatter(textFormatterPrice);
-        model.getOwnersInformation(cbOwners);
+        model.setOwnersInformation(cbOwners);
     }
 }

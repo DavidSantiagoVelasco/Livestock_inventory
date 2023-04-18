@@ -8,26 +8,32 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 
 <AnchorPane prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.inventory.ShowInventoryController">
-   <ComboBox fx:id="cbOwnerFiltrer" layoutX="53.0" layoutY="43.0" prefWidth="150.0" />
-   <ComboBox fx:id="cbSexFilter" layoutX="289.0" layoutY="43.0" prefWidth="150.0" />
-   <ComboBox fx:id="cbStateFilter" layoutX="525.0" layoutY="43.0" prefWidth="150.0" />
+   <ComboBox fx:id="cbOwnerFilter" layoutX="53.0" layoutY="43.0" onAction="#selectOwnerFilter" prefWidth="150.0" />
+   <ComboBox fx:id="cbSexFilter" layoutX="289.0" layoutY="43.0" onAction="#selectSexFilter" prefWidth="150.0" />
+   <ComboBox fx:id="cbStateFilter" layoutX="525.0" layoutY="43.0" onAction="#selectStateFilter" prefWidth="150.0" />
    <DatePicker fx:id="dpDateFrom" layoutX="761.0" layoutY="43.0" prefHeight="25.0" prefWidth="150.0" />
    <DatePicker fx:id="dpDateTo" layoutX="997.0" layoutY="43.0" prefHeight="25.0" prefWidth="150.0" />
    <RadioButton fx:id="rbPurchaseDateFilter" layoutX="788.0" layoutY="98.0" mnemonicParsing="false" onAction="#selectPurchaseDateFilter" text="Fecha compra" />
    <RadioButton fx:id="rbSaleDateFilter" layoutX="1030.0" layoutY="98.0" mnemonicParsing="false" onAction="#selectSaleDateFilter" text="Fecha venta" />
-   <Button layoutX="525.0" layoutY="94.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Filtrar" textFill="DARKSLATEGRAY" />
+   <Button layoutX="525.0" layoutY="94.0" mnemonicParsing="false" onAction="#filter" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Filtrar" textFill="DARKSLATEGRAY" />
+   <Button layoutX="293.0" layoutY="94.0" mnemonicParsing="false" onAction="#getAnimals" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Limpiar filtros" textFill="DARKSLATEGRAY" />
+   <Button layoutX="53.0" layoutY="92.0" mnemonicParsing="false" onAction="#getAllAnimals" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Ver todos" textFill="DARKSLATEGRAY" />
    <Label layoutX="53.0" layoutY="26.0" text="Filtrar por dueño" />
    <Label layoutX="289.0" layoutY="26.0" text="Filtrar por sexo" />
    <Label layoutX="525.0" layoutY="26.0" text="Filtrar por estado" />
    <Label layoutX="761.0" layoutY="26.0" text="Desde" />
    <Label layoutX="997.0" layoutY="26.0" text="Hasta" />
-   <AnchorPane layoutY="146.0" prefHeight="62.0" prefWidth="1200.0" />
+    <AnchorPane layoutY="146.0" prefHeight="62.0" prefWidth="1200.0" style="-fx-background-color: #2f4f4f;">
+        <HBox fx:id="hbFiltersContainer" prefHeight="62.0" prefWidth="1200.0">
+        </HBox>
+    </AnchorPane>
    <TableView fx:id="tblAnimals" layoutY="208.0" prefHeight="392.0" prefWidth="1200.0">
      <columns>
-       <TableColumn fx:id="colNumber" editable="false" prefWidth="75.0" resizable="false" sortable="false" text="Número" />
-       <TableColumn fx:id="colOwner" editable="false" prefWidth="120.0" resizable="false" sortable="false" text="Dueño" />
+       <TableColumn fx:id="colNumber" editable="false" prefWidth="75.0" resizable="false" text="Número" />
+       <TableColumn fx:id="colOwner" editable="false" prefWidth="120.0" resizable="false" text="Dueño" />
          <TableColumn fx:id="colAgeMonths" editable="false" prefWidth="54.0" resizable="false" text="E. meses" />
          <TableColumn fx:id="colColor" editable="false" prefWidth="76.0" resizable="false" text="Color" />
          <TableColumn fx:id="colIronBrand" editable="false" prefWidth="77.0" resizable="false" text="Marca hierro" />
