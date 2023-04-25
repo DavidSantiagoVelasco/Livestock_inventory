@@ -26,11 +26,11 @@
    <Label layoutX="525.0" layoutY="26.0" text="Filtrar por estado" />
    <Label layoutX="761.0" layoutY="26.0" text="Desde" />
    <Label layoutX="997.0" layoutY="26.0" text="Hasta" />
-    <AnchorPane layoutY="146.0" prefHeight="62.0" prefWidth="1200.0" style="-fx-background-color: #2f4f4f;">
+    <AnchorPane layoutY="185.0" prefHeight="62.0" prefWidth="1200.0" style="-fx-background-color: #2f4f4f;">
         <HBox fx:id="hbFiltersContainer" prefHeight="62.0" prefWidth="1200.0">
         </HBox>
     </AnchorPane>
-   <TableView fx:id="tblAnimals" layoutY="208.0" prefHeight="392.0" prefWidth="1200.0">
+   <TableView fx:id="tblAnimals" layoutY="247.0" prefHeight="353.0" prefWidth="1200.0">
      <columns>
        <TableColumn fx:id="colNumber" editable="false" prefWidth="75.0" resizable="false" text="Número" />
        <TableColumn fx:id="colOwner" editable="false" prefWidth="120.0" resizable="false" text="Dueño" />
@@ -48,4 +48,6 @@
          <TableColumn fx:id="colState" editable="false" prefWidth="76.0" resizable="false" text="Estado" />
      </columns>
    </TableView>
+   <Button fx:id="btnDeleteAnimal" layoutX="293.0" layoutY="142.0" mnemonicParsing="false" onAction="#deleteAnimal" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: #ff4242; -fx-cursor: hand;" text="Eliminar" textFill="WHITE" visible="false" />
+   <Button fx:id="btnSellAnimal" layoutX="525.0" layoutY="142.0" mnemonicParsing="false" onAction="#sellAnimal" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: #05B2DC; -fx-cursor: hand;" text="Vender" textFill="WHITE" visible="false" />
 </AnchorPane>

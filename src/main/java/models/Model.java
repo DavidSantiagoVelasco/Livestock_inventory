@@ -235,6 +235,33 @@ public class Model {
         }
     }
 
+    public Owner getOwnerById(int id){
+        Connection connection = JDBC.connection();
+        if(connection == null){
+            return null;
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM owners WHERE id = ? AND active = TRUE;");
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+
+            Owner owner = null;
+
+            while (resultSet.next()) {
+                owner = new Owner(resultSet.getInt("id"), resultSet.getString("name"),
+                        resultSet.getDouble("percentage"), resultSet.getString("iron_brand"),
+                        resultSet.getBoolean("active"));
+            }
+            resultSet.close();
+            statement.close();
+            connection.close();
+            return owner;
+        }catch (SQLException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public void setOwnersInformation(ComboBox cbOwners){
         ObservableList<Owner> owners = getActiveOwners();
         ObservableList<String> ownersInformation = FXCollections.observableArrayList();
@@ -290,6 +317,69 @@ public class Model {
             connection.close();
             return new Animal(id, idOwner, number, months, color, purchaseWeight, iron_brand, sex, purchasePrice,
                     purchaseDate, observations, StateAnimal.active);
+        }catch (SQLException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public boolean sellAnimal(Animal animal, double income, Date date, String descriptionIncome, String saleObservation){
+        Connection connection = JDBC.connection();
+        if(connection == null){
+            return false;
+        }
+        try {
+            PreparedStatement statement;
+            if( saleObservation.length() > 0){
+                statement = connection.prepareStatement("UPDATE animals SET state = 'sold', observations = ? " +
+                        "WHERE id = ?");
+                statement.setString(1, saleObservation);
+                statement.setInt(2, animal.getId());
+            }else{
+                statement = connection.prepareStatement("UPDATE animals SET state = 'sold' " +
+                        "WHERE id = ?");
+                statement.setInt(1, animal.getId());
+            }
+
+            int rowsAffected = statement.executeUpdate();
+            statement.close();
+            connection.close();
+            if(rowsAffected == 1){
+                Finance finance = addIncome(income, date, descriptionIncome);
+                return finance != null;
+            } else {
+                return false;
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public Animal getActiveAnimalByNumber(String number){
+        Connection connection = JDBC.connection();
+        if(connection == null){
+            return null;
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM animals WHERE number = ? AND state = 'active';");
+            statement.setString(1, number);
+            ResultSet resultSet = statement.executeQuery();
+
+            Animal animal = null;
+
+            while (resultSet.next()) {
+                animal = new Animal(resultSet.getInt("id"), resultSet.getInt("id_owner"),
+                        resultSet.getString("number"), resultSet.getInt("months"),
+                        resultSet.getString("color"), resultSet.getDouble("purchase_weight"),
+                        resultSet.getString("iron_brand"), resultSet.getString("sex").charAt(0),
+                        resultSet.getDouble("purchase_price"), resultSet.getDate("purchase_date"),
+                        resultSet.getString("observations"), StateAnimal.active);
+            }
+            resultSet.close();
+            statement.close();
+            connection.close();
+            return animal;
         }catch (SQLException e){
             e.printStackTrace();
             return null;
@@ -356,7 +446,10 @@ public class Model {
                 StateAnimal stateAnimal = StateAnimal.active;
                 String state = resultSet.getString("state");
                 if(!state.equals("active")){
-                    continue;
+                    switch (state){
+                        case "death" -> stateAnimal = StateAnimal.death;
+                        case "sold" -> stateAnimal = StateAnimal.sold;
+                    }
                 }
                 Animal animal = new Animal(resultSet.getInt("id"), resultSet.getInt("id_owner"),
                         resultSet.getString("number"), resultSet.getInt("months"),
@@ -446,13 +539,9 @@ public class Model {
             while (resultSet.next()) {
                 StateAnimal stateAnimalResultSet = StateAnimal.active;
                 String state = resultSet.getString("state");
-                switch (state){
-                    case "death":
-                        stateAnimalResultSet = StateAnimal.death;
-                        break;
-                    case "sold":
-                        stateAnimalResultSet = StateAnimal.sold;
-                        break;
+                switch (state) {
+                    case "death" -> stateAnimalResultSet = StateAnimal.death;
+                    case "sold" -> stateAnimalResultSet = StateAnimal.sold;
                 }
                 Animal animal = new Animal(resultSet.getInt("id"), resultSet.getInt("id_owner"),
                         resultSet.getString("number"), resultSet.getInt("months"),
@@ -470,6 +559,86 @@ public class Model {
             connection.close();
             return animals;
         } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public boolean deleteAnimal(Animal animal){
+        Connection connection = JDBC.connection();
+        if(connection == null){
+            return false;
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement("UPDATE animals SET state = 'death' " +
+                    "WHERE id = ?");
+            statement.setInt(1, animal.getId());
+
+            int rowsAffected = statement.executeUpdate();
+            statement.close();
+            connection.close();
+            return rowsAffected == 1;
+        }catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public Finance addExpense(double expense, Date purchaseDate, String description) {
+        Connection connection = JDBC.connection();
+        if(connection == null){
+            return null;
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO finances(date, expense, " +
+                    "description) VALUES(?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            statement.setDate(1, purchaseDate);
+            statement.setDouble(2, expense);
+            statement.setString(3, description);
+            statement.executeUpdate();
+            ResultSet resultSet = statement.getGeneratedKeys();
+            int id = -1;
+            if (resultSet.next()) {
+                id = resultSet.getInt(1); // Retorna el id generado
+            }
+            if(id == -1){
+                return null;
+            }
+            resultSet.close();
+            statement.close();
+            connection.close();
+            return new Finance(id, purchaseDate, 0, expense, description);
+        }catch (SQLException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Finance addIncome(double income, Date purchaseDate, String description) {
+        Connection connection = JDBC.connection();
+        if(connection == null){
+            return null;
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO finances(date, income, " +
+                    "description) VALUES(?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            statement.setDate(1, purchaseDate);
+            statement.setDouble(2, income);
+            statement.setString(3, description);
+            statement.executeUpdate();
+            ResultSet resultSet = statement.getGeneratedKeys();
+            int id = -1;
+            if (resultSet.next()) {
+                id = resultSet.getInt(1); // Retorna el id generado
+            }
+            if(id == -1){
+                return null;
+            }
+            resultSet.close();
+            statement.close();
+            connection.close();
+            return new Finance(id, purchaseDate, income, 0, description);
+        }catch (SQLException e){
             e.printStackTrace();
             return null;
         }

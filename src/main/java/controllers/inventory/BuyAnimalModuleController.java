@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import models.Model;
 import models.interfaces.Animal;
+import models.interfaces.Owner;
 
 import java.net.URL;
 import java.sql.Date;
@@ -54,6 +55,16 @@ public class BuyAnimalModuleController implements Initializable {
             return;
         }
 
+        Animal animalExists = model.getActiveAnimalByNumber(txtNumber.getText());
+
+        if(animalExists != null){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error");
+            alert.setTitle("Existe animal");
+            alert.setHeaderText("Ya existe un animal activo con el mismo número");
+            alert.showAndWait();
+            return;
+        }
+
         String selectedOwner = (String) cbOwners.getSelectionModel().getSelectedItem();
         int idSelectedOwner = model.getOwnerIdFromOwnerInformation(selectedOwner);
 
@@ -68,7 +79,15 @@ public class BuyAnimalModuleController implements Initializable {
             alert.showAndWait();
             return;
         }
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Éxito");
+
+        Owner owner = model.getOwnerById(animal.getIdOwner());
+
+        if(owner.getPercentage() == 0){
+            String description = "Compra del animal con número: " + animal.getNumber() + " y id: " + animal.getId();
+            model.addExpense(animal.getPurchasePrice(), animal.getPurchaseDate(), description);
+        }
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Éxito");
         alert.setHeaderText("Éxito agregando el nuevo animal para el dueño");
         alert.showAndWait();
         restartValues();

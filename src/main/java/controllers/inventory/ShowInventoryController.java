@@ -4,7 +4,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
@@ -12,16 +15,20 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import models.Model;
 import models.interfaces.Animal;
 import models.interfaces.Owner;
 import models.interfaces.ShowInventoryFilterCard;
 import models.interfaces.StateAnimal;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class ShowInventoryController implements Initializable {
@@ -77,6 +84,10 @@ public class ShowInventoryController implements Initializable {
 
     @FXML
     private HBox hbFiltersContainer;
+    @FXML
+    private Button btnSellAnimal;
+    @FXML
+    private Button btnDeleteAnimal;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -123,12 +134,26 @@ public class ShowInventoryController implements Initializable {
             }
         });
 
+        tblAnimals.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                btnSellAnimal.setVisible(true);
+                btnDeleteAnimal.setVisible(true);
+            } else {
+                btnSellAnimal.setVisible(false);
+                btnDeleteAnimal.setVisible(false);
+            }
+        });
+
         model = new Model();
 
         model.setOwnersInformation(cbOwnerFilter);
         cbSexFilter.setItems(FXCollections.observableArrayList("Macho", "Hembra"));
         cbStateFilter.setItems(FXCollections.observableArrayList(StateAnimal.active.toString(), StateAnimal.sold.toString(), StateAnimal.death.toString()));
 
+        setTblAnimals();
+    }
+
+    private void setTblAnimals(){
         ObservableList<Animal> animals = model.getActiveAnimals();
         tblAnimals.setItems(animals);
     }
@@ -354,7 +379,7 @@ public class ShowInventoryController implements Initializable {
         clearFilters();
     }
 
-    public void getAnimals(ActionEvent event) {
+    public void getAnimals() {
         ObservableList<Animal> animals = model.getActiveAnimals();
         tblAnimals.setItems(animals);
         clearFilters();
@@ -370,5 +395,91 @@ public class ShowInventoryController implements Initializable {
         dpDateFrom.setValue(null);
         rbSaleDateFilter.setSelected(false);
         rbPurchaseDateFilter.setSelected(false);
+    }
+
+    @FXML
+    private void deleteAnimal(ActionEvent event) {
+        if(tblAnimals.getSelectionModel().getSelectedItem() == null){
+            Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
+            alertError.setTitle("Error");
+            alertError.setHeaderText("No se encuentra ningún animal seleccionado");
+            alertError.showAndWait();
+            return;
+        }
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmación");
+        alert.setHeaderText("¿Está seguro que desea eliminar el animal?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK){
+            Animal animal = tblAnimals.getSelectionModel().getSelectedItem();
+            if(animal.getState().toString().equals(StateAnimal.death.toString())){
+                Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
+                alertError.setTitle("Error");
+                alertError.setHeaderText("El animal ya se encuentra eliminado");
+                alertError.showAndWait();
+                return;
+            } else if(animal.getState().toString().equals(StateAnimal.sold.toString())){
+                Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
+                alertError.setTitle("Error");
+                alertError.setHeaderText("El animal se encuentra vendido");
+                alertError.showAndWait();
+                return;
+            }
+            boolean response = model.deleteAnimal(animal);
+            if(response){
+                Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
+                alertConfirmation.setTitle("Éxito");
+                alertConfirmation.setHeaderText("Exito eliminando el animal");
+                alertConfirmation.showAndWait();
+                setTblAnimals();
+            } else {
+                Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
+                alertError.setTitle("Error");
+                alertError.setHeaderText("Ocurrió un error. Por favor intente más tarde");
+                alertError.showAndWait();
+            }
+        }
+    }
+
+    @FXML
+    private void sellAnimal(ActionEvent event) {
+        if(tblAnimals.getSelectionModel().getSelectedItem() == null){
+            Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
+            alertError.setTitle("Error");
+            alertError.setHeaderText("No se encuentra ningún animal seleccionado");
+            alertError.showAndWait();
+            return;
+        }
+        Animal animal = tblAnimals.getSelectionModel().getSelectedItem();
+        if(animal.getState().toString().equals(StateAnimal.death.toString())){
+            Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
+            alertError.setTitle("Error");
+            alertError.setHeaderText("El animal ya se encuentra eliminado");
+            alertError.showAndWait();
+            return;
+        } else if(animal.getState().toString().equals(StateAnimal.sold.toString())){
+            Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
+            alertError.setTitle("Error");
+            alertError.setHeaderText("El animal se encuentra vendido");
+            alertError.showAndWait();
+            return;
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/livestock_inventory/inventory/sellAnimal.fxml"));
+            SellAnimalController sellAnimalController = new SellAnimalController(animal, this);
+            loader.setController(sellAnimalController);
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Vender animal");
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+
+            stage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
