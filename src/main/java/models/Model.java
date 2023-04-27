@@ -472,18 +472,20 @@ public class Model {
         }
     }
 
-    public ObservableList<Animal> getFilterAnimals(int idOwner, String sex, StateAnimal stateAnimal, String purchaseOrSale, String dateFrom, String dateTo){
+    public ObservableList<Animal> getFilterAnimals(String number, int idOwner, String sex, StateAnimal stateAnimal, String purchaseOrSale, String dateFrom, String dateTo){
         Connection connection = JDBC.connection();
         if (connection == null) {
             return null;
         }
-
         String query = "SELECT a.id, a.id_owner, o.name, o.percentage, o.active, a.number, a.months, a.color, " +
                 "a.purchase_weight, a.iron_brand, a.sex, a.purchase_price, a.purchase_date, a.observations, " +
                 "a.sale_weight, a.sale_price, a.sale_date, a.state " +
                 "FROM animals a " +
                 "INNER JOIN owners o ON a.id_owner = o.id " +
                 "WHERE ";
+        if(number.length() > 0){
+            query += "a.number like ? AND ";
+        }
         if(idOwner > 0){
             query += "a.id_owner = ? AND ";
         }
@@ -514,6 +516,9 @@ public class Model {
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             int cont = 1;
+            if(number.length() > 0){
+                statement.setString(cont++, "%" + number + "%");
+            }
             if(idOwner > 0){
                 statement.setInt(cont++, idOwner);
             }

@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -35,6 +36,8 @@ public class ShowInventoryController implements Initializable {
 
     private Model model;
 
+    @FXML
+    private TextField txtNumberFilter;
     @FXML
     private ComboBox cbOwnerFilter;
     @FXML
@@ -105,6 +108,12 @@ public class ShowInventoryController implements Initializable {
         colSalePrice.setCellValueFactory(new PropertyValueFactory("salePrice"));
         colSaleDate.setCellValueFactory(new PropertyValueFactory("saleDate"));
         colState.setCellValueFactory(new PropertyValueFactory("state"));
+
+        txtNumberFilter.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                selectNumberFilter();
+            }
+        });
 
         tblAnimals.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2 && tblAnimals.getSelectionModel().getSelectedItem() != null) {
@@ -252,12 +261,31 @@ public class ShowInventoryController implements Initializable {
         filterCardOwner.getChildren().add(contentPane);
 
         hbFiltersContainer.getChildren().add(filterCardOwner);
+        if(filterType.equals("FilterNumber")){
+            ShowInventoryFilterCard filterCard = new ShowInventoryFilterCard("FilterNumber", filterCardOwner);
+            filterCard.setValue(information);
+            filters.add(filterCard);
+            return;
+        }
         filters.add(new ShowInventoryFilterCard(filterType, filterCardOwner));
     }
 
     private void removeFilter(String filterType, AnchorPane filterCard){
         hbFiltersContainer.getChildren().remove(filterCard);
+        ShowInventoryFilterCard currentFilterCard = null;
+        for (ShowInventoryFilterCard showInventoryFilterCard :
+                filters) {
+            if(showInventoryFilterCard.getCard().equals(filterCard)){
+                currentFilterCard = showInventoryFilterCard;
+            }
+        }
+        if(currentFilterCard != null){
+            filters.remove(currentFilterCard);
+        }
         switch (filterType){
+            case "FilterNumber":
+                txtNumberFilter.setText("");
+                break;
             case "FilterOwner":
                 cbOwnerFilter.setValue(null);
                 break;
@@ -335,14 +363,48 @@ public class ShowInventoryController implements Initializable {
         addFilter("FilterState", "Filtrar por estado", cbStateFilter.getValue().toString());
     }
 
+    public void selectNumberFilter(){
+        if(txtNumberFilter.getText().length() == 0){
+            return;
+        }
+        ShowInventoryFilterCard currentFilterCard = null;
+        for (ShowInventoryFilterCard filterCard: filters
+        ) {
+            if(filterCard.getType().equals("FilterNumber")){
+                hbFiltersContainer.getChildren().remove(filterCard.getCard());
+                currentFilterCard = filterCard;
+            }
+        }
+        if(currentFilterCard != null){
+            filters.remove(currentFilterCard);
+        }
+        addFilter("FilterNumber", "Filtrar por número", txtNumberFilter.getText());
+    }
+
     public void filter(ActionEvent event) {
         if(cbOwnerFilter.getValue() == null && cbSexFilter.getValue() == null && cbStateFilter.getValue() == null &&
-                (!rbPurchaseDateFilter.isSelected() && !rbSaleDateFilter.isSelected())){
+                (!rbPurchaseDateFilter.isSelected() && !rbSaleDateFilter.isSelected()) && txtNumberFilter.getText().length() == 0){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("No hay filtros");
             alert.setHeaderText("Debes agregar filtros para poder completar la acción");
             alert.showAndWait();
             return;
+        }
+        if(txtNumberFilter.getText().length() > 0){
+            ShowInventoryFilterCard existsFilterCard = null;
+            for (ShowInventoryFilterCard filterCard:
+                 filters) {
+                if(filterCard.getType().equals("FilterNumber")){
+                    existsFilterCard = filterCard;
+                }
+            }
+            if(existsFilterCard == null){
+                addFilter("FilterNumber", "Filtrar por número", txtNumberFilter.getText());
+            } else if (!existsFilterCard.getValue().equals(txtNumberFilter.getText())) {
+                hbFiltersContainer.getChildren().remove(existsFilterCard.getCard());
+                filters.remove(existsFilterCard);
+                addFilter("FilterNumber", "Filtrar por número", txtNumberFilter.getText());
+            }
         }
         int idOwner = cbOwnerFilter.getValue() != null ? model.getOwnerIdFromOwnerInformation(cbOwnerFilter.getValue().toString()) : -1;
         String sex = cbSexFilter.getValue() != null ? cbSexFilter.getValue().toString().charAt(0)+"" : "";
@@ -369,7 +431,7 @@ public class ShowInventoryController implements Initializable {
         }
         String dateFrom = dpDateFrom.getValue() != null ? dpDateFrom.getValue().toString() : "";
         String dateTo = dpDateTo.getValue() != null ? dpDateTo.getValue().toString() : "";
-        ObservableList<Animal> animals = model.getFilterAnimals(idOwner, sex, stateAnimal, purchaseOrSale, dateFrom, dateTo);
+        ObservableList<Animal> animals = model.getFilterAnimals(txtNumberFilter.getText(), idOwner, sex, stateAnimal, purchaseOrSale, dateFrom, dateTo);
         tblAnimals.setItems(animals);
     }
 
@@ -387,6 +449,7 @@ public class ShowInventoryController implements Initializable {
 
     private void clearFilters(){
         filters.clear();
+        txtNumberFilter.setText("");
         hbFiltersContainer.getChildren().clear();
         cbOwnerFilter.setValue(null);
         cbSexFilter.setValue(null);
