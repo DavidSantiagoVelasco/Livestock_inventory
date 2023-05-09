@@ -119,6 +119,71 @@ public class Model {
         }
     }
 
+    public ObservableList<Task> getFilterTasks(StateTask stateTask, String creationOrAssigned, String dateFrom, String dateTo){
+        Connection connection = JDBC.connection();
+        if (connection == null) {
+            return null;
+        }
+        String query = "SELECT * FROM tasks WHERE ";
+        if(stateTask != null){
+            query += "state = ? AND ";
+        }
+        if(creationOrAssigned.length() > 0){
+            if(creationOrAssigned.equals("creation")){
+                query += "creation_date BETWEEN ? AND ? AND ";
+            } else if (creationOrAssigned.equals("assigned")) {
+                query += "assigned_date BETWEEN ? AND ? AND ";
+            } else {
+                return null;
+            }
+            if(dateFrom.length() < 1 || dateTo.length() < 1){
+                return null;
+            }
+        }
+
+        query = query.substring(0, query.length()-5);
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            int cont = 1;
+            if(stateTask != null){
+                switch (stateTask){
+                    case active -> statement.setString(cont++, "active");
+                    case canceled -> statement.setString(cont++, "canceled");
+                    case complete -> statement.setString(cont++, "complete");
+                }
+            }
+            if(creationOrAssigned.length() > 0){
+                statement.setString(cont++, dateFrom);
+                statement.setString(cont, dateTo);
+            }
+
+            ResultSet resultSet = statement.executeQuery();
+
+            ObservableList<Task> tasks = FXCollections.observableArrayList();
+
+            while (resultSet.next()) {
+                StateTask stateTaskResultSet = StateTask.active;
+                String state = resultSet.getString("state");
+                switch (state) {
+                    case "complete" -> stateTaskResultSet = StateTask.complete;
+                    case "canceled" -> stateTaskResultSet = StateTask.canceled;
+                }
+                Task task = new Task(resultSet.getInt("id"), resultSet.getString("name"),
+                        resultSet.getString("description"), resultSet.getDate("creation_date"),
+                        resultSet.getDate("assigned_date"), stateTaskResultSet);
+                tasks.add(task);
+            }
+            resultSet.close();
+            statement.close();
+            connection.close();
+            return tasks;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public ObservableList<Owner> getAllOwners(){
         Connection connection = JDBC.connection();
         if(connection == null){
@@ -574,10 +639,7 @@ public class Model {
             } else {
                 return null;
             }
-            if(dateFrom.length() < 1){
-                return null;
-            }
-            if(dateTo.length() < 1){
+            if(dateFrom.length() < 1 || dateTo.length() < 1){
                 return null;
             }
         }

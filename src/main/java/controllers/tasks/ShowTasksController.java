@@ -52,7 +52,7 @@ public class ShowTasksController implements Initializable {
     private Button btnCompleteTask;
     @FXML
     private Button btnCancelTask;
-    private List<FilterCard> filters = new ArrayList<>();
+    private final List<FilterCard> filters = new ArrayList<>();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -67,9 +67,9 @@ public class ShowTasksController implements Initializable {
 
         tblTasks.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2 && tblTasks.getSelectionModel().getSelectedItem() != null) {
-                TablePosition<Task, ?> pos = tblTasks.getSelectionModel().getSelectedCells().get(0);
+                TablePosition pos = tblTasks.getSelectionModel().getSelectedCells().get(0);
                 int row = pos.getRow();
-                TableColumn<Task, ?> col = pos.getTableColumn();
+                TableColumn col = pos.getTableColumn();
                 Task selectedTask = tblTasks.getItems().get(row);
                 if (col == colDescription) {
                     String description = selectedTask.getDescription();
@@ -165,9 +165,38 @@ public class ShowTasksController implements Initializable {
     }
 
     public void filter() {
+        if(cbStateFilter.getValue() == null && (!rbAssignedDateFilter.isSelected() && !rbCreationDateFilter.isSelected())){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("No hay filtros");
+            alert.setHeaderText("Debes agregar filtros para poder completar la acción");
+            alert.showAndWait();
+            return;
+        }
+        String stateString = cbStateFilter.getValue() != null ? cbStateFilter.getValue().toString() : "";
+        StateTask stateTask = null;
+        if(stateString.length() > 0){
+            switch (stateString) {
+                case "Activo" -> stateTask = StateTask.active;
+                case "Completado" -> stateTask = StateTask.complete;
+                case "Cancelado" -> stateTask = StateTask.canceled;
+            }
+        }
+        String creationOrAssigned = "";
+        if (rbCreationDateFilter.isSelected()) {
+            creationOrAssigned = "creation";
+        } else if (rbAssignedDateFilter.isSelected()) {
+            creationOrAssigned = "assigned";
+        }
+        String dateFrom = dpDateFrom.getValue() != null ? dpDateFrom.getValue().toString() : "";
+        String dateTo = dpDateTo.getValue() != null ? dpDateTo.getValue().toString() : "";
+        ObservableList<Task> tasks = model.getFilterTasks(stateTask, creationOrAssigned, dateFrom, dateTo);
+        tblTasks.setItems(tasks);
     }
 
     public void getTasks() {
+        ObservableList<Task> tasks = model.getActiveTasks();
+        tblTasks.setItems(tasks);
+        clearFilters();
     }
 
     public void clearFilters() {
