@@ -18,6 +18,7 @@ import java.net.URL;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class ShowTasksController implements Initializable {
@@ -289,8 +290,92 @@ public class ShowTasksController implements Initializable {
     }
 
     public void completeTask() {
+        if(tblTasks.getSelectionModel().getSelectedItem() == null){
+            Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
+            alertError.setTitle("Error");
+            alertError.setHeaderText("No se encuentra ningún recordatorio seleccionado");
+            alertError.showAndWait();
+            return;
+        }
+        Task task = tblTasks.getSelectionModel().getSelectedItem();
+        if(task.getState().toString().equals(StateTask.complete.toString())){
+            Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
+            alertError.setTitle("Error");
+            alertError.setHeaderText("El recordatorio ya se encuentra completado");
+            alertError.showAndWait();
+            return;
+        } else if(task.getState().toString().equals(StateTask.canceled.toString())){
+            Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
+            alertError.setTitle("Error");
+            alertError.setHeaderText("El recordatorio se encuentra cancelado");
+            alertError.showAndWait();
+            return;
+        }
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmación");
+        alert.setHeaderText("¿Está seguro de querer completar el recordatorio?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK){
+            boolean response = model.completeTask(task);
+            if(response){
+                Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
+                alertConfirmation.setTitle("Éxito");
+                alertConfirmation.setHeaderText("Éxito completando el recordatorio");
+                alertConfirmation.showAndWait();
+                setTblTasks();
+            } else {
+                Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
+                alertError.setTitle("Error");
+                alertError.setHeaderText("Ocurrió un error. Por favor intente más tarde");
+                alertError.showAndWait();
+            }
+        }
     }
 
     public void cancelTask() {
+        if(tblTasks.getSelectionModel().getSelectedItem() == null){
+            Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
+            alertError.setTitle("Error");
+            alertError.setHeaderText("No se encuentra ningún recordatorio seleccionado");
+            alertError.showAndWait();
+            return;
+        }
+        Task task = tblTasks.getSelectionModel().getSelectedItem();
+        if(task.getState().toString().equals(StateTask.complete.toString())){
+            Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
+            alertError.setTitle("Error");
+            alertError.setHeaderText("El recordatorio se encuentra completado");
+            alertError.showAndWait();
+            return;
+        } else if(task.getState().toString().equals(StateTask.canceled.toString())){
+            Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
+            alertError.setTitle("Error");
+            alertError.setHeaderText("El recordatorio ya se encuentra cancelado");
+            alertError.showAndWait();
+            return;
+        }
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmación");
+        alert.setHeaderText("¿Está seguro de querer cancelar el recordatorio?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK){
+            boolean response = model.canceledTask(task);
+            if(response){
+                Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
+                alertConfirmation.setTitle("Éxito");
+                alertConfirmation.setHeaderText("Éxito cancelando el recordatorio");
+                alertConfirmation.showAndWait();
+                setTblTasks();
+            } else {
+                Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
+                alertError.setTitle("Error");
+                alertError.setHeaderText("Ocurrió un error. Por favor intente más tarde");
+                alertError.showAndWait();
+            }
+        }
     }
 }

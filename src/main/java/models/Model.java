@@ -184,6 +184,46 @@ public class Model {
         }
     }
 
+    public boolean completeTask(Task task) {
+        Connection connection = JDBC.connection();
+        if(connection == null){
+            return false;
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement("UPDATE tasks SET state = 'complete' " +
+                    "WHERE id = ?");
+            statement.setInt(1, task.getId());
+
+            int rowsAffected = statement.executeUpdate();
+            statement.close();
+            connection.close();
+            return rowsAffected == 1;
+        }catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean canceledTask(Task task) {
+        Connection connection = JDBC.connection();
+        if(connection == null){
+            return false;
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement("UPDATE tasks SET state = 'canceled' " +
+                    "WHERE id = ?");
+            statement.setInt(1, task.getId());
+
+            int rowsAffected = statement.executeUpdate();
+            statement.close();
+            connection.close();
+            return rowsAffected == 1;
+        }catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public ObservableList<Owner> getAllOwners(){
         Connection connection = JDBC.connection();
         if(connection == null){

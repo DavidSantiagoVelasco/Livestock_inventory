@@ -120,7 +120,7 @@ public class ShowInventoryController implements Initializable {
             if (event.getClickCount() == 2 && tblAnimals.getSelectionModel().getSelectedItem() != null) {
                 TablePosition pos = tblAnimals.getSelectionModel().getSelectedCells().get(0);
                 int row = pos.getRow();
-                TableColumn<Animal, ?> col = pos.getTableColumn();
+                TableColumn col = pos.getTableColumn();
                 Animal selectedAnimal = tblAnimals.getItems().get(row);
                 if (col == colObservations) {
                     String observations = selectedAnimal.getObservations();
@@ -478,7 +478,7 @@ public class ShowInventoryController implements Initializable {
             if(response){
                 Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
                 alertConfirmation.setTitle("Éxito");
-                alertConfirmation.setHeaderText("Exito eliminando el animal");
+                alertConfirmation.setHeaderText("Éxito eliminando el animal");
                 alertConfirmation.showAndWait();
                 setTblAnimals();
             } else {
