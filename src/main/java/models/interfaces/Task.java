@@ -40,17 +40,8 @@ public class Task {
         return assignedDate;
     }
 
-    public String getState() {
-        switch (this.state){
-            case active:
-                return "active";
-            case complete:
-                return "complete";
-            case canceled:
-                return "canceled";
-            default:
-                return "";
-        }
+    public StateTask getState() {
+        return state;
     }
 
     public void setState(StateTask state) {

@@ -48,6 +48,77 @@ public class Model {
         }
     }
 
+    public ObservableList<Task> getActiveTasks(){
+
+        Connection connection = JDBC.connection();
+        if(connection == null){
+            return null;
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM tasks WHERE " +
+                    "state = 'active'");
+            ResultSet resultSet = statement.executeQuery();
+
+            ObservableList<Task> tasks = FXCollections.observableArrayList();
+
+            while (resultSet.next()) {
+                StateTask stateTask = StateTask.active;
+                String state = resultSet.getString("state");
+                switch (state) {
+                    case "complete" -> stateTask = StateTask.complete;
+                    case "canceled" -> stateTask = StateTask.canceled;
+                }
+                Timestamp creationDateTS = resultSet.getTimestamp("creation_date");
+                Date creationDate = new Date(creationDateTS.getTime());
+                tasks.add(new Task(resultSet.getInt("id"), resultSet.getString("name"),
+                        resultSet.getString("description"), creationDate,
+                        resultSet.getDate("assigned_date"), stateTask));
+            }
+            resultSet.close();
+            statement.close();
+            connection.close();
+            return tasks;
+        }catch (SQLException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public ObservableList<Task> getAllTasks(){
+
+        Connection connection = JDBC.connection();
+        if(connection == null){
+            return null;
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM tasks");
+            ResultSet resultSet = statement.executeQuery();
+
+            ObservableList<Task> tasks = FXCollections.observableArrayList();
+
+            while (resultSet.next()) {
+                StateTask stateTask = StateTask.active;
+                String state = resultSet.getString("state");
+                switch (state) {
+                    case "complete" -> stateTask = StateTask.complete;
+                    case "canceled" -> stateTask = StateTask.canceled;
+                }
+                Timestamp creationDateTS = resultSet.getTimestamp("creation_date");
+                Date creationDate = new Date(creationDateTS.getTime());
+                tasks.add(new Task(resultSet.getInt("id"), resultSet.getString("name"),
+                        resultSet.getString("description"), creationDate,
+                        resultSet.getDate("assigned_date"), stateTask));
+            }
+            resultSet.close();
+            statement.close();
+            connection.close();
+            return tasks;
+        }catch (SQLException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public ObservableList<Owner> getAllOwners(){
         Connection connection = JDBC.connection();
         if(connection == null){

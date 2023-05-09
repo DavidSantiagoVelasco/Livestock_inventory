@@ -2,10 +2,11 @@ package controllers.inventory;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.print.PageLayout;
+import javafx.print.PrinterJob;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -21,7 +22,7 @@ import javafx.stage.Stage;
 import models.Model;
 import models.interfaces.Animal;
 import models.interfaces.Owner;
-import models.interfaces.ShowInventoryFilterCard;
+import models.interfaces.FilterCard;
 import models.interfaces.StateAnimal;
 
 import java.io.IOException;
@@ -83,7 +84,7 @@ public class ShowInventoryController implements Initializable {
     @FXML
     private TableColumn<Animal, String> colState;
 
-    private List<ShowInventoryFilterCard> filters = new ArrayList<>();
+    private final List<FilterCard> filters = new ArrayList<>();
 
     @FXML
     private HBox hbFiltersContainer;
@@ -94,20 +95,20 @@ public class ShowInventoryController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        colNumber.setCellValueFactory(new PropertyValueFactory("number"));
-        colOwner.setCellValueFactory(new PropertyValueFactory("ownerInformation"));
-        colAgeMonths.setCellValueFactory(new PropertyValueFactory("months"));
-        colColor.setCellValueFactory(new PropertyValueFactory("color"));
-        colIronBrand.setCellValueFactory(new PropertyValueFactory("ironBrand"));
-        colSex.setCellValueFactory(new PropertyValueFactory("sex"));
-        colPurchaseWeight.setCellValueFactory(new PropertyValueFactory("purchaseWeight"));
-        colPurchasePrice.setCellValueFactory(new PropertyValueFactory("purchasePrice"));
-        colPurchaseDate.setCellValueFactory(new PropertyValueFactory("purchaseDate"));
-        colObservations.setCellValueFactory(new PropertyValueFactory("observations"));
-        colSaleWeight.setCellValueFactory(new PropertyValueFactory("saleWeight"));
-        colSalePrice.setCellValueFactory(new PropertyValueFactory("salePrice"));
-        colSaleDate.setCellValueFactory(new PropertyValueFactory("saleDate"));
-        colState.setCellValueFactory(new PropertyValueFactory("state"));
+        colNumber.setCellValueFactory(new PropertyValueFactory<>("number"));
+        colOwner.setCellValueFactory(new PropertyValueFactory<>("ownerInformation"));
+        colAgeMonths.setCellValueFactory(new PropertyValueFactory<>("months"));
+        colColor.setCellValueFactory(new PropertyValueFactory<>("color"));
+        colIronBrand.setCellValueFactory(new PropertyValueFactory<>("ironBrand"));
+        colSex.setCellValueFactory(new PropertyValueFactory<>("sex"));
+        colPurchaseWeight.setCellValueFactory(new PropertyValueFactory<>("purchaseWeight"));
+        colPurchasePrice.setCellValueFactory(new PropertyValueFactory<>("purchasePrice"));
+        colPurchaseDate.setCellValueFactory(new PropertyValueFactory<>("purchaseDate"));
+        colObservations.setCellValueFactory(new PropertyValueFactory<>("observations"));
+        colSaleWeight.setCellValueFactory(new PropertyValueFactory<>("saleWeight"));
+        colSalePrice.setCellValueFactory(new PropertyValueFactory<>("salePrice"));
+        colSaleDate.setCellValueFactory(new PropertyValueFactory<>("saleDate"));
+        colState.setCellValueFactory(new PropertyValueFactory<>("state"));
 
         txtNumberFilter.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
@@ -117,7 +118,7 @@ public class ShowInventoryController implements Initializable {
 
         tblAnimals.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2 && tblAnimals.getSelectionModel().getSelectedItem() != null) {
-                TablePosition<Animal, ?> pos = tblAnimals.getSelectionModel().getSelectedCells().get(0);
+                TablePosition pos = tblAnimals.getSelectionModel().getSelectedCells().get(0);
                 int row = pos.getRow();
                 TableColumn<Animal, ?> col = pos.getTableColumn();
                 Animal selectedAnimal = tblAnimals.getItems().get(row);
@@ -167,7 +168,7 @@ public class ShowInventoryController implements Initializable {
         tblAnimals.setItems(animals);
     }
 
-    public void selectPurchaseDateFilter(ActionEvent event) {
+    public void selectPurchaseDateFilter() {
         if(dpDateFrom.getValue() == null || dpDateTo.getValue() == null){
             rbPurchaseDateFilter.setSelected(false);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -187,7 +188,7 @@ public class ShowInventoryController implements Initializable {
         }
     }
 
-    public void selectSaleDateFilter(ActionEvent event) {
+    public void selectSaleDateFilter() {
         if(dpDateFrom.getValue() == null || dpDateTo.getValue() == null){
             rbSaleDateFilter.setSelected(false);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -208,8 +209,8 @@ public class ShowInventoryController implements Initializable {
     }
 
     private void removeFilterDate(boolean setDatesNull){
-        ShowInventoryFilterCard currentFilterCard = null;
-        for (ShowInventoryFilterCard filterCard: filters
+        FilterCard currentFilterCard = null;
+        for (FilterCard filterCard: filters
              ) {
             if(filterCard.getType().equals("FilterDate")){
                 hbFiltersContainer.getChildren().remove(filterCard.getCard());
@@ -253,63 +254,53 @@ public class ShowInventoryController implements Initializable {
         closeButton.setTextFill(Color.RED);
         closeButton.setFont(new Font(10));
 
-        closeButton.setOnAction(e -> {
-            removeFilter(filterType, filterCardOwner);
-        });
+        closeButton.setOnAction(e -> removeFilter(filterType, filterCardOwner));
 
         contentPane.getChildren().add(closeButton);
         filterCardOwner.getChildren().add(contentPane);
 
         hbFiltersContainer.getChildren().add(filterCardOwner);
         if(filterType.equals("FilterNumber")){
-            ShowInventoryFilterCard filterCard = new ShowInventoryFilterCard("FilterNumber", filterCardOwner);
+            FilterCard filterCard = new FilterCard("FilterNumber", filterCardOwner);
             filterCard.setValue(information);
             filters.add(filterCard);
             return;
         }
-        filters.add(new ShowInventoryFilterCard(filterType, filterCardOwner));
+        filters.add(new FilterCard(filterType, filterCardOwner));
     }
 
     private void removeFilter(String filterType, AnchorPane filterCard){
         hbFiltersContainer.getChildren().remove(filterCard);
-        ShowInventoryFilterCard currentFilterCard = null;
-        for (ShowInventoryFilterCard showInventoryFilterCard :
+        FilterCard currentFilterCard = null;
+        for (FilterCard fc :
                 filters) {
-            if(showInventoryFilterCard.getCard().equals(filterCard)){
-                currentFilterCard = showInventoryFilterCard;
+            if(fc.getCard().equals(filterCard)){
+                currentFilterCard = fc;
             }
         }
         if(currentFilterCard != null){
             filters.remove(currentFilterCard);
         }
-        switch (filterType){
-            case "FilterNumber":
-                txtNumberFilter.setText("");
-                break;
-            case "FilterOwner":
-                cbOwnerFilter.setValue(null);
-                break;
-            case "FilterSex":
-                cbSexFilter.setValue(null);
-                break;
-            case "FilterState":
-                cbStateFilter.setValue(null);
-                break;
-            case "FilterDate":
+        switch (filterType) {
+            case "FilterNumber" -> txtNumberFilter.setText("");
+            case "FilterOwner" -> cbOwnerFilter.setValue(null);
+            case "FilterSex" -> cbSexFilter.setValue(null);
+            case "FilterState" -> cbStateFilter.setValue(null);
+            case "FilterDate" -> {
                 dpDateTo.setValue(null);
                 dpDateFrom.setValue(null);
                 rbSaleDateFilter.setSelected(false);
                 rbPurchaseDateFilter.setSelected(false);
-                break;
+            }
         }
     }
 
-    public void selectOwnerFilter(ActionEvent event) {
+    public void selectOwnerFilter() {
         if(cbOwnerFilter.getValue() == null){
             return;
         }
-        ShowInventoryFilterCard currentFilterCard = null;
-        for (ShowInventoryFilterCard filterCard: filters
+        FilterCard currentFilterCard = null;
+        for (FilterCard filterCard: filters
              ) {
             if(filterCard.getType().equals("FilterOwner")){
                 hbFiltersContainer.getChildren().remove(filterCard.getCard());
@@ -327,12 +318,12 @@ public class ShowInventoryController implements Initializable {
         addFilter("FilterOwner", "Filtrar por dueño", ownerInformation);
     }
 
-    public void selectSexFilter(ActionEvent event) {
+    public void selectSexFilter() {
         if(cbSexFilter.getValue() == null){
             return;
         }
-        ShowInventoryFilterCard currentFilterCard = null;
-        for (ShowInventoryFilterCard filterCard: filters
+        FilterCard currentFilterCard = null;
+        for (FilterCard filterCard: filters
         ) {
             if(filterCard.getType().equals("FilterSex")){
                 hbFiltersContainer.getChildren().remove(filterCard.getCard());
@@ -345,12 +336,12 @@ public class ShowInventoryController implements Initializable {
         addFilter("FilterSex", "Filtrar por sexo", cbSexFilter.getValue().toString());
     }
 
-    public void selectStateFilter(ActionEvent event) {
+    public void selectStateFilter() {
         if(cbStateFilter.getValue() == null){
             return;
         }
-        ShowInventoryFilterCard currentFilterCard = null;
-        for (ShowInventoryFilterCard filterCard: filters
+        FilterCard currentFilterCard = null;
+        for (FilterCard filterCard: filters
         ) {
             if(filterCard.getType().equals("FilterState")){
                 hbFiltersContainer.getChildren().remove(filterCard.getCard());
@@ -367,8 +358,8 @@ public class ShowInventoryController implements Initializable {
         if(txtNumberFilter.getText().length() == 0){
             return;
         }
-        ShowInventoryFilterCard currentFilterCard = null;
-        for (ShowInventoryFilterCard filterCard: filters
+        FilterCard currentFilterCard = null;
+        for (FilterCard filterCard: filters
         ) {
             if(filterCard.getType().equals("FilterNumber")){
                 hbFiltersContainer.getChildren().remove(filterCard.getCard());
@@ -381,7 +372,7 @@ public class ShowInventoryController implements Initializable {
         addFilter("FilterNumber", "Filtrar por número", txtNumberFilter.getText());
     }
 
-    public void filter(ActionEvent event) {
+    public void filter() {
         if(cbOwnerFilter.getValue() == null && cbSexFilter.getValue() == null && cbStateFilter.getValue() == null &&
                 (!rbPurchaseDateFilter.isSelected() && !rbSaleDateFilter.isSelected()) && txtNumberFilter.getText().length() == 0){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -391,8 +382,8 @@ public class ShowInventoryController implements Initializable {
             return;
         }
         if(txtNumberFilter.getText().length() > 0){
-            ShowInventoryFilterCard existsFilterCard = null;
-            for (ShowInventoryFilterCard filterCard:
+            FilterCard existsFilterCard = null;
+            for (FilterCard filterCard:
                  filters) {
                 if(filterCard.getType().equals("FilterNumber")){
                     existsFilterCard = filterCard;
@@ -411,16 +402,10 @@ public class ShowInventoryController implements Initializable {
         String stateString = cbStateFilter.getValue() != null ? cbStateFilter.getValue().toString() : "";
         StateAnimal stateAnimal = null;
         if(stateString.length() > 0){
-            switch (stateString){
-                case "Activo":
-                    stateAnimal = StateAnimal.active;
-                    break;
-                case "Vendido":
-                    stateAnimal = StateAnimal.sold;
-                    break;
-                case "Muerto":
-                    stateAnimal = StateAnimal.death;
-                    break;
+            switch (stateString) {
+                case "Activo" -> stateAnimal = StateAnimal.active;
+                case "Vendido" -> stateAnimal = StateAnimal.sold;
+                case "Muerto" -> stateAnimal = StateAnimal.death;
             }
         }
         String purchaseOrSale = "";
@@ -435,7 +420,7 @@ public class ShowInventoryController implements Initializable {
         tblAnimals.setItems(animals);
     }
 
-    public void getAllAnimals(ActionEvent event) {
+    public void getAllAnimals() {
         ObservableList<Animal> animals = model.getAllAnimals();
         tblAnimals.setItems(animals);
         clearFilters();
@@ -461,7 +446,7 @@ public class ShowInventoryController implements Initializable {
     }
 
     @FXML
-    private void deleteAnimal(ActionEvent event) {
+    private void deleteAnimal() {
         if(tblAnimals.getSelectionModel().getSelectedItem() == null){
             Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
             alertError.setTitle("Error");
@@ -506,7 +491,7 @@ public class ShowInventoryController implements Initializable {
     }
 
     @FXML
-    private void sellAnimal(ActionEvent event) {
+    private void sellAnimal() {
         if(tblAnimals.getSelectionModel().getSelectedItem() == null){
             Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
             alertError.setTitle("Error");
@@ -543,6 +528,19 @@ public class ShowInventoryController implements Initializable {
             stage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void print(){
+        PrinterJob printerJob = PrinterJob.createPrinterJob();
+        if (printerJob == null) {
+            return;
+        }
+        boolean proceed = printerJob.showPrintDialog(tblAnimals.getScene().getWindow());
+        if (proceed) {
+            PageLayout pageLayout = printerJob.getJobSettings().getPageLayout();
+            printerJob.printPage(pageLayout, tblAnimals);
+            printerJob.endJob();
         }
     }
 }

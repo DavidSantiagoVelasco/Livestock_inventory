@@ -2,13 +2,13 @@ package models.interfaces;
 
 import javafx.scene.layout.AnchorPane;
 
-public class ShowInventoryFilterCard {
+public class FilterCard {
 
     private final String type;
     private String value;
     private final AnchorPane card;
 
-    public ShowInventoryFilterCard(String type, AnchorPane card) {
+    public FilterCard(String type, AnchorPane card) {
         this.type = type;
         this.card = card;
     }

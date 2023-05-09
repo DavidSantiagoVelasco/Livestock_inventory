@@ -16,4 +16,6 @@ module com.example.livestock_inventory {
     opens controllers.components to javafx.fxml;
     exports controllers.owners;
     opens controllers.owners to javafx.fxml;
+    exports controllers.tasks;
+    opens controllers.tasks to javafx.fxml;
 }
