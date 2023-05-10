@@ -224,6 +224,38 @@ public class Model {
         }
     }
 
+    public Task createTask(String name, String description, Date assignedDate){
+        Connection connection = JDBC.connection();
+        if(connection == null){
+            return null;
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO tasks(name, description, " +
+                            "assigned_date, state) values(?, ?, ?, ?);",
+                    Statement.RETURN_GENERATED_KEYS);
+            statement.setString(1, name);
+            statement.setString(2, description);
+            statement.setDate(3, assignedDate);
+            statement.setString(4, "active");
+            statement.executeUpdate();
+            ResultSet resultSet = statement.getGeneratedKeys();
+            int id = -1;
+            if (resultSet.next()) {
+                id = resultSet.getInt(1);
+            }
+            if(id == -1){
+                return null;
+            }
+            resultSet.close();
+            statement.close();
+            connection.close();
+            return new Task(id, name, description, new Date(new java.util.Date().getTime()), assignedDate, StateTask.active);
+        }catch (SQLException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public ObservableList<Owner> getAllOwners(){
         Connection connection = JDBC.connection();
         if(connection == null){

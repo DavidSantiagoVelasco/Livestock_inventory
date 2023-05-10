@@ -25,7 +25,7 @@
                     <Font size="18.0" />
                 </font>
             </Button>
-            <Button layoutX="173.0" layoutY="261.0" mnemonicParsing="false" onAction="#addTask" prefHeight="71.0" prefWidth="268.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Agregar recordatorio" textFill="DARKSLATEGRAY">
+            <Button layoutX="173.0" fx:id="btnCreateTask" layoutY="261.0" mnemonicParsing="false" onAction="#createTask" prefHeight="71.0" prefWidth="268.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Agregar recordatorio" textFill="DARKSLATEGRAY">
                 <font>
                     <Font size="18.0" />
                 </font>
