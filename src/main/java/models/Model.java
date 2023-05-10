@@ -10,6 +10,7 @@ import java.time.LocalDate;
 
 public class Model {
 
+    /** ========================================== Tasks ====================================== **/
     public ObservableList<Task> getTasksMonth(){
         LocalDate currentDate = LocalDate.now();
 
@@ -256,6 +257,9 @@ public class Model {
         }
     }
 
+
+    /*  ========================================== ====== ====================================== **/
+    /** ========================================== Owners ====================================== **/
     public ObservableList<Owner> getAllOwners(){
         Connection connection = JDBC.connection();
         if(connection == null){
@@ -338,42 +342,6 @@ public class Model {
         }
     }
 
-    public ObservableList<Animal> getAnimalsByOwnerId(int idOwner){
-        Connection connection = JDBC.connection();
-        if(connection == null){
-            return null;
-        }
-        try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM animals WHERE " +
-                    "id_owner = ? AND state = 'active'");
-            statement.setInt(1, idOwner);
-            ResultSet resultSet = statement.executeQuery();
-
-            ObservableList<Animal> animals = FXCollections.observableArrayList();
-
-            while (resultSet.next()) {
-                StateAnimal stateAnimal = StateAnimal.active;
-                String state = resultSet.getString("state");
-                if(!state.equals("active")){
-                    continue;
-                }
-                animals.add(new Animal(resultSet.getInt("id"), resultSet.getInt("id_owner"),
-                        resultSet.getString("number"), resultSet.getInt("months"),
-                        resultSet.getString("color"), resultSet.getDouble("purchase_weight"),
-                        resultSet.getString("iron_brand"), resultSet.getString("sex").charAt(0),
-                        resultSet.getDouble("purchase_price"), resultSet.getDate("purchase_date"),
-                         resultSet.getString("observations"), stateAnimal));
-            }
-            resultSet.close();
-            statement.close();
-            connection.close();
-            return animals;
-        }catch (SQLException e){
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     public int deleteOwner(int idOwner) {
         Connection connection = JDBC.connection();
         if(connection == null){
@@ -397,7 +365,7 @@ public class Model {
             return -1;
         }
     }
-    
+
     public boolean modifyOwner(int idOwner, String name, String percentage, String ironBrand){
         Connection connection = JDBC.connection();
         if (connection == null) {
@@ -488,6 +456,45 @@ public class Model {
     public String getOwnerIronBrandFromOwnerInformation(String ownerInformation){
         String[] ownerSplit = ownerInformation.split("Marca hierro: ");
         return ownerSplit[1];
+    }
+
+
+    /*  ========================================== ====== ====================================== **/
+    /** ========================================== Animals ====================================== **/
+    public ObservableList<Animal> getAnimalsByOwnerId(int idOwner){
+        Connection connection = JDBC.connection();
+        if(connection == null){
+            return null;
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM animals WHERE " +
+                    "id_owner = ? AND state = 'active'");
+            statement.setInt(1, idOwner);
+            ResultSet resultSet = statement.executeQuery();
+
+            ObservableList<Animal> animals = FXCollections.observableArrayList();
+
+            while (resultSet.next()) {
+                StateAnimal stateAnimal = StateAnimal.active;
+                String state = resultSet.getString("state");
+                if(!state.equals("active")){
+                    continue;
+                }
+                animals.add(new Animal(resultSet.getInt("id"), resultSet.getInt("id_owner"),
+                        resultSet.getString("number"), resultSet.getInt("months"),
+                        resultSet.getString("color"), resultSet.getDouble("purchase_weight"),
+                        resultSet.getString("iron_brand"), resultSet.getString("sex").charAt(0),
+                        resultSet.getDouble("purchase_price"), resultSet.getDate("purchase_date"),
+                        resultSet.getString("observations"), stateAnimal));
+            }
+            resultSet.close();
+            statement.close();
+            connection.close();
+            return animals;
+        }catch (SQLException e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public Animal createAnimal(int idOwner, String number, int months, String color, double purchaseWeight,
@@ -794,6 +801,8 @@ public class Model {
         }
     }
 
+    /*  ========================================== ====== ====================================== **/
+    /** ========================================== Finances ====================================== **/
     public Finance addExpense(double expense, Date purchaseDate, String description) {
         Connection connection = JDBC.connection();
         if(connection == null){
