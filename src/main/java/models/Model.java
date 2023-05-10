@@ -10,12 +10,14 @@ import java.time.LocalDate;
 
 public class Model {
 
-    /** ========================================== Tasks ====================================== **/
-    public ObservableList<Task> getTasksMonth(){
+    /**
+     * ========================================== Tasks ======================================
+     **/
+    public ObservableList<Task> getTasksMonth() {
         LocalDate currentDate = LocalDate.now();
 
         Connection connection = JDBC.connection();
-        if(connection == null){
+        if (connection == null) {
             return null;
         }
         try {
@@ -43,16 +45,16 @@ public class Model {
             statement.close();
             connection.close();
             return tasks;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public ObservableList<Task> getActiveTasks(){
+    public ObservableList<Task> getActiveTasks() {
 
         Connection connection = JDBC.connection();
-        if(connection == null){
+        if (connection == null) {
             return null;
         }
         try {
@@ -79,16 +81,16 @@ public class Model {
             statement.close();
             connection.close();
             return tasks;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public ObservableList<Task> getAllTasks(){
+    public ObservableList<Task> getAllTasks() {
 
         Connection connection = JDBC.connection();
-        if(connection == null){
+        if (connection == null) {
             return null;
         }
         try {
@@ -114,47 +116,47 @@ public class Model {
             statement.close();
             connection.close();
             return tasks;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public ObservableList<Task> getFilterTasks(StateTask stateTask, String creationOrAssigned, String dateFrom, String dateTo){
+    public ObservableList<Task> getFilterTasks(StateTask stateTask, String creationOrAssigned, String dateFrom, String dateTo) {
         Connection connection = JDBC.connection();
         if (connection == null) {
             return null;
         }
         String query = "SELECT * FROM tasks WHERE ";
-        if(stateTask != null){
+        if (stateTask != null) {
             query += "state = ? AND ";
         }
-        if(creationOrAssigned.length() > 0){
-            if(creationOrAssigned.equals("creation")){
+        if (creationOrAssigned.length() > 0) {
+            if (creationOrAssigned.equals("creation")) {
                 query += "creation_date BETWEEN ? AND ? AND ";
             } else if (creationOrAssigned.equals("assigned")) {
                 query += "assigned_date BETWEEN ? AND ? AND ";
             } else {
                 return null;
             }
-            if(dateFrom.length() < 1 || dateTo.length() < 1){
+            if (dateFrom.length() < 1 || dateTo.length() < 1) {
                 return null;
             }
         }
 
-        query = query.substring(0, query.length()-5);
+        query = query.substring(0, query.length() - 5);
 
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             int cont = 1;
-            if(stateTask != null){
-                switch (stateTask){
+            if (stateTask != null) {
+                switch (stateTask) {
                     case active -> statement.setString(cont++, "active");
                     case canceled -> statement.setString(cont++, "canceled");
                     case complete -> statement.setString(cont++, "complete");
                 }
             }
-            if(creationOrAssigned.length() > 0){
+            if (creationOrAssigned.length() > 0) {
                 statement.setString(cont++, dateFrom);
                 statement.setString(cont, dateTo);
             }
@@ -187,7 +189,7 @@ public class Model {
 
     public boolean completeTask(Task task) {
         Connection connection = JDBC.connection();
-        if(connection == null){
+        if (connection == null) {
             return false;
         }
         try {
@@ -199,7 +201,7 @@ public class Model {
             statement.close();
             connection.close();
             return rowsAffected == 1;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
@@ -207,7 +209,7 @@ public class Model {
 
     public boolean canceledTask(Task task) {
         Connection connection = JDBC.connection();
-        if(connection == null){
+        if (connection == null) {
             return false;
         }
         try {
@@ -219,15 +221,15 @@ public class Model {
             statement.close();
             connection.close();
             return rowsAffected == 1;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
 
-    public Task createTask(String name, String description, Date assignedDate){
+    public Task createTask(String name, String description, Date assignedDate) {
         Connection connection = JDBC.connection();
-        if(connection == null){
+        if (connection == null) {
             return null;
         }
         try {
@@ -244,25 +246,26 @@ public class Model {
             if (resultSet.next()) {
                 id = resultSet.getInt(1);
             }
-            if(id == -1){
+            if (id == -1) {
                 return null;
             }
             resultSet.close();
             statement.close();
             connection.close();
             return new Task(id, name, description, new Date(new java.util.Date().getTime()), assignedDate, StateTask.active);
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
     }
 
 
-    /*  ========================================== ====== ====================================== **/
-    /** ========================================== Owners ====================================== **/
-    public ObservableList<Owner> getAllOwners(){
+    /**
+     * ========================================== Owners ======================================
+     **/
+    public ObservableList<Owner> getAllOwners() {
         Connection connection = JDBC.connection();
-        if(connection == null){
+        if (connection == null) {
             return null;
         }
         try {
@@ -280,15 +283,15 @@ public class Model {
             statement.close();
             connection.close();
             return owners;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public ObservableList<Owner> getActiveOwners(){
+    public ObservableList<Owner> getActiveOwners() {
         Connection connection = JDBC.connection();
-        if(connection == null){
+        if (connection == null) {
             return null;
         }
         try {
@@ -306,20 +309,20 @@ public class Model {
             statement.close();
             connection.close();
             return owners;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public Owner createOwner(String name, double percentage, String ironBrand){
+    public Owner createOwner(String name, double percentage, String ironBrand) {
         Connection connection = JDBC.connection();
-        if(connection == null){
+        if (connection == null) {
             return null;
         }
         try {
             PreparedStatement statement = connection.prepareStatement("INSERT INTO owners(name, percentage, " +
-                            "iron_brand) VALUES(?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+                    "iron_brand) VALUES(?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, name);
             statement.setDouble(2, percentage);
             statement.setString(3, ironBrand);
@@ -329,14 +332,14 @@ public class Model {
             if (resultSet.next()) {
                 id = resultSet.getInt(1); // Retorna el id generado
             }
-            if(id == -1){
+            if (id == -1) {
                 return null;
             }
             resultSet.close();
             statement.close();
             connection.close();
             return new Owner(id, name, percentage, ironBrand, true);
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
@@ -344,7 +347,7 @@ public class Model {
 
     public int deleteOwner(int idOwner) {
         Connection connection = JDBC.connection();
-        if(connection == null){
+        if (connection == null) {
             return -1;
         }
         try {
@@ -355,46 +358,46 @@ public class Model {
             int rowsAffected = statement.executeUpdate();
             statement.close();
             connection.close();
-            if(rowsAffected == 1){
+            if (rowsAffected == 1) {
                 return 0;
-            }else {
+            } else {
                 return 1;
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return -1;
         }
     }
 
-    public boolean modifyOwner(int idOwner, String name, String percentage, String ironBrand){
+    public boolean modifyOwner(int idOwner, String name, String percentage, String ironBrand) {
         Connection connection = JDBC.connection();
         if (connection == null) {
             return false;
         }
 
         String query = "UPDATE owners SET ";
-        if(name.length() > 0){
+        if (name.length() > 0) {
             query += "name = ?, ";
         }
-        if(percentage.length() > 0){
+        if (percentage.length() > 0) {
             query += "percentage = ?, ";
         }
-        if(ironBrand.length() > 0){
+        if (ironBrand.length() > 0) {
             query += "iron_brand = ?, ";
         }
-        query = query.substring(0, query.length()-2);
+        query = query.substring(0, query.length() - 2);
         query += " WHERE id = ?";
 
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             int cont = 1;
-            if(name.length() > 0){
+            if (name.length() > 0) {
                 statement.setString(cont++, name);
             }
-            if(percentage.length() > 0){
+            if (percentage.length() > 0) {
                 statement.setDouble(cont++, Double.parseDouble(percentage));
             }
-            if(ironBrand.length() > 0){
+            if (ironBrand.length() > 0) {
                 statement.setString(cont++, ironBrand);
             }
 
@@ -411,9 +414,9 @@ public class Model {
         }
     }
 
-    public Owner getOwnerById(int id){
+    public Owner getOwnerById(int id) {
         Connection connection = JDBC.connection();
-        if(connection == null){
+        if (connection == null) {
             return null;
         }
         try {
@@ -432,38 +435,39 @@ public class Model {
             statement.close();
             connection.close();
             return owner;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public void setOwnersInformation(ComboBox cbOwners){
+    public void setOwnersInformation(ComboBox cbOwners) {
         ObservableList<Owner> owners = getActiveOwners();
         ObservableList<String> ownersInformation = FXCollections.observableArrayList();
-        for (Owner owner: owners) {
+        for (Owner owner : owners) {
             ownersInformation.add("Id: " + owner.getId() + " | Nombre: " + owner.getName() + " | Porcentaje: "
                     + owner.getPercentage() + " | Marca hierro: " + owner.getIronBrand());
         }
         cbOwners.setItems(ownersInformation);
     }
 
-    public int getOwnerIdFromOwnerInformation(String ownerInformation){
+    public int getOwnerIdFromOwnerInformation(String ownerInformation) {
         String[] ownerSplit = ownerInformation.split(" ");
         return Integer.parseInt(ownerSplit[1]);
     }
 
-    public String getOwnerIronBrandFromOwnerInformation(String ownerInformation){
+    public String getOwnerIronBrandFromOwnerInformation(String ownerInformation) {
         String[] ownerSplit = ownerInformation.split("Marca hierro: ");
         return ownerSplit[1];
     }
 
 
-    /*  ========================================== ====== ====================================== **/
-    /** ========================================== Animals ====================================== **/
-    public ObservableList<Animal> getAnimalsByOwnerId(int idOwner){
+    /**
+     * ========================================== Animals ======================================
+     **/
+    public ObservableList<Animal> getAnimalsByOwnerId(int idOwner) {
         Connection connection = JDBC.connection();
-        if(connection == null){
+        if (connection == null) {
             return null;
         }
         try {
@@ -477,7 +481,7 @@ public class Model {
             while (resultSet.next()) {
                 StateAnimal stateAnimal = StateAnimal.active;
                 String state = resultSet.getString("state");
-                if(!state.equals("active")){
+                if (!state.equals("active")) {
                     continue;
                 }
                 animals.add(new Animal(resultSet.getInt("id"), resultSet.getInt("id_owner"),
@@ -491,16 +495,16 @@ public class Model {
             statement.close();
             connection.close();
             return animals;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
     }
 
     public Animal createAnimal(int idOwner, String number, int months, String color, double purchaseWeight,
-                               String iron_brand, char sex, double purchasePrice, String observations, Date purchaseDate){
+                               String iron_brand, char sex, double purchasePrice, String observations, Date purchaseDate) {
         Connection connection = JDBC.connection();
-        if(connection == null){
+        if (connection == null) {
             return null;
         }
         try {
@@ -514,7 +518,7 @@ public class Model {
             statement.setString(4, color);
             statement.setDouble(5, purchaseWeight);
             statement.setString(6, iron_brand);
-            statement.setString(7, sex+"");
+            statement.setString(7, sex + "");
             statement.setDouble(8, purchasePrice);
             statement.setDate(9, purchaseDate);
             statement.setString(10, observations);
@@ -524,7 +528,7 @@ public class Model {
             if (resultSet.next()) {
                 id = resultSet.getInt(1); // Retorna el id generado
             }
-            if(id == -1){
+            if (id == -1) {
                 return null;
             }
             resultSet.close();
@@ -532,25 +536,25 @@ public class Model {
             connection.close();
             return new Animal(id, idOwner, number, months, color, purchaseWeight, iron_brand, sex, purchasePrice,
                     purchaseDate, observations, StateAnimal.active);
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public boolean sellAnimal(Animal animal, double income, Date date, String descriptionIncome, String saleObservation){
+    public boolean sellAnimal(Animal animal, double income, Date date, String descriptionIncome, String saleObservation) {
         Connection connection = JDBC.connection();
-        if(connection == null){
+        if (connection == null) {
             return false;
         }
         try {
             PreparedStatement statement;
-            if( saleObservation.length() > 0){
+            if (saleObservation.length() > 0) {
                 statement = connection.prepareStatement("UPDATE animals SET state = 'sold', observations = ? " +
                         "WHERE id = ?");
                 statement.setString(1, saleObservation);
                 statement.setInt(2, animal.getId());
-            }else{
+            } else {
                 statement = connection.prepareStatement("UPDATE animals SET state = 'sold' " +
                         "WHERE id = ?");
                 statement.setInt(1, animal.getId());
@@ -559,21 +563,21 @@ public class Model {
             int rowsAffected = statement.executeUpdate();
             statement.close();
             connection.close();
-            if(rowsAffected == 1){
+            if (rowsAffected == 1) {
                 Finance finance = addIncome(income, date, descriptionIncome);
                 return finance != null;
             } else {
                 return false;
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
 
-    public Animal getActiveAnimalByNumber(String number){
+    public Animal getActiveAnimalByNumber(String number) {
         Connection connection = JDBC.connection();
-        if(connection == null){
+        if (connection == null) {
             return null;
         }
         try {
@@ -595,15 +599,15 @@ public class Model {
             statement.close();
             connection.close();
             return animal;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public ObservableList<Animal> getActiveAnimals(){
+    public ObservableList<Animal> getActiveAnimals() {
         Connection connection = JDBC.connection();
-        if(connection == null){
+        if (connection == null) {
             return null;
         }
         try {
@@ -619,7 +623,7 @@ public class Model {
             while (resultSet.next()) {
                 StateAnimal stateAnimal = StateAnimal.active;
                 String state = resultSet.getString("state");
-                if(!state.equals("active")){
+                if (!state.equals("active")) {
                     continue;
                 }
                 Animal animal = new Animal(resultSet.getInt("id"), resultSet.getInt("id_owner"),
@@ -637,15 +641,15 @@ public class Model {
             statement.close();
             connection.close();
             return animals;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public ObservableList<Animal> getAllAnimals(){
+    public ObservableList<Animal> getAllAnimals() {
         Connection connection = JDBC.connection();
-        if(connection == null){
+        if (connection == null) {
             return null;
         }
         try {
@@ -660,8 +664,8 @@ public class Model {
             while (resultSet.next()) {
                 StateAnimal stateAnimal = StateAnimal.active;
                 String state = resultSet.getString("state");
-                if(!state.equals("active")){
-                    switch (state){
+                if (!state.equals("active")) {
+                    switch (state) {
                         case "death" -> stateAnimal = StateAnimal.death;
                         case "sold" -> stateAnimal = StateAnimal.sold;
                     }
@@ -681,13 +685,13 @@ public class Model {
             statement.close();
             connection.close();
             return animals;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public ObservableList<Animal> getFilterAnimals(String number, int idOwner, String sex, StateAnimal stateAnimal, String purchaseOrSale, String dateFrom, String dateTo){
+    public ObservableList<Animal> getFilterAnimals(String number, int idOwner, String sex, StateAnimal stateAnimal, String purchaseOrSale, String dateFrom, String dateTo) {
         Connection connection = JDBC.connection();
         if (connection == null) {
             return null;
@@ -698,53 +702,53 @@ public class Model {
                 "FROM animals a " +
                 "INNER JOIN owners o ON a.id_owner = o.id " +
                 "WHERE ";
-        if(number.length() > 0){
+        if (number.length() > 0) {
             query += "a.number like ? AND ";
         }
-        if(idOwner > 0){
+        if (idOwner > 0) {
             query += "a.id_owner = ? AND ";
         }
-        if(sex.length() > 0){
+        if (sex.length() > 0) {
             query += "a.sex = ? AND ";
         }
-        if(stateAnimal != null){
+        if (stateAnimal != null) {
             query += "a.state = ? AND ";
         }
-        if(purchaseOrSale.length() > 0){
-            if(purchaseOrSale.equals("purchase")){
+        if (purchaseOrSale.length() > 0) {
+            if (purchaseOrSale.equals("purchase")) {
                 query += "a.purchase_date BETWEEN ? AND ? AND ";
             } else if (purchaseOrSale.equals("sale")) {
                 query += "a.sale_date BETWEEN ? AND ? AND ";
             } else {
                 return null;
             }
-            if(dateFrom.length() < 1 || dateTo.length() < 1){
+            if (dateFrom.length() < 1 || dateTo.length() < 1) {
                 return null;
             }
         }
 
-        query = query.substring(0, query.length()-5);
+        query = query.substring(0, query.length() - 5);
 
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             int cont = 1;
-            if(number.length() > 0){
+            if (number.length() > 0) {
                 statement.setString(cont++, "%" + number + "%");
             }
-            if(idOwner > 0){
+            if (idOwner > 0) {
                 statement.setInt(cont++, idOwner);
             }
-            if(sex.length() > 0){
+            if (sex.length() > 0) {
                 statement.setString(cont++, sex);
             }
-            if(stateAnimal != null){
-                switch (stateAnimal){
+            if (stateAnimal != null) {
+                switch (stateAnimal) {
                     case active -> statement.setString(cont++, "active");
                     case sold -> statement.setString(cont++, "sold");
                     case death -> statement.setString(cont++, "death");
                 }
             }
-            if(purchaseOrSale.length() > 0){
+            if (purchaseOrSale.length() > 0) {
                 statement.setString(cont++, dateFrom);
                 statement.setString(cont, dateTo);
             }
@@ -781,9 +785,9 @@ public class Model {
         }
     }
 
-    public boolean deleteAnimal(Animal animal){
+    public boolean deleteAnimal(Animal animal) {
         Connection connection = JDBC.connection();
-        if(connection == null){
+        if (connection == null) {
             return false;
         }
         try {
@@ -795,17 +799,19 @@ public class Model {
             statement.close();
             connection.close();
             return rowsAffected == 1;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
 
-    /*  ========================================== ====== ====================================== **/
-    /** ========================================== Finances ====================================== **/
+
+    /**
+     * ========================================== Finances ======================================
+     **/
     public Finance addExpense(double expense, Date purchaseDate, String description) {
         Connection connection = JDBC.connection();
-        if(connection == null){
+        if (connection == null) {
             return null;
         }
         try {
@@ -820,14 +826,14 @@ public class Model {
             if (resultSet.next()) {
                 id = resultSet.getInt(1); // Retorna el id generado
             }
-            if(id == -1){
+            if (id == -1) {
                 return null;
             }
             resultSet.close();
             statement.close();
             connection.close();
             return new Finance(id, purchaseDate, 0, expense, description);
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
@@ -835,7 +841,7 @@ public class Model {
 
     public Finance addIncome(double income, Date purchaseDate, String description) {
         Connection connection = JDBC.connection();
-        if(connection == null){
+        if (connection == null) {
             return null;
         }
         try {
@@ -850,14 +856,40 @@ public class Model {
             if (resultSet.next()) {
                 id = resultSet.getInt(1); // Retorna el id generado
             }
-            if(id == -1){
+            if (id == -1) {
                 return null;
             }
             resultSet.close();
             statement.close();
             connection.close();
             return new Finance(id, purchaseDate, income, 0, description);
-        }catch (SQLException e){
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public ObservableList<Finance> getFinances() {
+        Connection connection = JDBC.connection();
+        if (connection == null) {
+            return null;
+        }
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM finances");
+
+            ObservableList<Finance> finances = FXCollections.observableArrayList();
+
+            while (resultSet.next()) {
+                finances.add(new Finance(resultSet.getInt("id"), resultSet.getDate("date"),
+                        resultSet.getDouble("income"), resultSet.getDouble("expense"),
+                        resultSet.getString("description")));
+            }
+            resultSet.close();
+            statement.close();
+            connection.close();
+            return finances;
+        } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }

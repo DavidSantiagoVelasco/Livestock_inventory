@@ -2,32 +2,33 @@ package controllers.components;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
-public class MenuController implements Initializable {
+public class MenuController {
 
     @FXML
     private Button btnFinance;
 
     @FXML
-    private Button btnInventory;
-
-    @FXML
-    private Button btnTasks;
-
-    @FXML
-    private Button btnVeterinaryAssistance;
-
-    @FXML
     private void openFinance() {
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/livestock_inventory/finances/finances.fxml"));
+            Parent inventoryParent = loader.load();
+            Scene inventoryScene = new Scene(inventoryParent);
+            Stage stage = new Stage();
 
+            stage.setScene(inventoryScene);
+            stage.show();
+
+            Stage currentStage = (Stage) this.btnFinance.getScene().getWindow();
+            currentStage.close();
+
+        }catch (java.io.IOException e){
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -90,10 +91,5 @@ public class MenuController implements Initializable {
         }catch (java.io.IOException e){
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-
     }
 }

@@ -20,12 +20,12 @@
                     <Font size="24.0" />
                 </font>
             </Label>
-            <Button layoutX="173.0" layoutY="124.0" mnemonicParsing="false" onAction="#showTasks" prefHeight="71.0" prefWidth="268.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Ver recordatorios" textFill="DARKSLATEGRAY">
+            <Button layoutX="173.0" layoutY="156.0" mnemonicParsing="false" onAction="#showTasks" prefHeight="71.0" prefWidth="268.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Ver recordatorios" textFill="DARKSLATEGRAY">
                 <font>
                     <Font size="18.0" />
                 </font>
             </Button>
-            <Button layoutX="173.0" fx:id="btnCreateTask" layoutY="261.0" mnemonicParsing="false" onAction="#createTask" prefHeight="71.0" prefWidth="268.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Agregar recordatorio" textFill="DARKSLATEGRAY">
+            <Button fx:id="btnCreateTask" layoutX="173.0" layoutY="303.0" mnemonicParsing="false" onAction="#createTask" prefHeight="71.0" prefWidth="268.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Agregar recordatorio" textFill="DARKSLATEGRAY">
                 <font>
                     <Font size="18.0" />
                 </font>
