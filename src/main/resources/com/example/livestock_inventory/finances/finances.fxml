@@ -5,7 +5,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
-
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.finances.FinancesController">
     <top>
         <fx:include source="../components/header.fxml" />
@@ -25,9 +24,11 @@
                     <Font size="18.0" />
                 </font>
             </Button>
-            <Button layoutX="173.0" layoutY="303.0" mnemonicParsing="false" onAction="#addFinances" prefHeight="71.0" prefWidth="268.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Agregar" textFill="DARKSLATEGRAY">
+            <Button fx:id="btnAddFinances" layoutX="173.0" layoutY="303.0" mnemonicParsing="false"
+                    onAction="#addFinances" prefHeight="71.0" prefWidth="268.0"
+                    style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Agregar" textFill="DARKSLATEGRAY">
                 <font>
-                    <Font size="18.0" />
+                    <Font size="18.0"/>
                 </font>
             </Button>
         </AnchorPane>
