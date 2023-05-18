@@ -102,10 +102,31 @@ public class ShowFinancesController implements Initializable {
 
     @FXML
     private void filter() {
+        if (cbTypeFinance.getValue() == null && (dpDateFrom.getValue() == null || dpDateTo.getValue() == null)) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("No hay filtros");
+            alert.setHeaderText("Debes agregar filtros para poder completar la acción");
+            alert.showAndWait();
+            return;
+        }
+        String financesType = cbTypeFinance.getValue() != null ? cbTypeFinance.getValue().toString() : "";
+        if (financesType.length() > 0) {
+            switch (financesType) {
+                case "Ingreso" -> financesType = "income";
+                case "Egreso" -> financesType = "expense";
+            }
+        }
+        String dateFrom = dpDateFrom.getValue() != null ? dpDateFrom.getValue().toString() : "";
+        String dateTo = dpDateTo.getValue() != null ? dpDateTo.getValue().toString() : "";
+        ObservableList<Finance> finances = model.getFilterFinances(financesType, dateFrom, dateTo);
+        tblFinances.setItems(finances);
     }
 
     @FXML
     private void getFinances() {
+        ObservableList<Finance> finances = model.getFinances();
+        tblFinances.setItems(finances);
+        clearFilters();
     }
 
     @FXML
@@ -183,5 +204,13 @@ public class ShowFinancesController implements Initializable {
                 dpDateFrom.setValue(null);
             }
         }
+    }
+
+    private void clearFilters() {
+        filters.clear();
+        hbFiltersContainer.getChildren().clear();
+        cbTypeFinance.setValue(null);
+        dpDateTo.setValue(null);
+        dpDateFrom.setValue(null);
     }
 }

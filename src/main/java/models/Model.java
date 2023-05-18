@@ -894,4 +894,51 @@ public class Model {
             return null;
         }
     }
+
+    public ObservableList<Finance> getFilterFinances(String financesType, String dateFrom, String dateTo) {
+        Connection connection = JDBC.connection();
+        if (connection == null) {
+            return null;
+        }
+        if (financesType.length() == 0 && (dateFrom.length() == 0 || dateTo.length() == 0)) {
+            return null;
+        }
+        String query = "SELECT * FROM finances WHERE ";
+        if (financesType.length() > 0) {
+            if (financesType.equalsIgnoreCase("income")) {
+                query += "income > 0 AND ";
+            } else if (financesType.equalsIgnoreCase("expense")) {
+                query += "expense > 0 AND ";
+            }
+        }
+        if (dateFrom.length() > 0 && dateTo.length() > 0) {
+            query += "date BETWEEN ? AND ? AND ";
+        }
+        query = query.substring(0, query.length() - 5);
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            if (dateFrom.length() > 0 && dateTo.length() > 0) {
+                statement.setString(1, dateFrom);
+                statement.setString(2, dateTo);
+            }
+
+            ResultSet resultSet = statement.executeQuery();
+
+            ObservableList<Finance> finances = FXCollections.observableArrayList();
+
+            while (resultSet.next()) {
+                Finance finance = new Finance(resultSet.getInt("id"), resultSet.getDate("date"),
+                        resultSet.getDouble("income"), resultSet.getDouble("expense"),
+                        resultSet.getString("description"));
+                finances.add(finance);
+            }
+            resultSet.close();
+            statement.close();
+            connection.close();
+            return finances;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
