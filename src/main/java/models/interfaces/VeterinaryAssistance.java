@@ -9,22 +9,17 @@ public class VeterinaryAssistance {
     private final Date completion_date;
     private final String name;
     private final String description;
-    private double cost;
-    private Date next_date;
+    private final double cost;
+    private final Date next_date;
 
-    public VeterinaryAssistance(int id, Date assigned_date, Date completion_date, String name, String description) {
+    public VeterinaryAssistance(int id, Date assigned_date, Date completion_date, String name, String description,
+                                double cost, Date next_date) {
         this.id = id;
         this.assigned_date = assigned_date;
         this.completion_date = completion_date;
         this.name = name;
         this.description = description;
-    }
-
-    public void setCost(double cost) {
         this.cost = cost;
-    }
-
-    public void setNext_date(Date next_date) {
         this.next_date = next_date;
     }
 

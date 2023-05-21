@@ -941,4 +941,73 @@ public class Model {
             return null;
         }
     }
+
+    /**
+     * ========================================== Veterinary Assistance ======================================
+     **/
+
+    public VeterinaryAssistance createCompletedVeterinaryAssistance(String name, Date completionDate, Double cost,
+                                                                    String description, Date nextDate){
+        Connection connection = JDBC.connection();
+        if (connection == null) {
+            return null;
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO veterinary_assistance(completion_date, " +
+                    "name, description, cost, next_date) VALUES(?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            statement.setDate(1, completionDate);
+            statement.setString(2, name);
+            statement.setString(3, description);
+            statement.setDouble(4, cost);
+            statement.setDate(5, nextDate);
+            statement.executeUpdate();
+            ResultSet resultSet = statement.getGeneratedKeys();
+            int id = -1;
+            if (resultSet.next()) {
+                id = resultSet.getInt(1);
+            }
+            if (id == -1) {
+                return null;
+            }
+            resultSet.close();
+            statement.close();
+            connection.close();
+            return new VeterinaryAssistance(id, null, completionDate, name, description, cost, nextDate);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public VeterinaryAssistance createAssignedVeterinaryAssistance(String name, Date assignedDate, Double cost,
+                                                                    String description){
+        Connection connection = JDBC.connection();
+        if (connection == null) {
+            return null;
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO veterinary_assistance(assigned_date, " +
+                    "name, description, cost) VALUES(?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            statement.setDate(1, assignedDate);
+            statement.setString(2, name);
+            statement.setString(3, description);
+            statement.setDouble(4, cost);
+            statement.executeUpdate();
+            ResultSet resultSet = statement.getGeneratedKeys();
+            int id = -1;
+            if (resultSet.next()) {
+                id = resultSet.getInt(1);
+            }
+            if (id == -1) {
+                return null;
+            }
+            resultSet.close();
+            statement.close();
+            connection.close();
+            return new VeterinaryAssistance(id, assignedDate, null, name, description, cost, null);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

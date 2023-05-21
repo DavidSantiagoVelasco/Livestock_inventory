@@ -72,7 +72,7 @@ public class MenuController {
     @FXML
     private void openVeterinaryAssistance() {
         try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/livestock_inventory/veterinaryAssistance/veterinaryAssistence.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/livestock_inventory/veterinaryAssistance/veterinaryAssistance.fxml"));
             Parent inventoryParent = loader.load();
             Scene inventoryScene = new Scene(inventoryParent);
             Stage stage = new Stage();
