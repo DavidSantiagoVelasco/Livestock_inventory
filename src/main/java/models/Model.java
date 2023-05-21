@@ -29,17 +29,17 @@ public class Model {
             ObservableList<Task> tasks = FXCollections.observableArrayList();
 
             while (resultSet.next()) {
-                StateTask stateTask = StateTask.active;
+                EventState eventState = EventState.active;
                 String state = resultSet.getString("state");
                 switch (state) {
-                    case "complete" -> stateTask = StateTask.complete;
-                    case "canceled" -> stateTask = StateTask.canceled;
+                    case "complete" -> eventState = EventState.complete;
+                    case "canceled" -> eventState = EventState.canceled;
                 }
                 Timestamp creationDateTS = resultSet.getTimestamp("creation_date");
                 Date creationDate = new Date(creationDateTS.getTime());
                 tasks.add(new Task(resultSet.getInt("id"), resultSet.getString("name"),
                         resultSet.getString("description"), creationDate,
-                        resultSet.getDate("assigned_date"), stateTask));
+                        resultSet.getDate("assigned_date"), eventState));
             }
             resultSet.close();
             statement.close();
@@ -65,17 +65,17 @@ public class Model {
             ObservableList<Task> tasks = FXCollections.observableArrayList();
 
             while (resultSet.next()) {
-                StateTask stateTask = StateTask.active;
+                EventState eventState = EventState.active;
                 String state = resultSet.getString("state");
                 switch (state) {
-                    case "complete" -> stateTask = StateTask.complete;
-                    case "canceled" -> stateTask = StateTask.canceled;
+                    case "complete" -> eventState = EventState.complete;
+                    case "canceled" -> eventState = EventState.canceled;
                 }
                 Timestamp creationDateTS = resultSet.getTimestamp("creation_date");
                 Date creationDate = new Date(creationDateTS.getTime());
                 tasks.add(new Task(resultSet.getInt("id"), resultSet.getString("name"),
                         resultSet.getString("description"), creationDate,
-                        resultSet.getDate("assigned_date"), stateTask));
+                        resultSet.getDate("assigned_date"), eventState));
             }
             resultSet.close();
             statement.close();
@@ -100,17 +100,17 @@ public class Model {
             ObservableList<Task> tasks = FXCollections.observableArrayList();
 
             while (resultSet.next()) {
-                StateTask stateTask = StateTask.active;
+                EventState eventState = EventState.active;
                 String state = resultSet.getString("state");
                 switch (state) {
-                    case "complete" -> stateTask = StateTask.complete;
-                    case "canceled" -> stateTask = StateTask.canceled;
+                    case "complete" -> eventState = EventState.complete;
+                    case "canceled" -> eventState = EventState.canceled;
                 }
                 Timestamp creationDateTS = resultSet.getTimestamp("creation_date");
                 Date creationDate = new Date(creationDateTS.getTime());
                 tasks.add(new Task(resultSet.getInt("id"), resultSet.getString("name"),
                         resultSet.getString("description"), creationDate,
-                        resultSet.getDate("assigned_date"), stateTask));
+                        resultSet.getDate("assigned_date"), eventState));
             }
             resultSet.close();
             statement.close();
@@ -122,13 +122,13 @@ public class Model {
         }
     }
 
-    public ObservableList<Task> getFilterTasks(StateTask stateTask, String creationOrAssigned, String dateFrom, String dateTo) {
+    public ObservableList<Task> getFilterTasks(EventState eventState, String creationOrAssigned, String dateFrom, String dateTo) {
         Connection connection = JDBC.connection();
         if (connection == null) {
             return null;
         }
         String query = "SELECT * FROM tasks WHERE ";
-        if (stateTask != null) {
+        if (eventState != null) {
             query += "state = ? AND ";
         }
         if (creationOrAssigned.length() > 0) {
@@ -149,8 +149,8 @@ public class Model {
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             int cont = 1;
-            if (stateTask != null) {
-                switch (stateTask) {
+            if (eventState != null) {
+                switch (eventState) {
                     case active -> statement.setString(cont++, "active");
                     case canceled -> statement.setString(cont++, "canceled");
                     case complete -> statement.setString(cont++, "complete");
@@ -166,15 +166,15 @@ public class Model {
             ObservableList<Task> tasks = FXCollections.observableArrayList();
 
             while (resultSet.next()) {
-                StateTask stateTaskResultSet = StateTask.active;
+                EventState eventStateResultSet = EventState.active;
                 String state = resultSet.getString("state");
                 switch (state) {
-                    case "complete" -> stateTaskResultSet = StateTask.complete;
-                    case "canceled" -> stateTaskResultSet = StateTask.canceled;
+                    case "complete" -> eventStateResultSet = EventState.complete;
+                    case "canceled" -> eventStateResultSet = EventState.canceled;
                 }
                 Task task = new Task(resultSet.getInt("id"), resultSet.getString("name"),
                         resultSet.getString("description"), resultSet.getDate("creation_date"),
-                        resultSet.getDate("assigned_date"), stateTaskResultSet);
+                        resultSet.getDate("assigned_date"), eventStateResultSet);
                 tasks.add(task);
             }
             resultSet.close();
@@ -252,7 +252,7 @@ public class Model {
             resultSet.close();
             statement.close();
             connection.close();
-            return new Task(id, name, description, new Date(new java.util.Date().getTime()), assignedDate, StateTask.active);
+            return new Task(id, name, description, new Date(new java.util.Date().getTime()), assignedDate, EventState.active);
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
@@ -479,7 +479,7 @@ public class Model {
             ObservableList<Animal> animals = FXCollections.observableArrayList();
 
             while (resultSet.next()) {
-                StateAnimal stateAnimal = StateAnimal.active;
+                AnimalState animalState = AnimalState.active;
                 String state = resultSet.getString("state");
                 if (!state.equals("active")) {
                     continue;
@@ -489,7 +489,7 @@ public class Model {
                         resultSet.getString("color"), resultSet.getDouble("purchase_weight"),
                         resultSet.getString("iron_brand"), resultSet.getString("sex").charAt(0),
                         resultSet.getDouble("purchase_price"), resultSet.getDate("purchase_date"),
-                        resultSet.getString("observations"), stateAnimal));
+                        resultSet.getString("observations"), animalState));
             }
             resultSet.close();
             statement.close();
@@ -535,7 +535,7 @@ public class Model {
             statement.close();
             connection.close();
             return new Animal(id, idOwner, number, months, color, purchaseWeight, iron_brand, sex, purchasePrice,
-                    purchaseDate, observations, StateAnimal.active);
+                    purchaseDate, observations, AnimalState.active);
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
@@ -593,7 +593,7 @@ public class Model {
                         resultSet.getString("color"), resultSet.getDouble("purchase_weight"),
                         resultSet.getString("iron_brand"), resultSet.getString("sex").charAt(0),
                         resultSet.getDouble("purchase_price"), resultSet.getDate("purchase_date"),
-                        resultSet.getString("observations"), StateAnimal.active);
+                        resultSet.getString("observations"), AnimalState.active);
             }
             resultSet.close();
             statement.close();
@@ -621,7 +621,7 @@ public class Model {
             ObservableList<Animal> animals = FXCollections.observableArrayList();
 
             while (resultSet.next()) {
-                StateAnimal stateAnimal = StateAnimal.active;
+                AnimalState animalState = AnimalState.active;
                 String state = resultSet.getString("state");
                 if (!state.equals("active")) {
                     continue;
@@ -631,7 +631,7 @@ public class Model {
                         resultSet.getString("color"), resultSet.getDouble("purchase_weight"),
                         resultSet.getString("iron_brand"), resultSet.getString("sex").charAt(0),
                         resultSet.getDouble("purchase_price"), resultSet.getDate("purchase_date"),
-                        resultSet.getString("observations"), stateAnimal);
+                        resultSet.getString("observations"), animalState);
                 animal.setOwnerInformation(new Owner(resultSet.getInt("id_owner"),
                         resultSet.getString("name"), resultSet.getDouble("percentage"),
                         resultSet.getString("iron_brand"), resultSet.getBoolean("active")));
@@ -662,12 +662,12 @@ public class Model {
             ObservableList<Animal> animals = FXCollections.observableArrayList();
 
             while (resultSet.next()) {
-                StateAnimal stateAnimal = StateAnimal.active;
+                AnimalState animalState = AnimalState.active;
                 String state = resultSet.getString("state");
                 if (!state.equals("active")) {
                     switch (state) {
-                        case "death" -> stateAnimal = StateAnimal.death;
-                        case "sold" -> stateAnimal = StateAnimal.sold;
+                        case "death" -> animalState = AnimalState.death;
+                        case "sold" -> animalState = AnimalState.sold;
                     }
                 }
                 Animal animal = new Animal(resultSet.getInt("id"), resultSet.getInt("id_owner"),
@@ -675,7 +675,7 @@ public class Model {
                         resultSet.getString("color"), resultSet.getDouble("purchase_weight"),
                         resultSet.getString("iron_brand"), resultSet.getString("sex").charAt(0),
                         resultSet.getDouble("purchase_price"), resultSet.getDate("purchase_date"),
-                        resultSet.getString("observations"), stateAnimal);
+                        resultSet.getString("observations"), animalState);
                 animal.setOwnerInformation(new Owner(resultSet.getInt("id_owner"),
                         resultSet.getString("name"), resultSet.getDouble("percentage"),
                         resultSet.getString("iron_brand"), resultSet.getBoolean("active")));
@@ -691,7 +691,7 @@ public class Model {
         }
     }
 
-    public ObservableList<Animal> getFilterAnimals(String number, int idOwner, String sex, StateAnimal stateAnimal, String purchaseOrSale, String dateFrom, String dateTo) {
+    public ObservableList<Animal> getFilterAnimals(String number, int idOwner, String sex, AnimalState animalState, String purchaseOrSale, String dateFrom, String dateTo) {
         Connection connection = JDBC.connection();
         if (connection == null) {
             return null;
@@ -711,7 +711,7 @@ public class Model {
         if (sex.length() > 0) {
             query += "a.sex = ? AND ";
         }
-        if (stateAnimal != null) {
+        if (animalState != null) {
             query += "a.state = ? AND ";
         }
         if (purchaseOrSale.length() > 0) {
@@ -741,8 +741,8 @@ public class Model {
             if (sex.length() > 0) {
                 statement.setString(cont++, sex);
             }
-            if (stateAnimal != null) {
-                switch (stateAnimal) {
+            if (animalState != null) {
+                switch (animalState) {
                     case active -> statement.setString(cont++, "active");
                     case sold -> statement.setString(cont++, "sold");
                     case death -> statement.setString(cont++, "death");
@@ -758,18 +758,18 @@ public class Model {
             ObservableList<Animal> animals = FXCollections.observableArrayList();
 
             while (resultSet.next()) {
-                StateAnimal stateAnimalResultSet = StateAnimal.active;
+                AnimalState animalStateResultSet = AnimalState.active;
                 String state = resultSet.getString("state");
                 switch (state) {
-                    case "death" -> stateAnimalResultSet = StateAnimal.death;
-                    case "sold" -> stateAnimalResultSet = StateAnimal.sold;
+                    case "death" -> animalStateResultSet = AnimalState.death;
+                    case "sold" -> animalStateResultSet = AnimalState.sold;
                 }
                 Animal animal = new Animal(resultSet.getInt("id"), resultSet.getInt("id_owner"),
                         resultSet.getString("number"), resultSet.getInt("months"),
                         resultSet.getString("color"), resultSet.getDouble("purchase_weight"),
                         resultSet.getString("iron_brand"), resultSet.getString("sex").charAt(0),
                         resultSet.getDouble("purchase_price"), resultSet.getDate("purchase_date"),
-                        resultSet.getString("observations"), stateAnimalResultSet);
+                        resultSet.getString("observations"), animalStateResultSet);
                 animal.setOwnerInformation(new Owner(resultSet.getInt("id_owner"),
                         resultSet.getString("name"), resultSet.getDouble("percentage"),
                         resultSet.getString("iron_brand"), resultSet.getBoolean("active")));
@@ -954,12 +954,13 @@ public class Model {
         }
         try {
             PreparedStatement statement = connection.prepareStatement("INSERT INTO veterinary_assistance(completion_date, " +
-                    "name, description, cost, next_date) VALUES(?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+                    "name, description, cost, next_date, state) VALUES(?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             statement.setDate(1, completionDate);
             statement.setString(2, name);
             statement.setString(3, description);
             statement.setDouble(4, cost);
             statement.setDate(5, nextDate);
+            statement.setString(6, "complete");
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             int id = -1;
@@ -972,7 +973,7 @@ public class Model {
             resultSet.close();
             statement.close();
             connection.close();
-            return new VeterinaryAssistance(id, null, completionDate, name, description, cost, nextDate);
+            return new VeterinaryAssistance(id, null, completionDate, name, description, cost, nextDate, EventState.complete);
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
@@ -986,10 +987,11 @@ public class Model {
         }
         try {
             PreparedStatement statement = connection.prepareStatement("INSERT INTO veterinary_assistance(assigned_date, " +
-                    "name, description) VALUES(?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+                    "name, description, state) VALUES(?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             statement.setDate(1, assignedDate);
             statement.setString(2, name);
             statement.setString(3, description);
+            statement.setString(6, "active");
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             int id = -1;
@@ -1002,7 +1004,7 @@ public class Model {
             resultSet.close();
             statement.close();
             connection.close();
-            return new VeterinaryAssistance(id, assignedDate, null, name, description, 0, null);
+            return new VeterinaryAssistance(id, assignedDate, null, name, description, 0, null, EventState.active);
         } catch (SQLException e) {
             e.printStackTrace();
             return null;

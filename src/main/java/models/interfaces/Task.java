@@ -9,9 +9,9 @@ public class Task {
     private final String description;
     private final Date creationDate;
     private Date assignedDate;
-    private StateTask state;
+    private EventState state;
 
-    public Task(int id, String name, String description, Date creationDate, Date assignedDate, StateTask state) {
+    public Task(int id, String name, String description, Date creationDate, Date assignedDate, EventState state) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -40,11 +40,11 @@ public class Task {
         return assignedDate;
     }
 
-    public StateTask getState() {
+    public EventState getState() {
         return state;
     }
 
-    public void setState(StateTask state) {
+    public void setState(EventState state) {
         this.state = state;
     }
 

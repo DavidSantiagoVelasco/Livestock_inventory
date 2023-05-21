@@ -1,6 +1,6 @@
 package models.interfaces;
 
-public enum StateAnimal {
+public enum AnimalState {
     active,
     sold,
     death;
@@ -12,7 +12,6 @@ public enum StateAnimal {
             case active -> "Activo";
             case sold -> "Vendido";
             case death -> "Muerto";
-            default -> "";
         };
     }
 }

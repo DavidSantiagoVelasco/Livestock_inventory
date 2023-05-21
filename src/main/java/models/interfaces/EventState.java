@@ -1,6 +1,6 @@
 package models.interfaces;
 
-public enum StateTask {
+public enum EventState {
     active,
     complete,
     canceled;

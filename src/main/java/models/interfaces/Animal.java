@@ -6,23 +6,23 @@ public class Animal {
 
     private final int id;
     private int idOwner;
-    private String number;
+    private final String number;
     private int months;
-    private String color;
-    private double purchaseWeight;
+    private final String color;
+    private final double purchaseWeight;
     private String ironBrand;
-    private char sex;
-    private double purchasePrice;
-    private Date purchaseDate;
+    private final char sex;
+    private final double purchasePrice;
+    private final Date purchaseDate;
     private String observations;
     private double saleWeight;
     private double salePrice;
     private Date saleDate;
-    private StateAnimal state;
+    private AnimalState state;
 
     private Owner ownerInformation;
 
-    public Animal(int id, int idOwner, String number, int months, String color, double purchaseWeight, String ironBrand, char sex, double purchasePrice, Date purchaseDate, String observations, StateAnimal state) {
+    public Animal(int id, int idOwner, String number, int months, String color, double purchaseWeight, String ironBrand, char sex, double purchasePrice, Date purchaseDate, String observations, AnimalState state) {
         this.id = id;
         this.idOwner = idOwner;
         this.number = number;
@@ -93,7 +93,7 @@ public class Animal {
         return saleDate;
     }
 
-    public StateAnimal getState() {
+    public AnimalState getState() {
         return state;
     }
 

@@ -23,7 +23,7 @@ import models.Model;
 import models.interfaces.Animal;
 import models.interfaces.Owner;
 import models.interfaces.FilterCard;
-import models.interfaces.StateAnimal;
+import models.interfaces.AnimalState;
 
 import java.io.IOException;
 import java.net.URL;
@@ -158,7 +158,7 @@ public class ShowInventoryController implements Initializable {
 
         model.setOwnersInformation(cbOwnerFilter);
         cbSexFilter.setItems(FXCollections.observableArrayList("Macho", "Hembra"));
-        cbStateFilter.setItems(FXCollections.observableArrayList(StateAnimal.active.toString(), StateAnimal.sold.toString(), StateAnimal.death.toString()));
+        cbStateFilter.setItems(FXCollections.observableArrayList(AnimalState.active.toString(), AnimalState.sold.toString(), AnimalState.death.toString()));
 
         setTblAnimals();
     }
@@ -400,12 +400,12 @@ public class ShowInventoryController implements Initializable {
         int idOwner = cbOwnerFilter.getValue() != null ? model.getOwnerIdFromOwnerInformation(cbOwnerFilter.getValue().toString()) : -1;
         String sex = cbSexFilter.getValue() != null ? cbSexFilter.getValue().toString().charAt(0)+"" : "";
         String stateString = cbStateFilter.getValue() != null ? cbStateFilter.getValue().toString() : "";
-        StateAnimal stateAnimal = null;
+        AnimalState animalState = null;
         if(stateString.length() > 0){
             switch (stateString) {
-                case "Activo" -> stateAnimal = StateAnimal.active;
-                case "Vendido" -> stateAnimal = StateAnimal.sold;
-                case "Muerto" -> stateAnimal = StateAnimal.death;
+                case "Activo" -> animalState = AnimalState.active;
+                case "Vendido" -> animalState = AnimalState.sold;
+                case "Muerto" -> animalState = AnimalState.death;
             }
         }
         String purchaseOrSale = "";
@@ -416,7 +416,7 @@ public class ShowInventoryController implements Initializable {
         }
         String dateFrom = dpDateFrom.getValue() != null ? dpDateFrom.getValue().toString() : "";
         String dateTo = dpDateTo.getValue() != null ? dpDateTo.getValue().toString() : "";
-        ObservableList<Animal> animals = model.getFilterAnimals(txtNumberFilter.getText(), idOwner, sex, stateAnimal, purchaseOrSale, dateFrom, dateTo);
+        ObservableList<Animal> animals = model.getFilterAnimals(txtNumberFilter.getText(), idOwner, sex, animalState, purchaseOrSale, dateFrom, dateTo);
         tblAnimals.setItems(animals);
     }
 
@@ -461,13 +461,13 @@ public class ShowInventoryController implements Initializable {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK){
             Animal animal = tblAnimals.getSelectionModel().getSelectedItem();
-            if(animal.getState().toString().equals(StateAnimal.death.toString())){
+            if(animal.getState().toString().equals(AnimalState.death.toString())){
                 Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
                 alertError.setTitle("Error");
                 alertError.setHeaderText("El animal ya se encuentra eliminado");
                 alertError.showAndWait();
                 return;
-            } else if(animal.getState().toString().equals(StateAnimal.sold.toString())){
+            } else if(animal.getState().toString().equals(AnimalState.sold.toString())){
                 Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
                 alertError.setTitle("Error");
                 alertError.setHeaderText("El animal se encuentra vendido");
@@ -500,13 +500,13 @@ public class ShowInventoryController implements Initializable {
             return;
         }
         Animal animal = tblAnimals.getSelectionModel().getSelectedItem();
-        if(animal.getState().toString().equals(StateAnimal.death.toString())){
+        if(animal.getState().toString().equals(AnimalState.death.toString())){
             Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
             alertError.setTitle("Error");
             alertError.setHeaderText("El animal ya se encuentra eliminado");
             alertError.showAndWait();
             return;
-        } else if(animal.getState().toString().equals(StateAnimal.sold.toString())){
+        } else if(animal.getState().toString().equals(AnimalState.sold.toString())){
             Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
             alertError.setTitle("Error");
             alertError.setHeaderText("El animal se encuentra vendido");

@@ -92,7 +92,7 @@ public class ShowTasksController implements Initializable {
             }
         });
 
-        cbStateFilter.setItems(FXCollections.observableArrayList(StateTask.active.toString(), StateTask.complete.toString(), StateTask.canceled.toString()));
+        cbStateFilter.setItems(FXCollections.observableArrayList(EventState.active.toString(), EventState.complete.toString(), EventState.canceled.toString()));
         setTblTasks();
     }
 
@@ -174,12 +174,12 @@ public class ShowTasksController implements Initializable {
             return;
         }
         String stateString = cbStateFilter.getValue() != null ? cbStateFilter.getValue().toString() : "";
-        StateTask stateTask = null;
+        EventState eventState = null;
         if(stateString.length() > 0){
             switch (stateString) {
-                case "Activo" -> stateTask = StateTask.active;
-                case "Completado" -> stateTask = StateTask.complete;
-                case "Cancelado" -> stateTask = StateTask.canceled;
+                case "Activo" -> eventState = EventState.active;
+                case "Completado" -> eventState = EventState.complete;
+                case "Cancelado" -> eventState = EventState.canceled;
             }
         }
         String creationOrAssigned = "";
@@ -190,7 +190,7 @@ public class ShowTasksController implements Initializable {
         }
         String dateFrom = dpDateFrom.getValue() != null ? dpDateFrom.getValue().toString() : "";
         String dateTo = dpDateTo.getValue() != null ? dpDateTo.getValue().toString() : "";
-        ObservableList<Task> tasks = model.getFilterTasks(stateTask, creationOrAssigned, dateFrom, dateTo);
+        ObservableList<Task> tasks = model.getFilterTasks(eventState, creationOrAssigned, dateFrom, dateTo);
         tblTasks.setItems(tasks);
     }
 
@@ -298,13 +298,13 @@ public class ShowTasksController implements Initializable {
             return;
         }
         Task task = tblTasks.getSelectionModel().getSelectedItem();
-        if(task.getState().toString().equals(StateTask.complete.toString())){
+        if(task.getState().toString().equals(EventState.complete.toString())){
             Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
             alertError.setTitle("Error");
             alertError.setHeaderText("El recordatorio ya se encuentra completado");
             alertError.showAndWait();
             return;
-        } else if(task.getState().toString().equals(StateTask.canceled.toString())){
+        } else if(task.getState().toString().equals(EventState.canceled.toString())){
             Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
             alertError.setTitle("Error");
             alertError.setHeaderText("El recordatorio se encuentra cancelado");
@@ -343,13 +343,13 @@ public class ShowTasksController implements Initializable {
             return;
         }
         Task task = tblTasks.getSelectionModel().getSelectedItem();
-        if(task.getState().toString().equals(StateTask.complete.toString())){
+        if(task.getState().toString().equals(EventState.complete.toString())){
             Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
             alertError.setTitle("Error");
             alertError.setHeaderText("El recordatorio se encuentra completado");
             alertError.showAndWait();
             return;
-        } else if(task.getState().toString().equals(StateTask.canceled.toString())){
+        } else if(task.getState().toString().equals(EventState.canceled.toString())){
             Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
             alertError.setTitle("Error");
             alertError.setHeaderText("El recordatorio ya se encuentra cancelado");

@@ -5,34 +5,37 @@ import java.sql.Date;
 public class VeterinaryAssistance {
 
     private final int id;
-    private final Date assigned_date;
-    private final Date completion_date;
+    private final Date assignedDate;
+    private final Date completionDate;
     private final String name;
     private final String description;
     private final double cost;
-    private final Date next_date;
+    private final Date nextDate;
 
-    public VeterinaryAssistance(int id, Date assigned_date, Date completion_date, String name, String description,
-                                double cost, Date next_date) {
+    private final EventState state;
+
+    public VeterinaryAssistance(int id, Date assignedDate, Date completionDate, String name, String description,
+                                double cost, Date nextDate, EventState state) {
         this.id = id;
-        this.assigned_date = assigned_date;
-        this.completion_date = completion_date;
+        this.assignedDate = assignedDate;
+        this.completionDate = completionDate;
         this.name = name;
         this.description = description;
         this.cost = cost;
-        this.next_date = next_date;
+        this.nextDate = nextDate;
+        this.state = state;
     }
 
     public int getId() {
         return id;
     }
 
-    public Date getAssigned_date() {
-        return assigned_date;
+    public Date getAssignedDate() {
+        return assignedDate;
     }
 
-    public Date getCompletion_date() {
-        return completion_date;
+    public Date getCompletionDate() {
+        return completionDate;
     }
 
     public String getName() {
@@ -47,7 +50,11 @@ public class VeterinaryAssistance {
         return cost;
     }
 
-    public Date getNext_date() {
-        return next_date;
+    public Date getNextDate() {
+        return nextDate;
+    }
+
+    public EventState getState() {
+        return state;
     }
 }
