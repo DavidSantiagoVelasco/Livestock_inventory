@@ -10,6 +10,7 @@ import models.interfaces.VeterinaryAssistance;
 import java.net.URL;
 import java.sql.Date;
 import java.time.ZoneId;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class CreateCompletedVeterinaryAssistanceController implements Initializable {
@@ -58,52 +59,59 @@ public class CreateCompletedVeterinaryAssistanceController implements Initializa
             alert.showAndWait();
             return;
         }
-        VeterinaryAssistance veterinaryAssistance = model.createCompletedVeterinaryAssistance(txtName.getText(),
-                new Date(dpCompletedDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()),
-                Double.parseDouble(txtCost.getText()), txtDescription.getText(),
-                new Date(dpAssignedDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()));
-        if (veterinaryAssistance == null) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error");
-            alert.setTitle("Error");
-            alert.setHeaderText("No se pudo crear la asistencia veterinaria");
-            alert.showAndWait();
-            return;
-        }
-        if (txtCost.getLength() > 0 && !txtCost.getText().equals("0")) {
-            model.addExpense(Double.parseDouble(txtCost.getText()),
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setTitle("Confirmación");
+        confirmation.setHeaderText("¿Está seguro que desea crear la asistencia veterinaria?");
+
+        Optional<ButtonType> result = confirmation.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            VeterinaryAssistance veterinaryAssistance = model.createCompletedVeterinaryAssistance(txtName.getText(),
                     new Date(dpCompletedDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()),
-                    "Asistencia veterinaria: " + txtDescription.getText());
-        }
-        if (cbRepeatAssistance.isSelected()) {
-            VeterinaryAssistance repeatVeterinaryAssistance = model.createAssignedVeterinaryAssistance(txtName.getText(),
-                    new Date(dpAssignedDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()),
-                    Double.parseDouble(txtCost.getText()), "Repetir: " + txtDescription.getText());
-            Task task;
-            String taskString = "";
-            if (cbCreateTask.isSelected()) {
-                task = model.createTask(txtName.getText(), "Asistencia veterinaria: " + txtDescription.getText(),
-                        new Date(dpAssignedDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()));
-                if (task == null) {
-                    taskString = "\nNo se pudo crear el recordatorio";
-                } else {
-                    taskString = "\nÉxito creando el recordatorio";
+                    Double.parseDouble(txtCost.getText()), txtDescription.getText(),
+                    new Date(dpAssignedDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()));
+            if (veterinaryAssistance == null) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Error");
+                alert.setTitle("Error");
+                alert.setHeaderText("No se pudo crear la asistencia veterinaria");
+                alert.showAndWait();
+                return;
+            }
+            if (txtCost.getLength() > 0 && !txtCost.getText().equals("0")) {
+                model.addExpense(Double.parseDouble(txtCost.getText()),
+                        new Date(dpCompletedDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()),
+                        "Asistencia veterinaria: " + txtDescription.getText());
+            }
+            if (cbRepeatAssistance.isSelected()) {
+                VeterinaryAssistance repeatVeterinaryAssistance = model.createAssignedVeterinaryAssistance(txtName.getText(),
+                        new Date(dpAssignedDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()),
+                        "Repetir: " + txtDescription.getText());
+                Task task;
+                String taskString = "";
+                if (cbCreateTask.isSelected()) {
+                    task = model.createTask(txtName.getText(), "Asistencia veterinaria: " + txtDescription.getText(),
+                            new Date(dpAssignedDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()));
+                    if (task == null) {
+                        taskString = "\nNo se pudo crear el recordatorio";
+                    } else {
+                        taskString = "\nÉxito creando el recordatorio";
+                    }
                 }
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setHeaderText("Éxito creando la asistencia veterinaria");
+                if (repeatVeterinaryAssistance == null) {
+                    alert.setContentText("No se pudo crear la próxima asistencia veterinaria" + taskString);
+                } else {
+                    alert.setContentText("Éxito creando la próxima asistencia veterinaria" + taskString);
+                }
+                alert.showAndWait();
+                restartValues();
+                return;
             }
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Éxito");
             alert.setHeaderText("Éxito creando la asistencia veterinaria");
-            if (repeatVeterinaryAssistance == null) {
-                alert.setContentText("No se pudo crear la próxima asistencia veterinaria" + taskString);
-            } else {
-                alert.setContentText("Éxito creando la próxima asistencia veterinaria" + taskString);
-            }
             alert.showAndWait();
             restartValues();
-            return;
         }
-        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Éxito");
-        alert.setHeaderText("Éxito creando la asistencia veterinaria");
-        alert.showAndWait();
-        restartValues();
     }
 
     @FXML

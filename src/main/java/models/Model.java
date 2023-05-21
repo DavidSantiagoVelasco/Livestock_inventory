@@ -979,19 +979,17 @@ public class Model {
         }
     }
 
-    public VeterinaryAssistance createAssignedVeterinaryAssistance(String name, Date assignedDate, Double cost,
-                                                                    String description){
+    public VeterinaryAssistance createAssignedVeterinaryAssistance(String name, Date assignedDate, String description){
         Connection connection = JDBC.connection();
         if (connection == null) {
             return null;
         }
         try {
             PreparedStatement statement = connection.prepareStatement("INSERT INTO veterinary_assistance(assigned_date, " +
-                    "name, description, cost) VALUES(?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+                    "name, description) VALUES(?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             statement.setDate(1, assignedDate);
             statement.setString(2, name);
             statement.setString(3, description);
-            statement.setDouble(4, cost);
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             int id = -1;
@@ -1004,7 +1002,7 @@ public class Model {
             resultSet.close();
             statement.close();
             connection.close();
-            return new VeterinaryAssistance(id, assignedDate, null, name, description, cost, null);
+            return new VeterinaryAssistance(id, assignedDate, null, name, description, 0, null);
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
