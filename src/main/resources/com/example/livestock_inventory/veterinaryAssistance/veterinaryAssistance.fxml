@@ -25,7 +25,7 @@
                     <Font size="18.0" />
                 </font>
             </Button>
-            <Button fx:id="btnAddAssistance" layoutX="41.0" layoutY="303.0" mnemonicParsing="false" onAction="#addCompletedAssistance" prefHeight="71.0" prefWidth="245.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Agregar asistencia completada" textFill="DARKSLATEGRAY">
+            <Button layoutX="41.0" layoutY="303.0" mnemonicParsing="false" onAction="#addCompletedAssistance" prefHeight="71.0" prefWidth="245.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Agregar asistencia completada" textFill="DARKSLATEGRAY">
                 <font>
                     <Font size="14.0" />
                 </font>

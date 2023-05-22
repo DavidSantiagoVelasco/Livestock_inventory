@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane minWidth="-Infinity" prefHeight="653.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.veterinaryAssistance.ShowVeterinaryAssistanceController">
+<ComboBox fx:id="cbStateFilter" layoutX="197.0" layoutY="43.0" onAction="#selectStateFilter" prefWidth="150.0" />
+<DatePicker fx:id="dpDateFrom" layoutX="405.0" layoutY="43.0" prefHeight="25.0" prefWidth="150.0" />
+<DatePicker fx:id="dpDateTo" layoutX="613.0" layoutY="43.0" prefHeight="25.0" prefWidth="150.0" />
+<RadioButton fx:id="rbAssignedDateFilter" layoutX="388.0" layoutY="98.0" mnemonicParsing="false" onAction="#selectDateFilter" text="Fecha asignada" />
+<RadioButton fx:id="rbCompletedDateFilter" layoutX="524.5" layoutY="98.0" mnemonicParsing="false" onAction="#selectDateFilter" text="Fecha completada" />
+   <RadioButton fx:id="rbNextDateFilter" layoutX="676.0" layoutY="98.0" mnemonicParsing="false" onAction="#selectDateFilter" text="Fecha siguiente" />
+<Button layoutX="197.0" layoutY="153.0" mnemonicParsing="false" onAction="#getAllVeterinaryAssistance" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Ver todos" textFill="DARKSLATEGRAY" />
+<Button layoutX="405.0" layoutY="153.0" mnemonicParsing="false" onAction="#filter" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Filtrar" textFill="DARKSLATEGRAY" />
+<Button layoutX="613.0" layoutY="153.0" mnemonicParsing="false" onAction="#getVeterinaryAssistance" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Limpiar filtros" textFill="DARKSLATEGRAY" />
+<Label layoutX="197.0" layoutY="26.0" text="Filtrar por estado" />
+<Label layoutX="405.0" layoutY="26.0" text="Desde" />
+<Label layoutX="613.0" layoutY="26.0" text="Hasta" />
+   <Button fx:id="btnCompleteVeterinaryAssistance" layoutX="305.0" layoutY="206.0" mnemonicParsing="false" onAction="#completeVeterinaryAssistance" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: #05B2DC; -fx-cursor: hand;" text="Completar" textFill="DARKSLATEGRAY" visible="false" />
+   <Button fx:id="btnCancelVeterinaryAssistance" layoutX="505.0" layoutY="206.0" mnemonicParsing="false" onAction="#cancelVeterinaryAssistance" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: #ff4242; -fx-cursor: hand;" text="Cancelar" textFill="DARKSLATEGRAY" visible="false" />
+<AnchorPane layoutY="259.0" minWidth="-Infinity" prefHeight="62.0" prefWidth="960.0" style="-fx-background-color: #2f4f4f;">
+    <HBox fx:id="hbFiltersContainer" prefHeight="62.0" prefWidth="960.0">
+    </HBox>
+</AnchorPane>
+<TableView fx:id="tblVeterinaryAssistance" layoutY="321.0" maxWidth="1.7976931348623157E308" prefHeight="332.0" prefWidth="960.0">
+    <columns>
+        <TableColumn fx:id="colAssignedDate" editable="false" prefWidth="140.0" resizable="false" text="Fecha asignada" />
+        <TableColumn fx:id="colCompletionDate" editable="false" prefWidth="140.0" resizable="false" text="Fecha completada" />
+        <TableColumn fx:id="colName" editable="false" minWidth="0.0" prefWidth="100.0" resizable="false" text="Nombre" />
+        <TableColumn fx:id="colDescription" editable="false" prefWidth="260.0" resizable="false" text="Descripción" />
+        <TableColumn fx:id="colCost" editable="false" prefWidth="90.0" resizable="false" text="Costo" />
+         <TableColumn fx:id="colNextDate" editable="false" prefWidth="140.0" resizable="false" text="Siguiente fecha" />
+         <TableColumn fx:id="colState" editable="false" prefWidth="90.0" resizable="false" text="Estado" />
+    </columns>
+</TableView>
+</AnchorPane>

@@ -1010,4 +1010,40 @@ public class Model {
             return null;
         }
     }
+
+    public ObservableList<VeterinaryAssistance> getActiveVeterinaryAssistance() {
+
+        Connection connection = JDBC.connection();
+        if (connection == null) {
+            return null;
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM veterinary_assistance WHERE " +
+                    "state = 'active'");
+            ResultSet resultSet = statement.executeQuery();
+
+            ObservableList<VeterinaryAssistance> veterinaryAssistance = FXCollections.observableArrayList();
+
+            while (resultSet.next()) {
+                EventState eventState = EventState.active;
+                String state = resultSet.getString("state");
+                switch (state) {
+                    case "complete" -> eventState = EventState.complete;
+                    case "canceled" -> eventState = EventState.canceled;
+                }
+                veterinaryAssistance.add(new VeterinaryAssistance(resultSet.getInt("id"),
+                        resultSet.getDate("assigned_date"), resultSet.getDate("completion_date"),
+                        resultSet.getString("name"), resultSet.getString("description"),
+                        resultSet.getDouble("cost"), resultSet.getDate("next_date"),
+                        eventState));
+            }
+            resultSet.close();
+            statement.close();
+            connection.close();
+            return veterinaryAssistance;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
