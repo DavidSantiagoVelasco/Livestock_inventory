@@ -111,6 +111,21 @@ public class ShowVeterinaryAssistanceController implements Initializable {
 
     @FXML
     private void selectStateFilter() {
+        if(cbStateFilter.getValue() == null){
+            return;
+        }
+        FilterCard currentFilterCard = null;
+        for (FilterCard filterCard: filters
+        ) {
+            if(filterCard.getType().equals("FilterState")){
+                hbFiltersContainer.getChildren().remove(filterCard.getCard());
+                currentFilterCard = filterCard;
+            }
+        }
+        if(currentFilterCard != null){
+            filters.remove(currentFilterCard);
+        }
+        addFilter("FilterState", "Filtrar por estado", cbStateFilter.getValue().toString());
     }
 
     @FXML
@@ -162,14 +177,48 @@ public class ShowVeterinaryAssistanceController implements Initializable {
 
     @FXML
     private void filter() {
+        if(cbStateFilter.getValue() == null && (!rbAssignedDateFilter.isSelected() && !rbCompletedDateFilter.isSelected() && !rbNextDateFilter.isSelected())){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("No hay filtros");
+            alert.setHeaderText("Debes agregar filtros para poder completar la acción");
+            alert.showAndWait();
+            return;
+        }
+        String stateString = cbStateFilter.getValue() != null ? cbStateFilter.getValue().toString() : "";
+        EventState eventState = null;
+        if(stateString.length() > 0){
+            switch (stateString) {
+                case "Activo" -> eventState = EventState.active;
+                case "Completado" -> eventState = EventState.complete;
+                case "Cancelado" -> eventState = EventState.canceled;
+            }
+        }
+        String dateFilterType = "";
+        if (rbCompletedDateFilter.isSelected()) {
+            dateFilterType = "completion";
+        } else if (rbAssignedDateFilter.isSelected()) {
+            dateFilterType = "assigned";
+        } else if (rbNextDateFilter.isSelected()){
+            dateFilterType = "next";
+        }
+        String dateFrom = dpDateFrom.getValue() != null ? dpDateFrom.getValue().toString() : "";
+        String dateTo = dpDateTo.getValue() != null ? dpDateTo.getValue().toString() : "";
+        ObservableList<VeterinaryAssistance> veterinaryAssistance = model.getFilterVeterinaryAssistance(eventState, dateFilterType, dateFrom, dateTo);
+        tblVeterinaryAssistance.setItems(veterinaryAssistance);
     }
 
     @FXML
     private void getAllVeterinaryAssistance() {
+        ObservableList<VeterinaryAssistance> veterinaryAssistance = model.getAllVeterinaryAssistance();
+        tblVeterinaryAssistance.setItems(veterinaryAssistance);
+        clearFilters();
     }
 
     @FXML
     private void getVeterinaryAssistance() {
+        ObservableList<VeterinaryAssistance> veterinaryAssistance = model.getActiveVeterinaryAssistance();
+        tblVeterinaryAssistance.setItems(veterinaryAssistance);
+        clearFilters();
     }
 
     @FXML
@@ -258,5 +307,16 @@ public class ShowVeterinaryAssistanceController implements Initializable {
                 rbNextDateFilter.setSelected(false);
             }
         }
+    }
+
+    private void clearFilters() {
+        filters.clear();
+        hbFiltersContainer.getChildren().clear();
+        cbStateFilter.setValue(null);
+        dpDateTo.setValue(null);
+        dpDateFrom.setValue(null);
+        rbCompletedDateFilter.setSelected(false);
+        rbAssignedDateFilter.setSelected(false);
+        rbNextDateFilter.setSelected(false);
     }
 }

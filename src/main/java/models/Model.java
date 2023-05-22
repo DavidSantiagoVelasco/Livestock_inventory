@@ -1046,4 +1046,106 @@ public class Model {
             return null;
         }
     }
+
+    public ObservableList<VeterinaryAssistance> getAllVeterinaryAssistance() {
+
+        Connection connection = JDBC.connection();
+        if (connection == null) {
+            return null;
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM veterinary_assistance");
+            ResultSet resultSet = statement.executeQuery();
+
+            ObservableList<VeterinaryAssistance> veterinaryAssistance = FXCollections.observableArrayList();
+
+            while (resultSet.next()) {
+                EventState eventState = EventState.active;
+                String state = resultSet.getString("state");
+                switch (state) {
+                    case "complete" -> eventState = EventState.complete;
+                    case "canceled" -> eventState = EventState.canceled;
+                }
+                veterinaryAssistance.add(new VeterinaryAssistance(resultSet.getInt("id"),
+                        resultSet.getDate("assigned_date"), resultSet.getDate("completion_date"),
+                        resultSet.getString("name"), resultSet.getString("description"),
+                        resultSet.getDouble("cost"), resultSet.getDate("next_date"),
+                        eventState));
+            }
+            resultSet.close();
+            statement.close();
+            connection.close();
+            return veterinaryAssistance;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public ObservableList<VeterinaryAssistance> getFilterVeterinaryAssistance(EventState eventState, String dateFilterType, String dateFrom, String dateTo) {
+        Connection connection = JDBC.connection();
+        if (connection == null) {
+            return null;
+        }
+        String query = "SELECT * FROM veterinary_assistance WHERE ";
+        if (eventState != null) {
+            query += "state = ? AND ";
+        }
+        if (dateFilterType.length() > 0) {
+            switch (dateFilterType) {
+                case "completion" -> query += "completion_date BETWEEN ? AND ? AND ";
+                case "assigned" -> query += "assigned_date BETWEEN ? AND ? AND ";
+                case "next" -> query += "next_date BETWEEN ? AND ? AND ";
+                default -> {
+                    return null;
+                }
+            }
+            if (dateFrom.length() < 1 || dateTo.length() < 1) {
+                return null;
+            }
+        }
+
+        query = query.substring(0, query.length() - 5);
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            int cont = 1;
+            if (eventState != null) {
+                switch (eventState) {
+                    case active -> statement.setString(cont++, "active");
+                    case canceled -> statement.setString(cont++, "canceled");
+                    case complete -> statement.setString(cont++, "complete");
+                }
+            }
+            if (dateFilterType.length() > 0) {
+                statement.setString(cont++, dateFrom);
+                statement.setString(cont, dateTo);
+            }
+
+            ResultSet resultSet = statement.executeQuery();
+
+            ObservableList<VeterinaryAssistance> veterinaryAssistance = FXCollections.observableArrayList();
+
+            while (resultSet.next()) {
+                EventState eventStateResultSet = EventState.active;
+                String state = resultSet.getString("state");
+                switch (state) {
+                    case "complete" -> eventStateResultSet = EventState.complete;
+                    case "canceled" -> eventStateResultSet = EventState.canceled;
+                }
+                veterinaryAssistance.add(new VeterinaryAssistance(resultSet.getInt("id"),
+                        resultSet.getDate("assigned_date"), resultSet.getDate("completion_date"),
+                        resultSet.getString("name"), resultSet.getString("description"),
+                        resultSet.getDouble("cost"), resultSet.getDate("next_date"),
+                        eventStateResultSet));
+            }
+            resultSet.close();
+            statement.close();
+            connection.close();
+            return veterinaryAssistance;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
