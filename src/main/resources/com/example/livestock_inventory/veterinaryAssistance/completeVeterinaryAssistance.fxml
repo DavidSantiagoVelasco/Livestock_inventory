@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="760.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.veterinaryAssistance.CreateCompletedVeterinaryAssistanceController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="760.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <AnchorPane prefHeight="100.0" prefWidth="760.0" style="-fx-background-color: darkslategrey;">
       <Label layoutX="215.0" layoutY="24.0" text="Inventario ganadero" textFill="WHITE">
          <font>
@@ -18,20 +18,20 @@
       </Label>
    </AnchorPane>
    <AnchorPane layoutY="100.0" prefHeight="500.0" prefWidth="760.0" style="-fx-background-color: white;">
-      <Label alignment="CENTER" prefHeight="80.0" prefWidth="760.0" style="-fx-border-color: #2f4f4f; -fx-border-width: 0px 0px 1px 0px;" text="Asistencia veterinaria completada" textAlignment="CENTER" textFill="DARKSLATEGRAY">
+      <Label alignment="CENTER" prefHeight="80.0" prefWidth="760.0" style="-fx-border-color: #2f4f4f; -fx-border-width: 0px 0px 1px 0px;" text="Completar asistencia veterinaria" textAlignment="CENTER" textFill="DARKSLATEGRAY">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
-      <Button layoutX="284.0" layoutY="427.0" mnemonicParsing="false" onAction="#createVeterinaryAssistance" prefHeight="51.0" prefWidth="193.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Crear asistencia" textFill="DARKSLATEGRAY">
+      <Button fx:id="btnCreateVeterinaryAssistance" layoutX="284.0" layoutY="427.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="193.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Completar asistencia" textFill="DARKSLATEGRAY">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <TextField fx:id="txtName" layoutX="77.5" layoutY="134.0" maxWidth="150.0" minWidth="150.0" />
+      <TextField fx:id="txtName" editable="false" layoutX="77.5" layoutY="134.0" maxWidth="150.0" minWidth="150.0" />
       <DatePicker fx:id="dpCompletedDate" layoutX="305.0" layoutY="134.0" prefHeight="25.0" prefWidth="150.0" />
       <TextField fx:id="txtCost" layoutX="532.5" layoutY="134.0" maxWidth="150.0" minWidth="150.0" />
-      <CheckBox fx:id="cbRepeatAssistance" layoutX="297.0" layoutY="186.0" mnemonicParsing="false" onAction="#repeatAssistance" text="¿Repetir asistencia veterinaria?" />
+      <CheckBox fx:id="cbRepeatAssistance" layoutX="297.0" layoutY="186.0" mnemonicParsing="false" text="¿Repetir asistencia médica?" />
       <Label layoutX="77.5" layoutY="117.0" text="Nombre" />
       <Label layoutX="115.0" layoutY="292.0" text="Descripción" />
       <Label layoutX="305.0" layoutY="117.0" text="Fecha realización" />

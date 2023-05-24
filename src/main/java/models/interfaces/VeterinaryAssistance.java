@@ -8,8 +8,8 @@ public class VeterinaryAssistance {
     private final Date assignedDate;
     private final Date completionDate;
     private final String name;
-    private final String description;
-    private final double cost;
+    private String description;
+    private double cost;
     private final Date nextDate;
 
     private final EventState state;
@@ -56,5 +56,13 @@ public class VeterinaryAssistance {
 
     public EventState getState() {
         return state;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setCost(double cost) {
+        this.cost = cost;
     }
 }

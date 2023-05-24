@@ -34,7 +34,7 @@ public class CreateCompletedVeterinaryAssistanceController implements Initializa
     @FXML
     private CheckBox cbCreateTask;
 
-    private boolean showInformationRepeatAssistanceExpense = false;
+    private boolean showInformationRepeatAssistanceExpense = true;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -89,7 +89,8 @@ public class CreateCompletedVeterinaryAssistanceController implements Initializa
                 String taskString = "";
                 if (cbCreateTask.isSelected()) {
                     task = model.createTask(txtName.getText(), "Asistencia veterinaria: " + txtDescription.getText(),
-                            new Date(dpAssignedDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()));
+                            new Date(dpAssignedDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()),
+                            veterinaryAssistance.getId());
                     if (task == null) {
                         taskString = "\nNo se pudo crear el recordatorio";
                     } else {
@@ -117,15 +118,16 @@ public class CreateCompletedVeterinaryAssistanceController implements Initializa
     @FXML
     private void repeatAssistance() {
         if (cbRepeatAssistance.isSelected()) {
-            if (txtCost.getLength() > 0 && !showInformationRepeatAssistanceExpense) {
+            if (txtCost.getLength() > 0 && showInformationRepeatAssistanceExpense) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Crear próxima asistencia veterinaria");
                 alert.setHeaderText("Información crear egreso");
-                alert.setContentText("Se creará una próxima asistencia veterinaria pero no se podrá agregará el " +
-                        "egreso con el valor del costo.\nPodrá agregar el egreso cuando finalice la próxima asistencia" +
-                        " veterinaria marcándola como completada en el módulo Ver Asistencias");
+                alert.setContentText("Se creará una próxima asistencia veterinaria pero no se podrá agregar el " +
+                        "egreso con el valor del costo para la próxima asistencia veterinaria.\nPodrá agregar el " +
+                        "egreso cuando finalice la próxima asistencia veterinaria marcándola como completada en " +
+                        "el módulo Ver Asistencias");
                 alert.showAndWait();
-                showInformationRepeatAssistanceExpense = true;
+                showInformationRepeatAssistanceExpense = false;
             }
             lblAssignedDate.setVisible(true);
             dpAssignedDate.setVisible(true);

@@ -4,7 +4,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
@@ -12,11 +15,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import models.Model;
-import models.interfaces.EventState;
-import models.interfaces.FilterCard;
-import models.interfaces.VeterinaryAssistance;
+import models.interfaces.*;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -101,12 +105,7 @@ public class ShowVeterinaryAssistanceController implements Initializable {
         });
 
         cbStateFilter.setItems(FXCollections.observableArrayList(EventState.active.toString(), EventState.complete.toString(), EventState.canceled.toString()));
-        setTblVeterinaryAssistance();
-    }
-
-    private void setTblVeterinaryAssistance() {
-        ObservableList<VeterinaryAssistance> veterinaryAssistance = model.getActiveVeterinaryAssistance();
-        tblVeterinaryAssistance.setItems(veterinaryAssistance);
+        getVeterinaryAssistance();
     }
 
     @FXML
@@ -215,7 +214,7 @@ public class ShowVeterinaryAssistanceController implements Initializable {
     }
 
     @FXML
-    private void getVeterinaryAssistance() {
+    public void getVeterinaryAssistance() {
         ObservableList<VeterinaryAssistance> veterinaryAssistance = model.getActiveVeterinaryAssistance();
         tblVeterinaryAssistance.setItems(veterinaryAssistance);
         clearFilters();
@@ -223,10 +222,68 @@ public class ShowVeterinaryAssistanceController implements Initializable {
 
     @FXML
     private void completeVeterinaryAssistance() {
+        if(tblVeterinaryAssistance.getSelectionModel().getSelectedItem() == null){
+            Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
+            alertError.setTitle("Error");
+            alertError.setHeaderText("No se encuentra ningún recordatorio seleccionado");
+            alertError.showAndWait();
+            return;
+        }
+        VeterinaryAssistance veterinaryAssistance = tblVeterinaryAssistance.getSelectionModel().getSelectedItem();
+        if(veterinaryAssistance.getState().toString().equals(EventState.complete.toString())){
+            Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
+            alertError.setTitle("Error");
+            alertError.setHeaderText("La asistencia veterinaria ya se encuentra completada");
+            alertError.showAndWait();
+            return;
+        } else if(veterinaryAssistance.getState().toString().equals(EventState.canceled.toString())){
+            Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
+            alertError.setTitle("Error");
+            alertError.setHeaderText("La asistencia veterinaria se encuentra cancelada");
+            alertError.showAndWait();
+            return;
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/livestock_inventory/veterinaryAssistance/completeVeterinaryAssistance.fxml"));
+            CompleteVeterinaryAssistanceController completeVeterinaryAssistanceController =
+                    new CompleteVeterinaryAssistanceController(veterinaryAssistance, this);
+            loader.setController(completeVeterinaryAssistanceController);
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+
+            stage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     private void cancelVeterinaryAssistance() {
+        if(tblVeterinaryAssistance.getSelectionModel().getSelectedItem() == null){
+            Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
+            alertError.setTitle("Error");
+            alertError.setHeaderText("No se encuentra ningún recordatorio seleccionado");
+            alertError.showAndWait();
+            return;
+        }
+        VeterinaryAssistance veterinaryAssistance = tblVeterinaryAssistance.getSelectionModel().getSelectedItem();
+        if(veterinaryAssistance.getState().toString().equals(EventState.complete.toString())){
+            Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
+            alertError.setTitle("Error");
+            alertError.setHeaderText("La asistencia veterinaria se se encuentra completada");
+            alertError.showAndWait();
+            return;
+        } else if(veterinaryAssistance.getState().toString().equals(EventState.canceled.toString())){
+            Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
+            alertError.setTitle("Error");
+            alertError.setHeaderText("La asistencia veterinaria ya se encuentra cancelada");
+            alertError.showAndWait();
+            return;
+        }
     }
 
     private void removeFilterDate(boolean setDatesNull){

@@ -259,6 +259,39 @@ public class Model {
         }
     }
 
+    public Task createTask(String name, String description, Date assignedDate, int idVeterinaryAssistance) {
+        Connection connection = JDBC.connection();
+        if (connection == null) {
+            return null;
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO tasks(name, description, " +
+                            "assigned_date, state, id_veterinary_assistance) values(?, ?, ?, ?, ?);",
+                    Statement.RETURN_GENERATED_KEYS);
+            statement.setString(1, name);
+            statement.setString(2, description);
+            statement.setDate(3, assignedDate);
+            statement.setString(4, "active");
+            statement.setInt(5, idVeterinaryAssistance);
+            statement.executeUpdate();
+            ResultSet resultSet = statement.getGeneratedKeys();
+            int id = -1;
+            if (resultSet.next()) {
+                id = resultSet.getInt(1);
+            }
+            if (id == -1) {
+                return null;
+            }
+            resultSet.close();
+            statement.close();
+            connection.close();
+            return new Task(id, name, description, new Date(new java.util.Date().getTime()), assignedDate, EventState.active);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
     /**
      * ========================================== Owners ======================================
@@ -330,7 +363,7 @@ public class Model {
             ResultSet resultSet = statement.getGeneratedKeys();
             int id = -1;
             if (resultSet.next()) {
-                id = resultSet.getInt(1); // Retorna el id generado
+                id = resultSet.getInt(1);
             }
             if (id == -1) {
                 return null;
@@ -526,7 +559,7 @@ public class Model {
             ResultSet resultSet = statement.getGeneratedKeys();
             int id = -1;
             if (resultSet.next()) {
-                id = resultSet.getInt(1); // Retorna el id generado
+                id = resultSet.getInt(1);
             }
             if (id == -1) {
                 return null;
@@ -824,7 +857,7 @@ public class Model {
             ResultSet resultSet = statement.getGeneratedKeys();
             int id = -1;
             if (resultSet.next()) {
-                id = resultSet.getInt(1); // Retorna el id generado
+                id = resultSet.getInt(1);
             }
             if (id == -1) {
                 return null;
@@ -854,7 +887,7 @@ public class Model {
             ResultSet resultSet = statement.getGeneratedKeys();
             int id = -1;
             if (resultSet.next()) {
-                id = resultSet.getInt(1); // Retorna el id generado
+                id = resultSet.getInt(1);
             }
             if (id == -1) {
                 return null;
@@ -991,7 +1024,7 @@ public class Model {
             statement.setDate(1, assignedDate);
             statement.setString(2, name);
             statement.setString(3, description);
-            statement.setString(6, "active");
+            statement.setString(4, "active");
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             int id = -1;
@@ -1146,6 +1179,47 @@ public class Model {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public boolean completeVeterinaryAssistance(VeterinaryAssistance veterinaryAssistance, boolean modifyDescription,
+                                                boolean modifyCost) {
+        Connection connection = JDBC.connection();
+        if (connection == null) {
+            return false;
+        }
+            String query = "UPDATE veterinary_assistance SET state = " +
+                    "'complete', ";
+            if(modifyDescription){
+                query += "description = ?, ";
+            }
+            if(modifyCost){
+                query += "cost = ?, ";
+            }
+            query = query.substring(0, query.length()-2);
+            query += " WHERE id = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            int cont = 1;
+            if(modifyDescription){
+                statement.setString(cont++, veterinaryAssistance.getDescription());
+            }
+            if(modifyCost){
+                statement.setDouble(cont++, veterinaryAssistance.getCost());
+            }
+            statement.setInt(cont, veterinaryAssistance.getId());
+            int rowsAffected = statement.executeUpdate();
+            PreparedStatement statementTask = connection.prepareStatement("UPDATE tasks SET state = 'complete' WHERE " +
+                    "id_veterinary_assistance = ?");
+            statementTask.setInt(1, veterinaryAssistance.getId());
+            statementTask.executeUpdate();
+            statementTask.close();
+            statement.close();
+            connection.close();
+            return rowsAffected == 1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 }

@@ -51,7 +51,8 @@ public class CreateAssignedVeterinaryAssistanceController {
             String taskString = "";
             if (cbCreateTask.isSelected()) {
                 Task task = model.createTask(txtName.getText(), "Asistencia veterinaria: " + txtDescription.getText(),
-                        new Date(dpAssignedDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()));
+                        new Date(dpAssignedDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()),
+                        veterinaryAssistance.getId());
                 if (task == null) {
                     taskString = "\nNo se pudo crear el recordatorio";
                 } else {
