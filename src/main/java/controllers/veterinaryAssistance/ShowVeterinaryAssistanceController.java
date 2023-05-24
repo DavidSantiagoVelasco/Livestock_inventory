@@ -25,6 +25,7 @@ import java.net.URL;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class ShowVeterinaryAssistanceController implements Initializable {
@@ -225,7 +226,7 @@ public class ShowVeterinaryAssistanceController implements Initializable {
         if(tblVeterinaryAssistance.getSelectionModel().getSelectedItem() == null){
             Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
             alertError.setTitle("Error");
-            alertError.setHeaderText("No se encuentra ningún recordatorio seleccionado");
+            alertError.setHeaderText("No se encuentra ninguna asistencia veterinaria seleccionada");
             alertError.showAndWait();
             return;
         }
@@ -266,7 +267,7 @@ public class ShowVeterinaryAssistanceController implements Initializable {
         if(tblVeterinaryAssistance.getSelectionModel().getSelectedItem() == null){
             Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
             alertError.setTitle("Error");
-            alertError.setHeaderText("No se encuentra ningún recordatorio seleccionado");
+            alertError.setHeaderText("No se encuentra ninguna asistencia veterinaria seleccionada");
             alertError.showAndWait();
             return;
         }
@@ -274,7 +275,7 @@ public class ShowVeterinaryAssistanceController implements Initializable {
         if(veterinaryAssistance.getState().toString().equals(EventState.complete.toString())){
             Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
             alertError.setTitle("Error");
-            alertError.setHeaderText("La asistencia veterinaria se se encuentra completada");
+            alertError.setHeaderText("La asistencia veterinaria se encuentra completada");
             alertError.showAndWait();
             return;
         } else if(veterinaryAssistance.getState().toString().equals(EventState.canceled.toString())){
@@ -283,6 +284,26 @@ public class ShowVeterinaryAssistanceController implements Initializable {
             alertError.setHeaderText("La asistencia veterinaria ya se encuentra cancelada");
             alertError.showAndWait();
             return;
+        }
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmación");
+        alert.setHeaderText("¿Está seguro de querer cancelar la asistencia veterinaria?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK){
+            boolean response = model.cancelVeterinaryAssistance(veterinaryAssistance);
+            if(response){
+                Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
+                alertConfirmation.setTitle("Éxito");
+                alertConfirmation.setHeaderText("Éxito cancelando la asistencia veterinaria");
+                alertConfirmation.showAndWait();
+                getVeterinaryAssistance();
+            } else {
+                Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
+                alertError.setTitle("Error");
+                alertError.setHeaderText("Ocurrió un error. Por favor intente más tarde");
+                alertError.showAndWait();
+            }
         }
     }
 

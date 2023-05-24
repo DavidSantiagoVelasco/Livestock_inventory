@@ -363,7 +363,7 @@ public class ShowTasksController implements Initializable {
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK){
-            boolean response = model.canceledTask(task);
+            boolean response = model.cancelTask(task);
             if(response){
                 Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
                 alertConfirmation.setTitle("Éxito");

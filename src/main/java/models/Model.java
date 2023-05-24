@@ -207,7 +207,7 @@ public class Model {
         }
     }
 
-    public boolean canceledTask(Task task) {
+    public boolean cancelTask(Task task) {
         Connection connection = JDBC.connection();
         if (connection == null) {
             return false;
@@ -1215,6 +1215,30 @@ public class Model {
             statementTask.executeUpdate();
             statementTask.close();
             statement.close();
+            connection.close();
+            return rowsAffected == 1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean cancelVeterinaryAssistance(VeterinaryAssistance veterinaryAssistance){
+        Connection connection = JDBC.connection();
+        if (connection == null) {
+            return false;
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement("UPDATE veterinary_assistance SET state =" +
+                    " 'canceled' WHERE id = ?");
+            statement.setInt(1, veterinaryAssistance.getId());
+            PreparedStatement statementTask = connection.prepareStatement("UPDATE tasks SET state = 'canceled' " +
+                    "WHERE id_veterinary_assistance = ?");
+            statementTask.setInt(1, veterinaryAssistance.getId());
+            statementTask.executeUpdate();
+            int rowsAffected = statement.executeUpdate();
+            statement.close();
+            statementTask.close();
             connection.close();
             return rowsAffected == 1;
         } catch (SQLException e) {
