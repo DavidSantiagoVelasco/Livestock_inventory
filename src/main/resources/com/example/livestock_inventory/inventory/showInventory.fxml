@@ -16,8 +16,8 @@
    <TextField fx:id="txtNumberFilter" layoutX="58.0" layoutY="43.0" promptText="Enter para agregar filtro" />
    <ComboBox fx:id="cbOwnerFilter" layoutX="472.0" layoutY="43.0" onAction="#selectOwnerFilter" prefWidth="150.0" />
    <ComboBox fx:id="cbStateFilter" layoutX="679.0" layoutY="43.0" onAction="#selectStateFilter" prefWidth="150.0" />
-   <DatePicker fx:id="dpDateFrom" layoutX="886.0" layoutY="43.0" prefHeight="25.0" prefWidth="150.0" />
-   <DatePicker fx:id="dpDateTo" layoutX="1093.0" layoutY="43.0" prefHeight="25.0" prefWidth="150.0" />
+   <DatePicker fx:id="dpDateFrom" layoutX="886.0" layoutY="43.0" onAction="#selectDatePicker" prefHeight="25.0" prefWidth="150.0" />
+   <DatePicker fx:id="dpDateTo" layoutX="1093.0" layoutY="43.0" onAction="#selectDatePicker" prefHeight="25.0" prefWidth="150.0" />
    <RadioButton fx:id="rbPurchaseDateFilter" layoutX="913.0" layoutY="98.0" mnemonicParsing="false" onAction="#selectPurchaseDateFilter" text="Fecha compra" />
    <RadioButton fx:id="rbSaleDateFilter" layoutX="1126.0" layoutY="98.0" mnemonicParsing="false" onAction="#selectSaleDateFilter" text="Fecha venta" />
    <Button layoutX="679.0" layoutY="94.0" mnemonicParsing="false" onAction="#filter" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Filtrar" textFill="DARKSLATEGRAY" />

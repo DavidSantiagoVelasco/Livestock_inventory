@@ -10,6 +10,7 @@ import models.interfaces.VeterinaryAssistance;
 
 import java.net.URL;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -76,6 +77,16 @@ public class CompleteVeterinaryAssistanceController implements Initializable {
             alert.setHeaderText("Faltan campos por llenar");
             alert.showAndWait();
             return;
+        }
+        if(cbRepeatAssistance.isSelected()){
+            if(!checkDateConsistency(dpCompletedDate.getValue(), dpAssignedDate.getValue())){
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Error");
+                alert.setTitle("Inconsistencia en las fechas");
+                alert.setHeaderText("La fecha de realización no puede ser mayor a la fecha asignada");
+                alert.showAndWait();
+                dpAssignedDate.setValue(null);
+                return;
+            }
         }
         Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION);
         alertConfirm.setTitle("Confirmación");
@@ -169,5 +180,11 @@ public class CompleteVeterinaryAssistanceController implements Initializable {
         Stage currentStage = (Stage) txtDescription.getScene().getWindow();
         showVeterinaryAssistanceController.getVeterinaryAssistance();
         currentStage.close();
+    }
+
+    private boolean checkDateConsistency(LocalDate fromDate, LocalDate toDate) {
+        Date from = Date.valueOf(fromDate);
+        Date to = Date.valueOf(toDate);
+        return !to.before(from);
     }
 }

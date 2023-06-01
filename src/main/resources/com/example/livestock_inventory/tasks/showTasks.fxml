@@ -12,8 +12,8 @@
 
 <AnchorPane minWidth="-Infinity" prefHeight="600.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.tasks.ShowTasksController">
 <ComboBox fx:id="cbStateFilter" layoutX="93.0" layoutY="43.0" onAction="#selectStateFilter" prefWidth="150.0" />
-<DatePicker fx:id="dpDateFrom" layoutX="301.0" layoutY="43.0" prefHeight="25.0" prefWidth="150.0" />
-<DatePicker fx:id="dpDateTo" layoutX="509.0" layoutY="43.0" prefHeight="25.0" prefWidth="150.0" />
+<DatePicker fx:id="dpDateFrom" layoutX="301.0" layoutY="43.0" onAction="#selectDatePicker" prefHeight="25.0" prefWidth="150.0" />
+<DatePicker fx:id="dpDateTo" layoutX="509.0" layoutY="43.0" onAction="#selectDatePicker" prefHeight="25.0" prefWidth="150.0" />
 <RadioButton fx:id="rbCreationDateFilter" layoutX="326.0" layoutY="98.0" mnemonicParsing="false" onAction="#selectCreationDateFilter" text="Fecha creación" />
 <RadioButton fx:id="rbAssignedDateFilter" layoutX="533.0" layoutY="98.0" mnemonicParsing="false" onAction="#selectAssignedDateFilter" text="Fecha asignada" />
 <Button layoutX="197.0" layoutY="153.0" mnemonicParsing="false" onAction="#getAllTasks" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Ver todos" textFill="DARKSLATEGRAY" />

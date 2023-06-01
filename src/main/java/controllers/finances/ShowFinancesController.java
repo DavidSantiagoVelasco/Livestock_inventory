@@ -2,6 +2,7 @@ package controllers.finances;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -17,6 +18,7 @@ import models.interfaces.Finance;
 
 import java.net.URL;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -45,6 +47,8 @@ public class ShowFinancesController implements Initializable {
     private HBox hbFiltersContainer;
 
     private final List<FilterCard> filters = new ArrayList<>();
+    private LocalDate dateFrom = null;
+    private LocalDate dateTo = null;
 
 
     @Override
@@ -130,22 +134,37 @@ public class ShowFinancesController implements Initializable {
     }
 
     @FXML
-    private void selectDatePicker() {
-        if(dpDateTo.getValue() != null && dpDateFrom.getValue() != null){
-            FilterCard currentFilterCard = null;
-            for (FilterCard filterCard: filters
-            ) {
-                if(filterCard.getType().equals("FilterDate")){
-                    hbFiltersContainer.getChildren().remove(filterCard.getCard());
-                    currentFilterCard = filterCard;
-                }
-            }
-            if(currentFilterCard != null){
-                filters.remove(currentFilterCard);
-            }
-            addFilter("FilterDate", "Filtrar por fecha", "Desde: " +
-                    dpDateFrom.getValue().toString() + " | Hasta: " + dpDateTo.getValue().toString());
+    private void selectDatePicker(ActionEvent event) {
+        DatePicker datePicker = (DatePicker) event.getSource();
+        if (dpDateFrom.getValue() == null || dpDateTo.getValue() == null) {
+            updateDateValues(datePicker);
+            return;
         }
+        if (!checkDateConsistency(dpDateFrom.getValue(), dpDateTo.getValue())) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("La fecha desde no puede ser mayor que la fecha hasta");
+            alert.showAndWait();
+            if (datePicker == dpDateFrom) {
+                dpDateFrom.setValue(dateFrom);
+            } else if (datePicker == dpDateTo) {
+                dpDateTo.setValue(dateTo);
+            }
+            return;
+        }
+        FilterCard currentFilterCard = null;
+        for (FilterCard filterCard : filters
+        ) {
+            if (filterCard.getType().equals("FilterDate")) {
+                hbFiltersContainer.getChildren().remove(filterCard.getCard());
+                currentFilterCard = filterCard;
+            }
+        }
+        if (currentFilterCard != null) {
+            filters.remove(currentFilterCard);
+        }
+        addFilter("FilterDate", "Filtrar por fecha", "Desde: " +
+                dpDateFrom.getValue().toString() + " | Hasta: " + dpDateTo.getValue().toString());
+        updateDateValues(datePicker);
     }
 
     private void addFilter(String filterType, String tittle, String information){
@@ -212,5 +231,19 @@ public class ShowFinancesController implements Initializable {
         cbTypeFinance.setValue(null);
         dpDateTo.setValue(null);
         dpDateFrom.setValue(null);
+    }
+
+    private boolean checkDateConsistency(LocalDate fromDate, LocalDate toDate) {
+        Date from = Date.valueOf(fromDate);
+        Date to = Date.valueOf(toDate);
+        return !to.before(from);
+    }
+
+    private void updateDateValues(DatePicker datePicker) {
+        if (datePicker == dpDateFrom) {
+            dateFrom = datePicker.getValue();
+        } else if (datePicker == dpDateTo) {
+            dateTo = datePicker.getValue();
+        }
     }
 }

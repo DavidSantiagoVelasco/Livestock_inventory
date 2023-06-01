@@ -9,6 +9,7 @@ import models.interfaces.VeterinaryAssistance;
 
 import java.net.URL;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -59,6 +60,16 @@ public class CreateCompletedVeterinaryAssistanceController implements Initializa
             alert.showAndWait();
             return;
         }
+        if(cbRepeatAssistance.isSelected()){
+            if(!checkDateConsistency(dpCompletedDate.getValue(), dpAssignedDate.getValue())){
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Error");
+                alert.setTitle("Inconsistencia en las fechas");
+                alert.setHeaderText("La fecha de realización no puede ser mayor a la fecha asignada");
+                alert.showAndWait();
+                dpAssignedDate.setValue(null);
+                return;
+            }
+        }
         Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
         confirmation.setTitle("Confirmación");
         confirmation.setHeaderText("¿Está seguro que desea crear la asistencia veterinaria?");
@@ -67,7 +78,8 @@ public class CreateCompletedVeterinaryAssistanceController implements Initializa
         if (result.get() == ButtonType.OK) {
             VeterinaryAssistance veterinaryAssistance = model.createCompletedVeterinaryAssistance(txtName.getText(),
                     new Date(dpCompletedDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()),
-                    Double.parseDouble(txtCost.getText()), txtDescription.getText(),
+                    Double.parseDouble(!txtCost.getText().isEmpty() ? txtCost.getText() : "0"),
+                    txtDescription.getText(),
                     new Date(dpAssignedDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()));
             if (veterinaryAssistance == null) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Error");
@@ -148,5 +160,11 @@ public class CreateCompletedVeterinaryAssistanceController implements Initializa
         cbRepeatAssistance.setSelected(false);
         txtDescription.setText("");
         repeatAssistance();
+    }
+
+    private boolean checkDateConsistency(LocalDate fromDate, LocalDate toDate) {
+        Date from = Date.valueOf(fromDate);
+        Date to = Date.valueOf(toDate);
+        return !to.before(from);
     }
 }

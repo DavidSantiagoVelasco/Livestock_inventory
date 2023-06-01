@@ -18,11 +18,14 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.Model;
-import models.interfaces.*;
+import models.interfaces.EventState;
+import models.interfaces.FilterCard;
+import models.interfaces.VeterinaryAssistance;
 
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -68,6 +71,8 @@ public class ShowVeterinaryAssistanceController implements Initializable {
     private TableColumn<VeterinaryAssistance, EventState> colState;
 
     private final List<FilterCard> filters = new ArrayList<>();
+    private LocalDate dateFrom = null;
+    private LocalDate dateTo = null;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -130,7 +135,7 @@ public class ShowVeterinaryAssistanceController implements Initializable {
 
     @FXML
     private void selectDateFilter(ActionEvent event) {
-        if(dpDateFrom.getValue() == null || dpDateTo.getValue() == null){
+        if (dpDateFrom.getValue() == null || dpDateTo.getValue() == null) {
             RadioButton selectedRadioButton = (RadioButton) event.getSource();
             selectedRadioButton.setSelected(false);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -138,36 +143,34 @@ public class ShowVeterinaryAssistanceController implements Initializable {
             alert.showAndWait();
             return;
         }
-        Object source = event.getSource();
-        if (source == rbAssignedDateFilter) {
-            if(!rbAssignedDateFilter.isSelected()){
-                removeFilterDate(true);
+        RadioButton source = (RadioButton) event.getSource();
+        if (!source.isSelected()) {
+            removeFilterDate(true);
+            return;
+        } else {
+            if (!checkDateConsistency(dpDateFrom.getValue(), dpDateTo.getValue())) {
+                source.setSelected(false);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setHeaderText("La fecha desde no puede ser mayor que la fecha hasta");
+                alert.showAndWait();
+                dpDateTo.setValue(null);
                 return;
-            } else {
-                removeFilterDate(false);
             }
+        }
+        if (source == rbAssignedDateFilter) {
+            removeFilterDate(false);
             rbCompletedDateFilter.setSelected(false);
             rbNextDateFilter.setSelected(false);
             addFilter("FilterDate", "Filtrar por fecha asignada", "Desde: " + dpDateFrom.getValue().toString()
-            + " | Hasta: " + dpDateTo.getValue().toString());
+                    + " | Hasta: " + dpDateTo.getValue().toString());
         } else if (source == rbCompletedDateFilter) {
-            if(!rbCompletedDateFilter.isSelected()){
-                removeFilterDate(true);
-                return;
-            } else {
-                removeFilterDate(false);
-            }
+            removeFilterDate(false);
             rbAssignedDateFilter.setSelected(false);
             rbNextDateFilter.setSelected(false);
             addFilter("FilterDate", "Filtrar por fecha completada", "Desde: " + dpDateFrom.getValue().toString()
             + " | Hasta: " + dpDateTo.getValue().toString());
         } else if (source == rbNextDateFilter) {
-            if(!rbNextDateFilter.isSelected()){
-                removeFilterDate(true);
-                return;
-            } else {
-                removeFilterDate(false);
-            }
+            removeFilterDate(false);
             rbAssignedDateFilter.setSelected(false);
             rbCompletedDateFilter.setSelected(false);
             addFilter("FilterDate", "Filtrar por siguiente fecha", "Desde: " + dpDateFrom.getValue().toString()
@@ -214,7 +217,6 @@ public class ShowVeterinaryAssistanceController implements Initializable {
         clearFilters();
     }
 
-    @FXML
     public void getVeterinaryAssistance() {
         ObservableList<VeterinaryAssistance> veterinaryAssistance = model.getActiveVeterinaryAssistance();
         tblVeterinaryAssistance.setItems(veterinaryAssistance);
@@ -307,16 +309,49 @@ public class ShowVeterinaryAssistanceController implements Initializable {
         }
     }
 
-    private void removeFilterDate(boolean setDatesNull){
+    @FXML
+    private void selectDatePicker(ActionEvent event) {
+        DatePicker datePicker = (DatePicker) event.getSource();
+        if ((!rbAssignedDateFilter.isSelected() && !rbCompletedDateFilter.isSelected() &&
+                !rbNextDateFilter.isSelected()) || dpDateFrom.getValue() == null || dpDateTo.getValue() == null) {
+            updateDateValues(datePicker);
+            return;
+        }
+        if (!checkDateConsistency(dpDateFrom.getValue(), dpDateTo.getValue())) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("La fecha desde no puede ser mayor que la fecha hasta");
+            alert.showAndWait();
+            if (datePicker == dpDateFrom) {
+                dpDateFrom.setValue(dateFrom);
+            } else if (datePicker == dpDateTo) {
+                dpDateTo.setValue(dateTo);
+            }
+            return;
+        }
+        removeFilterDate(false);
+        if (rbAssignedDateFilter.isSelected()) {
+            addFilter("FilterDate", "Filtrar por fecha asignada", "Desde: " +
+                    dpDateFrom.getValue().toString() + " | Hasta: " + dpDateTo.getValue().toString());
+        } else if (rbCompletedDateFilter.isSelected()) {
+            addFilter("FilterDate", "Filtrar por fecha completada", "Desde: " +
+                    dpDateFrom.getValue().toString() + " | Hasta: " + dpDateTo.getValue().toString());
+        } else if (rbNextDateFilter.isSelected()) {
+            addFilter("FilterDate", "Filtrar por siguiente fecha", "Desde: " +
+                    dpDateFrom.getValue().toString() + " | Hasta: " + dpDateTo.getValue().toString());
+        }
+        updateDateValues(datePicker);
+    }
+
+    private void removeFilterDate(boolean setDatesNull) {
         FilterCard currentFilterCard = null;
-        for (FilterCard filterCard: filters
+        for (FilterCard filterCard : filters
         ) {
-            if(filterCard.getType().equals("FilterDate")){
+            if (filterCard.getType().equals("FilterDate")) {
                 hbFiltersContainer.getChildren().remove(filterCard.getCard());
                 currentFilterCard = filterCard;
             }
         }
-        if(currentFilterCard == null){
+        if (currentFilterCard == null) {
             return;
         }
         filters.remove(currentFilterCard);
@@ -396,5 +431,19 @@ public class ShowVeterinaryAssistanceController implements Initializable {
         rbCompletedDateFilter.setSelected(false);
         rbAssignedDateFilter.setSelected(false);
         rbNextDateFilter.setSelected(false);
+    }
+
+    private boolean checkDateConsistency(LocalDate fromDate, LocalDate toDate) {
+        Date from = Date.valueOf(fromDate);
+        Date to = Date.valueOf(toDate);
+        return !to.before(from);
+    }
+
+    private void updateDateValues(DatePicker datePicker) {
+        if (datePicker == dpDateFrom) {
+            dateFrom = datePicker.getValue();
+        } else if (datePicker == dpDateTo) {
+            dateTo = datePicker.getValue();
+        }
     }
 }

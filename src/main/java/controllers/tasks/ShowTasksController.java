@@ -2,6 +2,7 @@ package controllers.tasks;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -12,10 +13,13 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import models.Model;
-import models.interfaces.*;
+import models.interfaces.EventState;
+import models.interfaces.FilterCard;
+import models.interfaces.Task;
 
 import java.net.URL;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -53,7 +57,10 @@ public class ShowTasksController implements Initializable {
     private Button btnCompleteTask;
     @FXML
     private Button btnCancelTask;
+
     private final List<FilterCard> filters = new ArrayList<>();
+    private  LocalDate dateFrom = null;
+    private LocalDate dateTo = null;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -101,7 +108,8 @@ public class ShowTasksController implements Initializable {
         tblTasks.setItems(tasks);
     }
 
-    public void selectStateFilter() {
+    @FXML
+    private void selectStateFilter() {
         if(cbStateFilter.getValue() == null){
             return;
         }
@@ -119,7 +127,8 @@ public class ShowTasksController implements Initializable {
         addFilter("FilterState", "Filtrar por estado", cbStateFilter.getValue().toString());
     }
 
-    public void selectCreationDateFilter() {
+    @FXML
+    private void selectCreationDateFilter() {
         if(dpDateFrom.getValue() == null || dpDateTo.getValue() == null){
             rbCreationDateFilter.setSelected(false);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -131,7 +140,15 @@ public class ShowTasksController implements Initializable {
             removeFilterDate(false);
             rbAssignedDateFilter.setSelected(false);
         }
-        if(rbCreationDateFilter.isSelected()){
+        if(rbCreationDateFilter.isSelected()) {
+            if (!checkDateConsistency(dpDateFrom.getValue(), dpDateTo.getValue())) {
+                rbCreationDateFilter.setSelected(false);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setHeaderText("La fecha desde no puede ser mayor que la fecha hasta");
+                alert.showAndWait();
+                dpDateTo.setValue(null);
+                return;
+            }
             addFilter("FilterDate", "Filtrar por fecha creación", "Desde: " +
                     dpDateFrom.getValue().toString() + " | Hasta: " + dpDateTo.getValue().toString());
         } else {
@@ -139,7 +156,8 @@ public class ShowTasksController implements Initializable {
         }
     }
 
-    public void selectAssignedDateFilter() {
+    @FXML
+    private void selectAssignedDateFilter() {
         if(dpDateFrom.getValue() == null || dpDateTo.getValue() == null){
             rbAssignedDateFilter.setSelected(false);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -151,7 +169,15 @@ public class ShowTasksController implements Initializable {
             removeFilterDate(false);
             rbCreationDateFilter.setSelected(false);
         }
-        if(rbAssignedDateFilter.isSelected()){
+        if(rbAssignedDateFilter.isSelected()) {
+            if (!checkDateConsistency(dpDateFrom.getValue(), dpDateTo.getValue())) {
+                rbAssignedDateFilter.setSelected(false);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setHeaderText("La fecha desde no puede ser mayor que la fecha hasta");
+                alert.showAndWait();
+                dpDateTo.setValue(null);
+                return;
+            }
             addFilter("FilterDate", "Filtrar por fecha asignada", "Desde: " +
                     dpDateFrom.getValue().toString() + " | Hasta: " + dpDateTo.getValue().toString());
         } else {
@@ -159,13 +185,15 @@ public class ShowTasksController implements Initializable {
         }
     }
 
-    public void getAllTasks() {
+    @FXML
+    private void getAllTasks() {
         ObservableList<Task> tasks = model.getAllTasks();
         tblTasks.setItems(tasks);
         clearFilters();
     }
 
-    public void filter() {
+    @FXML
+    private void filter() {
         if(cbStateFilter.getValue() == null && (!rbAssignedDateFilter.isSelected() && !rbCreationDateFilter.isSelected())){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("No hay filtros");
@@ -194,13 +222,15 @@ public class ShowTasksController implements Initializable {
         tblTasks.setItems(tasks);
     }
 
-    public void getTasks() {
+    @FXML
+    private void getTasks() {
         ObservableList<Task> tasks = model.getActiveTasks();
         tblTasks.setItems(tasks);
         clearFilters();
     }
 
-    public void clearFilters() {
+    @FXML
+    private void clearFilters() {
         filters.clear();
         hbFiltersContainer.getChildren().clear();
         cbStateFilter.setValue(null);
@@ -208,6 +238,128 @@ public class ShowTasksController implements Initializable {
         dpDateFrom.setValue(null);
         rbCreationDateFilter.setSelected(false);
         rbAssignedDateFilter.setSelected(false);
+    }
+
+    @FXML
+    private void completeTask() {
+        if(tblTasks.getSelectionModel().getSelectedItem() == null){
+            Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
+            alertError.setTitle("Error");
+            alertError.setHeaderText("No se encuentra ningún recordatorio seleccionado");
+            alertError.showAndWait();
+            return;
+        }
+        Task task = tblTasks.getSelectionModel().getSelectedItem();
+        if(task.getState().toString().equals(EventState.complete.toString())){
+            Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
+            alertError.setTitle("Error");
+            alertError.setHeaderText("El recordatorio ya se encuentra completado");
+            alertError.showAndWait();
+            return;
+        } else if(task.getState().toString().equals(EventState.canceled.toString())){
+            Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
+            alertError.setTitle("Error");
+            alertError.setHeaderText("El recordatorio se encuentra cancelado");
+            alertError.showAndWait();
+            return;
+        }
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmación");
+        alert.setHeaderText("¿Está seguro de querer completar el recordatorio?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK){
+            boolean response = model.completeTask(task);
+            if(response){
+                Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
+                alertConfirmation.setTitle("Éxito");
+                alertConfirmation.setHeaderText("Éxito completando el recordatorio");
+                alertConfirmation.showAndWait();
+                setTblTasks();
+            } else {
+                Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
+                alertError.setTitle("Error");
+                alertError.setHeaderText("Ocurrió un error. Por favor intente más tarde");
+                alertError.showAndWait();
+            }
+        }
+    }
+
+    @FXML
+    private void cancelTask() {
+        if(tblTasks.getSelectionModel().getSelectedItem() == null){
+            Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
+            alertError.setTitle("Error");
+            alertError.setHeaderText("No se encuentra ningún recordatorio seleccionado");
+            alertError.showAndWait();
+            return;
+        }
+        Task task = tblTasks.getSelectionModel().getSelectedItem();
+        if(task.getState().toString().equals(EventState.complete.toString())){
+            Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
+            alertError.setTitle("Error");
+            alertError.setHeaderText("El recordatorio se encuentra completado");
+            alertError.showAndWait();
+            return;
+        } else if(task.getState().toString().equals(EventState.canceled.toString())){
+            Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
+            alertError.setTitle("Error");
+            alertError.setHeaderText("El recordatorio ya se encuentra cancelado");
+            alertError.showAndWait();
+            return;
+        }
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmación");
+        alert.setHeaderText("¿Está seguro de querer cancelar el recordatorio?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK){
+            boolean response = model.cancelTask(task);
+            if(response){
+                Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
+                alertConfirmation.setTitle("Éxito");
+                alertConfirmation.setHeaderText("Éxito cancelando el recordatorio");
+                alertConfirmation.showAndWait();
+                setTblTasks();
+            } else {
+                Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
+                alertError.setTitle("Error");
+                alertError.setHeaderText("Ocurrió un error. Por favor intente más tarde");
+                alertError.showAndWait();
+            }
+        }
+    }
+
+    @FXML
+    private void selectDatePicker(ActionEvent event) {
+        DatePicker datePicker = (DatePicker) event.getSource();
+        if ((!rbCreationDateFilter.isSelected() && !rbAssignedDateFilter.isSelected()) || dpDateFrom.getValue() == null
+                || dpDateTo.getValue() == null) {
+            updateDateValues(datePicker);
+            return;
+        }
+        if (!checkDateConsistency(dpDateFrom.getValue(), dpDateTo.getValue())) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("La fecha desde no puede ser mayor que la fecha hasta");
+            alert.showAndWait();
+            if(datePicker == dpDateFrom){
+                dpDateFrom.setValue(dateFrom);
+            } else if (datePicker == dpDateTo) {
+                dpDateTo.setValue(dateTo);
+            }
+            return;
+        }
+        removeFilterDate(false);
+        if(rbCreationDateFilter.isSelected()){
+            addFilter("FilterDate", "Filtrar por fecha creación", "Desde: " +
+                    dpDateFrom.getValue().toString() + " | Hasta: " + dpDateTo.getValue().toString());
+        } else if (rbAssignedDateFilter.isSelected()) {
+            addFilter("FilterDate", "Filtrar por fecha asignada", "Desde: " +
+                    dpDateFrom.getValue().toString() + " | Hasta: " + dpDateTo.getValue().toString());
+        }
+        updateDateValues(datePicker);
     }
 
     private void addFilter(String filterType, String tittle, String information){
@@ -289,93 +441,18 @@ public class ShowTasksController implements Initializable {
         }
     }
 
-    public void completeTask() {
-        if(tblTasks.getSelectionModel().getSelectedItem() == null){
-            Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
-            alertError.setTitle("Error");
-            alertError.setHeaderText("No se encuentra ningún recordatorio seleccionado");
-            alertError.showAndWait();
-            return;
-        }
-        Task task = tblTasks.getSelectionModel().getSelectedItem();
-        if(task.getState().toString().equals(EventState.complete.toString())){
-            Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
-            alertError.setTitle("Error");
-            alertError.setHeaderText("El recordatorio ya se encuentra completado");
-            alertError.showAndWait();
-            return;
-        } else if(task.getState().toString().equals(EventState.canceled.toString())){
-            Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
-            alertError.setTitle("Error");
-            alertError.setHeaderText("El recordatorio se encuentra cancelado");
-            alertError.showAndWait();
-            return;
-        }
+    private boolean checkDateConsistency(LocalDate fromDate, LocalDate toDate) {
+        Date from = Date.valueOf(fromDate);
+        Date to = Date.valueOf(toDate);
+        return !to.before(from);
+    }
 
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmación");
-        alert.setHeaderText("¿Está seguro de querer completar el recordatorio?");
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK){
-            boolean response = model.completeTask(task);
-            if(response){
-                Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
-                alertConfirmation.setTitle("Éxito");
-                alertConfirmation.setHeaderText("Éxito completando el recordatorio");
-                alertConfirmation.showAndWait();
-                setTblTasks();
-            } else {
-                Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
-                alertError.setTitle("Error");
-                alertError.setHeaderText("Ocurrió un error. Por favor intente más tarde");
-                alertError.showAndWait();
-            }
+    private void updateDateValues(DatePicker datePicker){
+        if(datePicker == dpDateFrom){
+            dateFrom = datePicker.getValue();
+        } else if (datePicker == dpDateTo) {
+            dateTo = datePicker.getValue();
         }
     }
 
-    public void cancelTask() {
-        if(tblTasks.getSelectionModel().getSelectedItem() == null){
-            Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
-            alertError.setTitle("Error");
-            alertError.setHeaderText("No se encuentra ningún recordatorio seleccionado");
-            alertError.showAndWait();
-            return;
-        }
-        Task task = tblTasks.getSelectionModel().getSelectedItem();
-        if(task.getState().toString().equals(EventState.complete.toString())){
-            Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
-            alertError.setTitle("Error");
-            alertError.setHeaderText("El recordatorio se encuentra completado");
-            alertError.showAndWait();
-            return;
-        } else if(task.getState().toString().equals(EventState.canceled.toString())){
-            Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
-            alertError.setTitle("Error");
-            alertError.setHeaderText("El recordatorio ya se encuentra cancelado");
-            alertError.showAndWait();
-            return;
-        }
-
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmación");
-        alert.setHeaderText("¿Está seguro de querer cancelar el recordatorio?");
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK){
-            boolean response = model.cancelTask(task);
-            if(response){
-                Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
-                alertConfirmation.setTitle("Éxito");
-                alertConfirmation.setHeaderText("Éxito cancelando el recordatorio");
-                alertConfirmation.showAndWait();
-                setTblTasks();
-            } else {
-                Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
-                alertError.setTitle("Error");
-                alertError.setHeaderText("Ocurrió un error. Por favor intente más tarde");
-                alertError.showAndWait();
-            }
-        }
-    }
 }

@@ -2,6 +2,7 @@ package controllers.inventory;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -21,13 +22,14 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.Model;
 import models.interfaces.Animal;
-import models.interfaces.Owner;
-import models.interfaces.FilterCard;
 import models.interfaces.AnimalState;
+import models.interfaces.FilterCard;
+import models.interfaces.Owner;
 
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -83,15 +85,16 @@ public class ShowInventoryController implements Initializable {
     private TableColumn<Animal, Date> colSaleDate;
     @FXML
     private TableColumn<Animal, String> colState;
-
-    private final List<FilterCard> filters = new ArrayList<>();
-
     @FXML
     private HBox hbFiltersContainer;
     @FXML
     private Button btnSellAnimal;
     @FXML
     private Button btnDeleteAnimal;
+    
+    private final List<FilterCard> filters = new ArrayList<>();
+    private  LocalDate dateFrom = null;
+    private LocalDate dateTo = null;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -163,24 +166,33 @@ public class ShowInventoryController implements Initializable {
         setTblAnimals();
     }
 
-    private void setTblAnimals(){
+    private void setTblAnimals() {
         ObservableList<Animal> animals = model.getActiveAnimals();
         tblAnimals.setItems(animals);
     }
 
-    public void selectPurchaseDateFilter() {
-        if(dpDateFrom.getValue() == null || dpDateTo.getValue() == null){
+    @FXML
+    private void selectPurchaseDateFilter() {
+        if (dpDateFrom.getValue() == null || dpDateTo.getValue() == null) {
             rbPurchaseDateFilter.setSelected(false);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText("Debes seleccionar primero el rango de fechas");
             alert.showAndWait();
             return;
         }
-        if(rbSaleDateFilter.isSelected()){
+        if (rbSaleDateFilter.isSelected()) {
             removeFilterDate(false);
             rbSaleDateFilter.setSelected(false);
         }
-        if(rbPurchaseDateFilter.isSelected()){
+        if (rbPurchaseDateFilter.isSelected()) {
+            if (!checkDateConsistency(dpDateFrom.getValue(), dpDateTo.getValue())) {
+                rbPurchaseDateFilter.setSelected(false);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setHeaderText("La fecha desde no puede ser mayor que la fecha hasta");
+                alert.showAndWait();
+                dpDateTo.setValue(null);
+                return;
+            }
             addFilter("FilterDate", "Filtrar por fecha compra", "Desde: " +
                     dpDateFrom.getValue().toString() + " | Hasta: " + dpDateTo.getValue().toString());
         } else {
@@ -188,19 +200,28 @@ public class ShowInventoryController implements Initializable {
         }
     }
 
-    public void selectSaleDateFilter() {
-        if(dpDateFrom.getValue() == null || dpDateTo.getValue() == null){
+    @FXML
+    private void selectSaleDateFilter() {
+        if (dpDateFrom.getValue() == null || dpDateTo.getValue() == null) {
             rbSaleDateFilter.setSelected(false);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText("Debes seleccionar primero el rango de fechas");
             alert.showAndWait();
             return;
         }
-        if(rbPurchaseDateFilter.isSelected()){
+        if (rbPurchaseDateFilter.isSelected()) {
             removeFilterDate(false);
             rbPurchaseDateFilter.setSelected(false);
         }
-        if(rbSaleDateFilter.isSelected()){
+        if (rbSaleDateFilter.isSelected()) {
+            if (!checkDateConsistency(dpDateFrom.getValue(), dpDateTo.getValue())) {
+                rbSaleDateFilter.setSelected(false);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setHeaderText("La fecha desde no puede ser mayor que la fecha hasta");
+                alert.showAndWait();
+                dpDateTo.setValue(null);
+                return;
+            }
             addFilter("FilterDate", "Filtrar por fecha venta", "Desde: " +
                     dpDateFrom.getValue().toString() + " | Hasta: " + dpDateTo.getValue().toString());
         } else {
@@ -295,14 +316,15 @@ public class ShowInventoryController implements Initializable {
         }
     }
 
-    public void selectOwnerFilter() {
-        if(cbOwnerFilter.getValue() == null){
+    @FXML
+    private void selectOwnerFilter() {
+        if (cbOwnerFilter.getValue() == null) {
             return;
         }
         FilterCard currentFilterCard = null;
-        for (FilterCard filterCard: filters
-             ) {
-            if(filterCard.getType().equals("FilterOwner")){
+        for (FilterCard filterCard : filters
+        ) {
+            if (filterCard.getType().equals("FilterOwner")) {
                 hbFiltersContainer.getChildren().remove(filterCard.getCard());
                 currentFilterCard = filterCard;
             }
@@ -312,38 +334,40 @@ public class ShowInventoryController implements Initializable {
         }
         String[] split = cbOwnerFilter.getValue().toString().split(" \\| Porcentaje:");
         String ownerInformation = split[0];
-        if(ownerInformation.length() > 35){
+        if (ownerInformation.length() > 35) {
             ownerInformation = ownerInformation.substring(0, 35);
         }
         addFilter("FilterOwner", "Filtrar por dueño", ownerInformation);
     }
 
-    public void selectSexFilter() {
-        if(cbSexFilter.getValue() == null){
+    @FXML
+    private void selectSexFilter() {
+        if (cbSexFilter.getValue() == null) {
             return;
         }
         FilterCard currentFilterCard = null;
-        for (FilterCard filterCard: filters
+        for (FilterCard filterCard : filters
         ) {
-            if(filterCard.getType().equals("FilterSex")){
+            if (filterCard.getType().equals("FilterSex")) {
                 hbFiltersContainer.getChildren().remove(filterCard.getCard());
                 currentFilterCard = filterCard;
             }
         }
-        if(currentFilterCard != null){
+        if (currentFilterCard != null) {
             filters.remove(currentFilterCard);
         }
         addFilter("FilterSex", "Filtrar por sexo", cbSexFilter.getValue().toString());
     }
 
-    public void selectStateFilter() {
-        if(cbStateFilter.getValue() == null){
+    @FXML
+    private void selectStateFilter() {
+        if (cbStateFilter.getValue() == null) {
             return;
         }
         FilterCard currentFilterCard = null;
-        for (FilterCard filterCard: filters
+        for (FilterCard filterCard : filters
         ) {
-            if(filterCard.getType().equals("FilterState")){
+            if (filterCard.getType().equals("FilterState")) {
                 hbFiltersContainer.getChildren().remove(filterCard.getCard());
                 currentFilterCard = filterCard;
             }
@@ -354,34 +378,35 @@ public class ShowInventoryController implements Initializable {
         addFilter("FilterState", "Filtrar por estado", cbStateFilter.getValue().toString());
     }
 
-    public void selectNumberFilter(){
-        if(txtNumberFilter.getText().length() == 0){
+    private void selectNumberFilter() {
+        if (txtNumberFilter.getText().length() == 0) {
             return;
         }
         FilterCard currentFilterCard = null;
-        for (FilterCard filterCard: filters
+        for (FilterCard filterCard : filters
         ) {
-            if(filterCard.getType().equals("FilterNumber")){
+            if (filterCard.getType().equals("FilterNumber")) {
                 hbFiltersContainer.getChildren().remove(filterCard.getCard());
                 currentFilterCard = filterCard;
             }
         }
-        if(currentFilterCard != null){
+        if (currentFilterCard != null) {
             filters.remove(currentFilterCard);
         }
         addFilter("FilterNumber", "Filtrar por número", txtNumberFilter.getText());
     }
 
-    public void filter() {
-        if(cbOwnerFilter.getValue() == null && cbSexFilter.getValue() == null && cbStateFilter.getValue() == null &&
-                (!rbPurchaseDateFilter.isSelected() && !rbSaleDateFilter.isSelected()) && txtNumberFilter.getText().length() == 0){
+    @FXML
+    private void filter() {
+        if (cbOwnerFilter.getValue() == null && cbSexFilter.getValue() == null && cbStateFilter.getValue() == null &&
+                (!rbPurchaseDateFilter.isSelected() && !rbSaleDateFilter.isSelected()) && txtNumberFilter.getText().length() == 0) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("No hay filtros");
             alert.setHeaderText("Debes agregar filtros para poder completar la acción");
             alert.showAndWait();
             return;
         }
-        if(txtNumberFilter.getText().length() > 0){
+        if (txtNumberFilter.getText().length() > 0) {
             FilterCard existsFilterCard = null;
             for (FilterCard filterCard:
                  filters) {
@@ -420,7 +445,8 @@ public class ShowInventoryController implements Initializable {
         tblAnimals.setItems(animals);
     }
 
-    public void getAllAnimals() {
+    @FXML
+    private void getAllAnimals() {
         ObservableList<Animal> animals = model.getAllAnimals();
         tblAnimals.setItems(animals);
         clearFilters();
@@ -531,7 +557,38 @@ public class ShowInventoryController implements Initializable {
         }
     }
 
-    public void print(){
+    @FXML
+    private void selectDatePicker(ActionEvent event) {
+        DatePicker datePicker = (DatePicker) event.getSource();
+        if ((!rbSaleDateFilter.isSelected() && !rbPurchaseDateFilter.isSelected()) || dpDateFrom.getValue() == null
+                || dpDateTo.getValue() == null) {
+            updateDateValues(datePicker);
+            return;
+        }
+        if (!checkDateConsistency(dpDateFrom.getValue(), dpDateTo.getValue())) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("La fecha desde no puede ser mayor que la fecha hasta");
+            alert.showAndWait();
+            if(datePicker == dpDateFrom){
+                dpDateFrom.setValue(dateFrom);
+            } else if (datePicker == dpDateTo) {
+                dpDateTo.setValue(dateTo);
+            }
+            return;
+        }
+        removeFilterDate(false);
+        if(rbPurchaseDateFilter.isSelected()){
+            addFilter("FilterDate", "Filtrar por fecha compra", "Desde: " +
+                    dpDateFrom.getValue().toString() + " | Hasta: " + dpDateTo.getValue().toString());
+        } else if (rbSaleDateFilter.isSelected()) {
+            addFilter("FilterDate", "Filtrar por fecha venta", "Desde: " +
+                    dpDateFrom.getValue().toString() + " | Hasta: " + dpDateTo.getValue().toString());
+        }
+        updateDateValues(datePicker);
+    }
+
+    @FXML
+    private void print() {
         PrinterJob printerJob = PrinterJob.createPrinterJob();
         if (printerJob == null) {
             return;
@@ -541,6 +598,20 @@ public class ShowInventoryController implements Initializable {
             PageLayout pageLayout = printerJob.getJobSettings().getPageLayout();
             printerJob.printPage(pageLayout, tblAnimals);
             printerJob.endJob();
+        }
+    }
+
+    private boolean checkDateConsistency(LocalDate fromDate, LocalDate toDate) {
+        Date from = Date.valueOf(fromDate);
+        Date to = Date.valueOf(toDate);
+        return !to.before(from);
+    }
+
+    private void updateDateValues(DatePicker datePicker){
+        if(datePicker == dpDateFrom){
+            dateFrom = datePicker.getValue();
+        } else if (datePicker == dpDateTo) {
+            dateTo = datePicker.getValue();
         }
     }
 }
