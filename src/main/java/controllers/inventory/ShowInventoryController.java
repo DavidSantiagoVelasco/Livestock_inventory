@@ -594,7 +594,7 @@ public class ShowInventoryController implements Initializable {
     }
 
     @FXML
-    private void print() {
+    private void generateReport() {
         if(animals.size() == 0){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText("No hay animales filtrados para hacer un reporte");
@@ -613,15 +613,15 @@ public class ShowInventoryController implements Initializable {
             stage.setResizable(false);
 
             stage.showAndWait();
-            Alert alert;
-            if(reportOptionsController.getResponse()){
-                alert = new Alert(Alert.AlertType.INFORMATION);
+            if (reportOptionsController.getResponse() == 1) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setHeaderText("Se generó el reporte. Busque el pdf en descargas");
-            } else {
-                alert = new Alert(Alert.AlertType.ERROR);
+                alert.showAndWait();
+            } else if (reportOptionsController.getResponse() == -1) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setHeaderText("Ocurrió un error. Intente más tarde");
+                alert.showAndWait();
             }
-            alert.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
         }

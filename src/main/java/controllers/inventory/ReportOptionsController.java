@@ -58,7 +58,7 @@ public class ReportOptionsController implements Initializable {
     @FXML
     private RadioButton rbState;
 
-    private boolean response = true;
+    private int response = 0;
     private final List<Animal> animals;
     private final List<String> columnNames = new ArrayList<>();
     private final List<Float> columnWidths = new ArrayList<>();
@@ -88,7 +88,7 @@ public class ReportOptionsController implements Initializable {
         btnGenerateReport.setOnAction(event -> generateReport());
     }
 
-    public boolean getResponse() {
+    public int getResponse() {
         return response;
     }
 
@@ -243,9 +243,10 @@ public class ReportOptionsController implements Initializable {
             document.close();
             pdfDocument.close();
         } catch (IOException e) {
-            response = false;
+            response = -1;
             e.printStackTrace();
         }
+        response = 1;
         Stage stage = (Stage) btnGenerateReport.getScene().getWindow();
         stage.close();
     }

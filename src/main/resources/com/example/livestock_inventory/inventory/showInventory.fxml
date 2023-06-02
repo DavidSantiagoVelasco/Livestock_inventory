@@ -53,5 +53,5 @@
          <TableColumn fx:id="colState" editable="false" resizable="false" text="Estado" />
      </columns>
    </TableView>
-   <Button layoutX="679.0" layoutY="146.0" mnemonicParsing="false" onAction="#print" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Imprimir" textFill="DARKSLATEGRAY" />
+   <Button layoutX="679.0" layoutY="146.0" mnemonicParsing="false" onAction="#generateReport" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Generar reporte" textFill="DARKSLATEGRAY" />
 </AnchorPane>
