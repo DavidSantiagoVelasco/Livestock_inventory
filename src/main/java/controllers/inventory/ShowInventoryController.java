@@ -6,8 +6,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.print.PageLayout;
-import javafx.print.PrinterJob;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -34,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
 
 public class ShowInventoryController implements Initializable {
 
@@ -91,7 +90,8 @@ public class ShowInventoryController implements Initializable {
     private Button btnSellAnimal;
     @FXML
     private Button btnDeleteAnimal;
-    
+
+    private final List<Animal> animals = new ArrayList<>();
     private final List<FilterCard> filters = new ArrayList<>();
     private  LocalDate dateFrom = null;
     private LocalDate dateTo = null;
@@ -168,7 +168,13 @@ public class ShowInventoryController implements Initializable {
 
     private void setTblAnimals() {
         ObservableList<Animal> animals = model.getActiveAnimals();
+        setTblAnimals(animals);
+    }
+
+    private void setTblAnimals(ObservableList<Animal> animals){
         tblAnimals.setItems(animals);
+        this.animals.clear();
+        this.animals.addAll(animals);
     }
 
     @FXML
@@ -442,19 +448,19 @@ public class ShowInventoryController implements Initializable {
         String dateFrom = dpDateFrom.getValue() != null ? dpDateFrom.getValue().toString() : "";
         String dateTo = dpDateTo.getValue() != null ? dpDateTo.getValue().toString() : "";
         ObservableList<Animal> animals = model.getFilterAnimals(txtNumberFilter.getText(), idOwner, sex, animalState, purchaseOrSale, dateFrom, dateTo);
-        tblAnimals.setItems(animals);
+        setTblAnimals(animals);
     }
 
     @FXML
     private void getAllAnimals() {
         ObservableList<Animal> animals = model.getAllAnimals();
-        tblAnimals.setItems(animals);
+        setTblAnimals(animals);
         clearFilters();
     }
 
     public void getAnimals() {
         ObservableList<Animal> animals = model.getActiveAnimals();
-        tblAnimals.setItems(animals);
+        setTblAnimals(animals);
         clearFilters();
     }
 
@@ -589,15 +595,35 @@ public class ShowInventoryController implements Initializable {
 
     @FXML
     private void print() {
-        PrinterJob printerJob = PrinterJob.createPrinterJob();
-        if (printerJob == null) {
+        if(animals.size() == 0){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("No hay animales filtrados para hacer un reporte");
+            alert.showAndWait();
             return;
         }
-        boolean proceed = printerJob.showPrintDialog(tblAnimals.getScene().getWindow());
-        if (proceed) {
-            PageLayout pageLayout = printerJob.getJobSettings().getPageLayout();
-            printerJob.printPage(pageLayout, tblAnimals);
-            printerJob.endJob();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/livestock_inventory/inventory/reportOptions.fxml"));
+            ReportOptionsController reportOptionsController = new ReportOptionsController(animals);
+            loader.setController(reportOptionsController);
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+
+            stage.showAndWait();
+            Alert alert;
+            if(reportOptionsController.getResponse()){
+                alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setHeaderText("Se generó el reporte. Busque el pdf en descargas");
+            } else {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText("Ocurrió un error. Intente más tarde");
+            }
+            alert.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

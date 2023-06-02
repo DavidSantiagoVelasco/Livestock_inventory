@@ -19,10 +19,9 @@ public class TasksController {
             Parent inventoryParent = loader.load();
             Scene inventoryScene = new Scene(inventoryParent);
             Stage stage = new Stage();
-
+            stage.setTitle("Recordatorios");
             stage.setScene(inventoryScene);
             stage.show();
-
         }catch (java.io.IOException e){
             e.printStackTrace();
         }

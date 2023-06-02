@@ -26,8 +26,8 @@
    <Button fx:id="btnDeleteAnimal" layoutX="265.0" layoutY="146.0" mnemonicParsing="false" onAction="#deleteAnimal" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: #ff4242; -fx-cursor: hand;" text="Eliminar" textFill="WHITE" visible="false" />
    <Button fx:id="btnSellAnimal" layoutX="472.0" layoutY="146.0" mnemonicParsing="false" onAction="#sellAnimal" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: #05B2DC; -fx-cursor: hand;" text="Vender" textFill="WHITE" visible="false" />
    <Label layoutX="58.0" layoutY="26.0" text="Filtrar por número" />
-   <Label layoutX="265.0" layoutY="26.0" text="Filtrar por dueño" />
-   <Label layoutX="472.0" layoutY="26.0" text="Filtrar por sexo" />
+   <Label layoutX="265.0" layoutY="26.0" text="Filtrar por sexo" />
+   <Label layoutX="472.0" layoutY="26.0" text="Filtrar por dueño" />
    <Label layoutX="679.0" layoutY="26.0" text="Filtrar por estado" />
    <Label layoutX="886.0" layoutY="26.0" text="Desde" />
    <Label layoutX="1093.0" layoutY="26.0" text="Hasta" />
