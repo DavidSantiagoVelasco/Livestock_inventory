@@ -142,6 +142,9 @@ public class SellAnimalController implements Initializable {
                     description += "  |  Animal en aumento, ganancia para el dueño: " + ownerIncome;
                 }
                 Date date = new Date(dpSaleDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli());
+                animal.setSaleWeight(Double.parseDouble(txtSaleWeight.getText()));
+                animal.setSalePrice(Double.parseDouble(txtSalePrice.getText()));
+                animal.setSaleDate(date);
                 boolean response = model.sellAnimal(animal, income, date, description, saleObservations);
 
 

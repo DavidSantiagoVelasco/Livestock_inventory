@@ -36,6 +36,7 @@ import java.util.ResourceBundle;
 
 public class ShowInventoryController implements Initializable {
 
+    public Button btnWeights;
     private Model model;
 
     @FXML
@@ -151,9 +152,11 @@ public class ShowInventoryController implements Initializable {
             if (newSelection != null) {
                 btnSellAnimal.setVisible(true);
                 btnDeleteAnimal.setVisible(true);
+                btnWeights.setVisible(true);
             } else {
                 btnSellAnimal.setVisible(false);
                 btnDeleteAnimal.setVisible(false);
+                btnWeights.setVisible(false);
             }
         });
 
@@ -535,13 +538,13 @@ public class ShowInventoryController implements Initializable {
         if(animal.getState().toString().equals(AnimalState.death.toString())){
             Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
             alertError.setTitle("Error");
-            alertError.setHeaderText("El animal ya se encuentra eliminado");
+            alertError.setHeaderText("El animal se encuentra eliminado");
             alertError.showAndWait();
             return;
         } else if(animal.getState().toString().equals(AnimalState.sold.toString())){
             Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
             alertError.setTitle("Error");
-            alertError.setHeaderText("El animal se encuentra vendido");
+            alertError.setHeaderText("El animal ya se encuentra vendido");
             alertError.showAndWait();
             return;
         }
@@ -622,6 +625,34 @@ public class ShowInventoryController implements Initializable {
                 alert.setHeaderText("Ocurrió un error. Intente más tarde");
                 alert.showAndWait();
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void showAnimalWeights() {
+        if(tblAnimals.getSelectionModel().getSelectedItem() == null){
+            Alert alertError = new Alert(Alert.AlertType.ERROR, "Error");
+            alertError.setTitle("Error");
+            alertError.setHeaderText("No se encuentra ningún animal seleccionado");
+            alertError.showAndWait();
+            return;
+        }
+        Animal animal = tblAnimals.getSelectionModel().getSelectedItem();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/livestock_inventory/inventory/showAnimalWeights.fxml"));
+            ShowAnimalWeightsController showAnimalWeightsController = new ShowAnimalWeightsController(animal);
+            loader.setController(showAnimalWeightsController);
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Pesos del animal");
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+
+            stage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
         }

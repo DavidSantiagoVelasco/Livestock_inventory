@@ -5,12 +5,12 @@ import java.sql.Date;
 public class Animal {
 
     private final int id;
-    private int idOwner;
+    private final int idOwner;
     private final String number;
-    private int months;
+    private final int months;
     private final String color;
     private final double purchaseWeight;
-    private String ironBrand;
+    private final String ironBrand;
     private final char sex;
     private final double purchasePrice;
     private final Date purchaseDate;
@@ -22,7 +22,8 @@ public class Animal {
 
     private Owner ownerInformation;
 
-    public Animal(int id, int idOwner, String number, int months, String color, double purchaseWeight, String ironBrand, char sex, double purchasePrice, Date purchaseDate, String observations, AnimalState state) {
+    public Animal(int id, int idOwner, String number, int months, String color, double purchaseWeight, String ironBrand, char sex, double purchasePrice, Date purchaseDate, String observations, AnimalState state,
+                  double salePrice, Date saleDate, double saleWeight) {
         this.id = id;
         this.idOwner = idOwner;
         this.number = number;
@@ -35,6 +36,9 @@ public class Animal {
         this.purchaseDate = purchaseDate;
         this.observations = observations;
         this.state = state;
+        this.salePrice = salePrice;
+        this.saleWeight = saleWeight;
+        this.saleDate = saleDate;
     }
 
     public int getId() {
@@ -97,15 +101,27 @@ public class Animal {
         return state;
     }
 
-    public void setOwnerInformation(Owner ownerInformation){
-        this.ownerInformation = ownerInformation;
-    }
-
     public String getOwnerInformation(){
         return "Id: " + ownerInformation.getId() + " | Nombre: " + ownerInformation.getName();
     }
 
     public Owner getOwner(){
         return ownerInformation;
+    }
+
+    public void setOwnerInformation(Owner ownerInformation){
+        this.ownerInformation = ownerInformation;
+    }
+
+    public void setSaleWeight(double saleWeight) {
+        this.saleWeight = saleWeight;
+    }
+
+    public void setSalePrice(double salePrice) {
+        this.salePrice = salePrice;
+    }
+
+    public void setSaleDate(Date saleDate) {
+        this.saleDate = saleDate;
     }
 }

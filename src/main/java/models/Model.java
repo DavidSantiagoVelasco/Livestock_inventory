@@ -522,7 +522,9 @@ public class Model {
                         resultSet.getString("color"), resultSet.getDouble("purchase_weight"),
                         resultSet.getString("iron_brand"), resultSet.getString("sex").charAt(0),
                         resultSet.getDouble("purchase_price"), resultSet.getDate("purchase_date"),
-                        resultSet.getString("observations"), animalState));
+                        resultSet.getString("observations"), animalState,
+                        resultSet.getDouble("sale_price"), resultSet.getDate("sale_date"),
+                        resultSet.getDouble("sale_weight")));
             }
             resultSet.close();
             statement.close();
@@ -567,8 +569,9 @@ public class Model {
             resultSet.close();
             statement.close();
             connection.close();
+            addAnimalWeight(id, number, purchaseWeight, purchaseDate);
             return new Animal(id, idOwner, number, months, color, purchaseWeight, iron_brand, sex, purchasePrice,
-                    purchaseDate, observations, AnimalState.active);
+                    purchaseDate, observations, AnimalState.active, 0, null, 0);
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
@@ -583,22 +586,32 @@ public class Model {
         try {
             PreparedStatement statement;
             if (saleObservation.length() > 0) {
-                statement = connection.prepareStatement("UPDATE animals SET state = 'sold', observations = ? " +
-                        "WHERE id = ?");
+                statement = connection.prepareStatement("UPDATE animals SET state = 'sold', observations = ?, " +
+                        "sale_weight = ?, sale_price = ?, sale_date = ? WHERE id = ?");
                 statement.setString(1, saleObservation);
                 statement.setInt(2, animal.getId());
             } else {
-                statement = connection.prepareStatement("UPDATE animals SET state = 'sold' " +
-                        "WHERE id = ?");
+                statement = connection.prepareStatement("UPDATE animals SET state = 'sold', sale_weight = ?, " +
+                        "sale_price = ?, sale_date = ? WHERE id = ?");
                 statement.setInt(1, animal.getId());
             }
+
+            int cont = 1;
+            if(saleObservation.length() > 0){
+                statement.setString(cont++, saleObservation);
+            }
+            statement.setDouble(cont++, animal.getSaleWeight());
+            statement.setDouble(cont++, animal.getSalePrice());
+            statement.setDate(cont++, animal.getSaleDate());
+            statement.setInt(cont, animal.getId());
 
             int rowsAffected = statement.executeUpdate();
             statement.close();
             connection.close();
             if (rowsAffected == 1) {
-                Finance finance = addIncome(income, date, descriptionIncome);
-                return finance != null;
+                addIncome(income, date, descriptionIncome);
+                addAnimalWeight(animal.getId(), animal.getNumber(), animal.getSaleWeight(), animal.getSaleDate());
+                return true;
             } else {
                 return false;
             }
@@ -626,7 +639,9 @@ public class Model {
                         resultSet.getString("color"), resultSet.getDouble("purchase_weight"),
                         resultSet.getString("iron_brand"), resultSet.getString("sex").charAt(0),
                         resultSet.getDouble("purchase_price"), resultSet.getDate("purchase_date"),
-                        resultSet.getString("observations"), AnimalState.active);
+                        resultSet.getString("observations"), AnimalState.active,
+                        resultSet.getDouble("sale_price"), resultSet.getDate("sale_date"),
+                        resultSet.getDouble("sale_weight"));
             }
             resultSet.close();
             statement.close();
@@ -664,7 +679,9 @@ public class Model {
                         resultSet.getString("color"), resultSet.getDouble("purchase_weight"),
                         resultSet.getString("iron_brand"), resultSet.getString("sex").charAt(0),
                         resultSet.getDouble("purchase_price"), resultSet.getDate("purchase_date"),
-                        resultSet.getString("observations"), animalState);
+                        resultSet.getString("observations"), animalState,
+                        resultSet.getDouble("sale_price"), resultSet.getDate("sale_date"),
+                        resultSet.getDouble("sale_weight"));
                 animal.setOwnerInformation(new Owner(resultSet.getInt("id_owner"),
                         resultSet.getString("name"), resultSet.getDouble("percentage"),
                         resultSet.getString("iron_brand"), resultSet.getBoolean("active")));
@@ -708,7 +725,9 @@ public class Model {
                         resultSet.getString("color"), resultSet.getDouble("purchase_weight"),
                         resultSet.getString("iron_brand"), resultSet.getString("sex").charAt(0),
                         resultSet.getDouble("purchase_price"), resultSet.getDate("purchase_date"),
-                        resultSet.getString("observations"), animalState);
+                        resultSet.getString("observations"), animalState,
+                        resultSet.getDouble("sale_price"), resultSet.getDate("sale_date"),
+                        resultSet.getDouble("sale_weight"));
                 animal.setOwnerInformation(new Owner(resultSet.getInt("id_owner"),
                         resultSet.getString("name"), resultSet.getDouble("percentage"),
                         resultSet.getString("iron_brand"), resultSet.getBoolean("active")));
@@ -802,7 +821,9 @@ public class Model {
                         resultSet.getString("color"), resultSet.getDouble("purchase_weight"),
                         resultSet.getString("iron_brand"), resultSet.getString("sex").charAt(0),
                         resultSet.getDouble("purchase_price"), resultSet.getDate("purchase_date"),
-                        resultSet.getString("observations"), animalStateResultSet);
+                        resultSet.getString("observations"), animalStateResultSet,
+                        resultSet.getDouble("sale_price"), resultSet.getDate("sale_date"),
+                        resultSet.getDouble("sale_weight"));
                 animal.setOwnerInformation(new Owner(resultSet.getInt("id_owner"),
                         resultSet.getString("name"), resultSet.getDouble("percentage"),
                         resultSet.getString("iron_brand"), resultSet.getBoolean("active")));
@@ -835,6 +856,69 @@ public class Model {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    /**
+     * ========================================== Weight ======================================
+     **/
+
+    public boolean addAnimalWeight(int idAnimal, String number, double weight, Date date){
+        Connection connection = JDBC.connection();
+        if (connection == null) {
+            return false;
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO weights(id_animal, " +
+                    "animal_number, weight, date) VALUES(?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            statement.setInt(1, idAnimal);
+            statement.setString(2, number);
+            statement.setDouble(3, weight);
+            statement.setDate(4, date);
+            statement.executeUpdate();
+            ResultSet resultSet = statement.getGeneratedKeys();
+            int id = -1;
+            if (resultSet.next()) {
+                id = resultSet.getInt(1);
+            }
+            if (id == -1) {
+                return false;
+            }
+            resultSet.close();
+            statement.close();
+            connection.close();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public ObservableList<Weight> getAnimalWeights(int idAnimal){
+        Connection connection = JDBC.connection();
+        if (connection == null) {
+            return null;
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM weights WHERE id_animal " +
+                    "= ? ORDER BY date ASC");
+            statement.setInt(1, idAnimal);
+            ResultSet resultSet = statement.executeQuery();
+
+            ObservableList<Weight> weights = FXCollections.observableArrayList();
+
+            while (resultSet.next()) {
+                weights.add(new Weight(resultSet.getInt("id"), resultSet.getInt("id_animal"),
+                        resultSet.getString("animal_number"), resultSet.getDouble("weight"),
+                        resultSet.getDate("date")));
+            }
+            resultSet.close();
+            statement.close();
+            connection.close();
+            return weights;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
