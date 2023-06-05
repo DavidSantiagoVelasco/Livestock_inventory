@@ -3,6 +3,7 @@ package controllers.inventory;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.Style;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
@@ -60,12 +61,14 @@ public class ReportOptionsController implements Initializable {
 
     private int response = 0;
     private final List<Animal> animals;
+    private final List<String> filters;
     private final List<String> columnNames = new ArrayList<>();
     private final List<Float> columnWidths = new ArrayList<>();
     private int selectedColumns = 8;
 
-    public ReportOptionsController(List<Animal> animals) {
+    public ReportOptionsController(List<Animal> animals, List<String> filters) {
         this.animals = animals;
+        this.filters = filters;
     }
 
     @Override
@@ -141,6 +144,15 @@ public class ReportOptionsController implements Initializable {
             document.add(new Paragraph("INVENTARIO GANADERO").setFontSize(32f));
             document.add(new Paragraph("Documento generado para la fecha " + formattedDate).setMarginBottom(20f));
 
+            Style boldStyle = new Style().setBold();
+
+            if(filters.size() > 0){
+                document.add(new Paragraph("Filtros:").setTextAlignment(TextAlignment.LEFT).setFontSize(11).addStyle(boldStyle).setMarginBottom(-1));
+                for (String filter: filters
+                     ) {
+                    document.add(new Paragraph(filter).setTextAlignment(TextAlignment.LEFT).setFontSize(8).setMarginBottom(-1));
+                }
+            }
 
             if (rbNumber.isSelected()) {
                 columnNames.add("Número");
@@ -205,10 +217,10 @@ public class ReportOptionsController implements Initializable {
                 floatColumnWidths[i] = columnWidths.get(i);
             }
 
-            Table table = new Table(floatColumnWidths);
+            Table table = new Table(floatColumnWidths).setMarginTop(30);
 
             for (String columnName : columnNames) {
-                table.addCell(new Cell().add(new Paragraph(columnName)));
+                table.addCell(new Cell().add(new Paragraph(columnName).addStyle(boldStyle)));
             }
 
             for (Animal animal : animals) {

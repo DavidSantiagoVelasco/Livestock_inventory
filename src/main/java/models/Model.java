@@ -468,6 +468,12 @@ public class Model {
         return ownerSplit[1];
     }
 
+    public String getOwnerNameFromOwnerInformation(String ownerInformation) {
+        String[] ownerSplit = ownerInformation.split("Nombre: ");
+        ownerSplit = ownerSplit[1].split(" \\| Porcentaje");
+        return ownerSplit[0];
+    }
+
 
     /**
      * ========================================== Animals ======================================

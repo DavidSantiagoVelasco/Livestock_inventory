@@ -96,6 +96,7 @@ public class ShowInventoryController implements Initializable {
     private final List<FilterCard> filters = new ArrayList<>();
     private  LocalDate dateFrom = null;
     private LocalDate dateTo = null;
+    private final List<String> filtersApplied = new ArrayList<>();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -415,6 +416,7 @@ public class ShowInventoryController implements Initializable {
             alert.showAndWait();
             return;
         }
+        filtersApplied.clear();
         if (txtNumberFilter.getText().length() > 0) {
             FilterCard existsFilterCard = null;
             for (FilterCard filterCard:
@@ -430,9 +432,18 @@ public class ShowInventoryController implements Initializable {
                 filters.remove(existsFilterCard);
                 addFilter("FilterNumber", "Filtrar por número", txtNumberFilter.getText());
             }
+            filtersApplied.add("Animales que incluyan " + txtNumberFilter.getText() + " en su número");
         }
         int idOwner = cbOwnerFilter.getValue() != null ? model.getOwnerIdFromOwnerInformation(cbOwnerFilter.getValue().toString()) : -1;
+        if(idOwner != -1){
+            filtersApplied.add("Animales de: " + model.getOwnerNameFromOwnerInformation(cbOwnerFilter.getValue().toString()));
+        }
         String sex = cbSexFilter.getValue() != null ? cbSexFilter.getValue().toString().charAt(0)+"" : "";
+        if(sex.equals("M")){
+            filtersApplied.add("Sexo: Machos");
+        } else if (sex.equals("H")) {
+            filtersApplied.add("Sexo: Hembras");
+        }
         String stateString = cbStateFilter.getValue() != null ? cbStateFilter.getValue().toString() : "";
         AnimalState animalState = null;
         if(stateString.length() > 0){
@@ -442,6 +453,9 @@ public class ShowInventoryController implements Initializable {
                 case "Muerto" -> animalState = AnimalState.death;
             }
         }
+        if(stateString.length() > 0){
+            filtersApplied.add("Estado: " + stateString + "s");
+        }
         String purchaseOrSale = "";
         if (rbPurchaseDateFilter.isSelected()) {
             purchaseOrSale = "purchase";
@@ -450,18 +464,26 @@ public class ShowInventoryController implements Initializable {
         }
         String dateFrom = dpDateFrom.getValue() != null ? dpDateFrom.getValue().toString() : "";
         String dateTo = dpDateTo.getValue() != null ? dpDateTo.getValue().toString() : "";
+        if(dateFrom.length() > 0 && dateTo.length() > 0){
+            filtersApplied.add("Fecha " + (purchaseOrSale.equals("purchase") ? "compra" : "venta") + " | Desde: " +
+                    dateFrom + " | Hasta: " + dateTo);
+        }
         ObservableList<Animal> animals = model.getFilterAnimals(txtNumberFilter.getText(), idOwner, sex, animalState, purchaseOrSale, dateFrom, dateTo);
         setTblAnimals(animals);
     }
 
     @FXML
     private void getAllAnimals() {
+        filtersApplied.clear();
+        filtersApplied.add("Todos los animales");
         ObservableList<Animal> animals = model.getAllAnimals();
         setTblAnimals(animals);
         clearFilters();
     }
 
     public void getAnimals() {
+        filtersApplied.clear();
+        filtersApplied.add("Todos los animales activos");
         ObservableList<Animal> animals = model.getActiveAnimals();
         setTblAnimals(animals);
         clearFilters();
@@ -606,7 +628,7 @@ public class ShowInventoryController implements Initializable {
         }
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/livestock_inventory/inventory/reportOptions.fxml"));
-            ReportOptionsController reportOptionsController = new ReportOptionsController(animals);
+            ReportOptionsController reportOptionsController = new ReportOptionsController(animals, filtersApplied);
             loader.setController(reportOptionsController);
             Parent root = loader.load();
 
