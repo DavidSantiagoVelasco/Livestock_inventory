@@ -13,7 +13,7 @@ public class Model {
     /**
      * ========================================== Tasks ======================================
      **/
-    public ObservableList<Task> getTasksMonth() {
+    public ObservableList<Task> getActiveTasksMonth() {
         LocalDate currentDate = LocalDate.now();
 
         Connection connection = JDBC.connection();
@@ -22,7 +22,7 @@ public class Model {
         }
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM tasks WHERE " +
-                    "MONTH(assigned_date) = ? ORDER BY assigned_date DESC");
+                    "MONTH(assigned_date) = ? AND state = 'active' ORDER BY assigned_date DESC");
             statement.setInt(1, currentDate.getMonthValue());
             ResultSet resultSet = statement.executeQuery();
 
@@ -296,32 +296,6 @@ public class Model {
     /**
      * ========================================== Owners ======================================
      **/
-    public ObservableList<Owner> getAllOwners() {
-        Connection connection = JDBC.connection();
-        if (connection == null) {
-            return null;
-        }
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM owners ORDER BY active DESC");
-
-            ObservableList<Owner> owners = FXCollections.observableArrayList();
-
-            while (resultSet.next()) {
-                owners.add(new Owner(resultSet.getInt("id"), resultSet.getString("name"),
-                        resultSet.getDouble("percentage"), resultSet.getString("iron_brand"),
-                        resultSet.getBoolean("active")));
-            }
-            resultSet.close();
-            statement.close();
-            connection.close();
-            return owners;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     public ObservableList<Owner> getActiveOwners() {
         Connection connection = JDBC.connection();
         if (connection == null) {

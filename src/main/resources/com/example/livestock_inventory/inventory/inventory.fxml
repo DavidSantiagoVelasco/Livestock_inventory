@@ -25,22 +25,7 @@
                     <Font size="18.0" />
                 </font>
             </Button>
-            <Button fx:id="btnModifyInventory" layoutX="173.0" layoutY="303.0" mnemonicParsing="false" onAction="#showOptionsModifyInventory" prefHeight="71.0" prefWidth="268.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Modificar inventario" textFill="DARKSLATEGRAY">
-                <font>
-                    <Font size="18.0" />
-                </font>
-            </Button>
-            <Button fx:id="btnBuyAnimals" layoutX="14.0" layoutY="261.0" mnemonicParsing="false" onAction="#buyAnimals" prefHeight="71.0" prefWidth="172.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Comprar animal" textFill="DARKSLATEGRAY" visible="false">
-                <font>
-                    <Font size="18.0" />
-                </font>
-            </Button>
-            <Button fx:id="btnSellAnimals" layoutX="221.0" layoutY="261.0" mnemonicParsing="false" onAction="#sellAnimals" prefHeight="71.0" prefWidth="172.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Vender animal" textFill="DARKSLATEGRAY" visible="false">
-                <font>
-                    <Font size="18.0" />
-                </font>
-            </Button>
-            <Button fx:id="btnDeleteAnimals" layoutX="427.0" layoutY="261.0" mnemonicParsing="false" onAction="#deleteAnimals" prefHeight="71.0" prefWidth="172.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Eliminar animales" textFill="#2e4d4d" visible="false">
+            <Button layoutX="173.0" layoutY="303.0" mnemonicParsing="false" onAction="#buyAnimal" prefHeight="71.0" prefWidth="268.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Comprar animal" textFill="DARKSLATEGRAY">
                 <font>
                     <Font size="18.0" />
                 </font>

@@ -4,25 +4,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 public class InventoryController {
 
     @FXML
-    private Button btnBuyAnimals;
-
-    @FXML
-    private Button btnDeleteAnimals;
-
-    @FXML
-    private Button btnModifyInventory;
-
-    @FXML
-    private Button btnSellAnimals;
-
-    @FXML
-    void buyAnimals() {
+    void buyAnimal() {
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/livestock_inventory/inventory/buyAnimalModule.fxml"));
             Parent inventoryParent = loader.load();
@@ -35,16 +22,6 @@ public class InventoryController {
         }catch (java.io.IOException e){
             e.printStackTrace();
         }
-    }
-
-    @FXML
-    void deleteAnimals() {
-
-    }
-
-    @FXML
-    void sellAnimals() {
-
     }
 
     @FXML
@@ -61,13 +38,5 @@ public class InventoryController {
         }catch (java.io.IOException e){
             e.printStackTrace();
         }
-    }
-
-    @FXML
-    void showOptionsModifyInventory() {
-        this.btnBuyAnimals.setVisible(true);
-        this.btnSellAnimals.setVisible(true);
-        this.btnDeleteAnimals.setVisible(true);
-        this.btnModifyInventory.setVisible(false);
     }
 }
