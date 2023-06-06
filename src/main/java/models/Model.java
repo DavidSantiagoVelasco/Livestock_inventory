@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import models.interfaces.*;
+import models.responses.FilterFinancesResponse;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -973,7 +974,7 @@ public class Model {
         }
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM finances");
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM finances ORDER BY date DESC");
 
             ObservableList<Finance> finances = FXCollections.observableArrayList();
 
@@ -992,7 +993,7 @@ public class Model {
         }
     }
 
-    public ObservableList<Finance> getFilterFinances(String financesType, String dateFrom, String dateTo) {
+    public FilterFinancesResponse getFilterFinances(String financesType, String dateFrom, String dateTo) {
         Connection connection = JDBC.connection();
         if (connection == null) {
             return null;
@@ -1022,17 +1023,22 @@ public class Model {
             ResultSet resultSet = statement.executeQuery();
 
             ObservableList<Finance> finances = FXCollections.observableArrayList();
+            double totalIncome = 0;
+            double totalExpense = 0;
 
             while (resultSet.next()) {
+                double currentIncome = resultSet.getDouble("income");
+                double currentExpense = resultSet.getDouble("expense");
                 Finance finance = new Finance(resultSet.getInt("id"), resultSet.getDate("date"),
-                        resultSet.getDouble("income"), resultSet.getDouble("expense"),
-                        resultSet.getString("description"));
+                        currentIncome, currentExpense, resultSet.getString("description"));
                 finances.add(finance);
+                totalIncome += currentIncome;
+                totalExpense += currentExpense;
             }
             resultSet.close();
             statement.close();
             connection.close();
-            return finances;
+            return new FilterFinancesResponse(finances, totalIncome, totalExpense);
         } catch (SQLException e) {
             e.printStackTrace();
             return null;

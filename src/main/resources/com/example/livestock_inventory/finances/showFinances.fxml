@@ -6,10 +6,11 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.finances.ShowFinancesController">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="660.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.finances.ShowFinancesController">
     <ComboBox fx:id="cbTypeFinance" layoutX="117.0" layoutY="43.0" onAction="#selectTypeFinanceFilter" prefWidth="150.0" />
     <DatePicker fx:id="dpDateFrom" layoutX="325.0" layoutY="43.0" onAction="#selectDatePicker" prefHeight="25.0" prefWidth="150.0" />
     <DatePicker fx:id="dpDateTo" layoutX="533.0" layoutY="43.0" onAction="#selectDatePicker" prefHeight="25.0" prefWidth="150.0" />
@@ -24,10 +25,14 @@
     </AnchorPane>
     <TableView fx:id="tblFinances" layoutY="218.0" maxWidth="1.7976931348623157E308" prefHeight="332.0" prefWidth="800.0">
         <columns>
-            <TableColumn fx:id="colIncome" editable="false" prefWidth="160.0" resizable="false" text="Ingreso" />
-         <TableColumn fx:id="colExpense" editable="false" prefWidth="160.0" resizable="false" text="Egreso" />
-            <TableColumn fx:id="colDescription" editable="false" prefWidth="320.0" resizable="false" text="Descripción" />
-            <TableColumn fx:id="colDate" editable="false" minWidth="0.0" prefWidth="160.0" resizable="false" text="Fecha" />
+            <TableColumn fx:id="colIncome" editable="false" maxWidth="160.0" prefWidth="160.0" resizable="false" text="Ingreso" />
+         <TableColumn fx:id="colExpense" editable="false" maxWidth="160.0" prefWidth="160.0" resizable="false" text="Egreso" />
+            <TableColumn fx:id="colDescription" editable="false" maxWidth="320.0" prefWidth="320.0" resizable="false" text="Descripción" />
+            <TableColumn fx:id="colDate" editable="false" maxWidth="160.0" minWidth="0.0" prefWidth="160.0" resizable="false" text="Fecha" />
         </columns>
     </TableView>
+   <TextArea fx:id="txtTotalIncomes" editable="false" focusTraversable="false" layoutX="150.0" layoutY="581.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="37.0" prefWidth="175.0" />
+   <Label layoutX="150.0" layoutY="564.0" text="Total ingresos" textFill="#05b2dc" />
+   <Label layoutX="475.0" layoutY="564.0" text="Total egresos" textFill="#ff4242" />
+   <TextArea fx:id="txtTotalExpenses" editable="false" focusTraversable="false" layoutX="475.0" layoutY="581.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="37.0" prefWidth="175.0" />
 </AnchorPane>

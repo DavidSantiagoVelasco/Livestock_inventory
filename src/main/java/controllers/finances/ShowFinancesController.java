@@ -15,9 +15,11 @@ import javafx.scene.text.Font;
 import models.Model;
 import models.interfaces.FilterCard;
 import models.interfaces.Finance;
+import models.responses.FilterFinancesResponse;
 
 import java.net.URL;
 import java.sql.Date;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +47,10 @@ public class ShowFinancesController implements Initializable {
     private TableColumn<Finance, Date> colDate;
     @FXML
     private HBox hbFiltersContainer;
+    @FXML
+    private TextArea txtTotalIncomes;
+    @FXML
+    private TextArea txtTotalExpenses;
 
     private final List<FilterCard> filters = new ArrayList<>();
     private LocalDate dateFrom = null;
@@ -77,12 +83,13 @@ public class ShowFinancesController implements Initializable {
 
         cbTypeFinance.setItems(FXCollections.observableArrayList("Ingreso", "Egreso"));
         setTblFinances();
-
     }
 
     private void setTblFinances() {
         ObservableList<Finance> finances = model.getFinances();
         tblFinances.setItems(finances);
+        txtTotalIncomes.setText("$0");
+        txtTotalExpenses.setText("$0");
     }
 
     @FXML
@@ -122,8 +129,17 @@ public class ShowFinancesController implements Initializable {
         }
         String dateFrom = dpDateFrom.getValue() != null ? dpDateFrom.getValue().toString() : "";
         String dateTo = dpDateTo.getValue() != null ? dpDateTo.getValue().toString() : "";
-        ObservableList<Finance> finances = model.getFilterFinances(financesType, dateFrom, dateTo);
-        tblFinances.setItems(finances);
+        FilterFinancesResponse filterFinances = model.getFilterFinances(financesType, dateFrom, dateTo);
+        if (filterFinances == null) {
+            tblFinances.setItems(null);
+            txtTotalIncomes.setText("$0");
+            txtTotalExpenses.setText("$0");
+            return;
+        }
+        tblFinances.setItems(filterFinances.getFinances());
+        DecimalFormat decimalFormat = new DecimalFormat("$#,###.###");
+        txtTotalIncomes.setText(decimalFormat.format(filterFinances.getTotalIncomes()));
+        txtTotalExpenses.setText(decimalFormat.format(filterFinances.getTotalExpenses()));
     }
 
     @FXML
@@ -231,6 +247,8 @@ public class ShowFinancesController implements Initializable {
         cbTypeFinance.setValue(null);
         dpDateTo.setValue(null);
         dpDateFrom.setValue(null);
+        txtTotalIncomes.setText("$0");
+        txtTotalExpenses.setText("$0");
     }
 
     private boolean checkDateConsistency(LocalDate fromDate, LocalDate toDate) {
