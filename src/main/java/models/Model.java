@@ -40,7 +40,8 @@ public class Model {
                 Date creationDate = new Date(creationDateTS.getTime());
                 tasks.add(new Task(resultSet.getInt("id"), resultSet.getString("name"),
                         resultSet.getString("description"), creationDate,
-                        resultSet.getDate("assigned_date"), eventState));
+                        resultSet.getDate("assigned_date"), eventState,
+                        resultSet.getInt("id_veterinary_assistance")));
             }
             resultSet.close();
             statement.close();
@@ -76,7 +77,8 @@ public class Model {
                 Date creationDate = new Date(creationDateTS.getTime());
                 tasks.add(new Task(resultSet.getInt("id"), resultSet.getString("name"),
                         resultSet.getString("description"), creationDate,
-                        resultSet.getDate("assigned_date"), eventState));
+                        resultSet.getDate("assigned_date"), eventState,
+                        resultSet.getInt("id_veterinary_assistance")));
             }
             resultSet.close();
             statement.close();
@@ -111,7 +113,8 @@ public class Model {
                 Date creationDate = new Date(creationDateTS.getTime());
                 tasks.add(new Task(resultSet.getInt("id"), resultSet.getString("name"),
                         resultSet.getString("description"), creationDate,
-                        resultSet.getDate("assigned_date"), eventState));
+                        resultSet.getDate("assigned_date"), eventState,
+                        resultSet.getInt("id_veterinary_assistance")));
             }
             resultSet.close();
             statement.close();
@@ -175,7 +178,8 @@ public class Model {
                 }
                 Task task = new Task(resultSet.getInt("id"), resultSet.getString("name"),
                         resultSet.getString("description"), resultSet.getDate("creation_date"),
-                        resultSet.getDate("assigned_date"), eventStateResultSet);
+                        resultSet.getDate("assigned_date"), eventStateResultSet,
+                        resultSet.getInt("id_veterinary_assistance"));
                 tasks.add(task);
             }
             resultSet.close();
@@ -208,7 +212,7 @@ public class Model {
         }
     }
 
-    public boolean cancelTask(Task task) {
+    public boolean cancelTask(Task task, boolean cancelVeterinaryAssistance) {
         Connection connection = JDBC.connection();
         if (connection == null) {
             return false;
@@ -220,6 +224,13 @@ public class Model {
 
             int rowsAffected = statement.executeUpdate();
             statement.close();
+            if(cancelVeterinaryAssistance){
+                PreparedStatement statementCancelVeterinaryAssistance = connection.prepareStatement("UPDATE " +
+                        "veterinary_assistance SET state = 'canceled' WHERE id = ?");
+                statementCancelVeterinaryAssistance.setInt(1, task.getIdVeterinaryAssistance());
+                statementCancelVeterinaryAssistance.executeUpdate();
+                statementCancelVeterinaryAssistance.close();
+            }
             connection.close();
             return rowsAffected == 1;
         } catch (SQLException e) {
@@ -253,7 +264,7 @@ public class Model {
             resultSet.close();
             statement.close();
             connection.close();
-            return new Task(id, name, description, new Date(new java.util.Date().getTime()), assignedDate, EventState.active);
+            return new Task(id, name, description, new Date(new java.util.Date().getTime()), assignedDate, EventState.active, 0);
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
@@ -286,7 +297,7 @@ public class Model {
             resultSet.close();
             statement.close();
             connection.close();
-            return new Task(id, name, description, new Date(new java.util.Date().getTime()), assignedDate, EventState.active);
+            return new Task(id, name, description, new Date(new java.util.Date().getTime()), assignedDate, EventState.active, idVeterinaryAssistance);
         } catch (SQLException e) {
             e.printStackTrace();
             return null;

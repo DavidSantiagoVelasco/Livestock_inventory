@@ -270,6 +270,13 @@ public class ShowTasksController implements Initializable {
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK){
+            if(task.getIdVeterinaryAssistance() != 0){
+                Alert alertInformation = new Alert(Alert.AlertType.INFORMATION);
+                alertInformation.setHeaderText("Asistencia veterinaria vinculada");
+                alertInformation.setContentText("Existe una asistencia veterinaria vinculada a este recordatorio. " +
+                        "Se recomienda completar la asistencia veterinaria");
+                alertInformation.showAndWait();
+            }
             boolean response = model.completeTask(task);
             if(response){
                 Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
@@ -316,7 +323,19 @@ public class ShowTasksController implements Initializable {
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK){
-            boolean response = model.cancelTask(task);
+            boolean cancelVeterinaryAssistance = false;
+            if(task.getIdVeterinaryAssistance() != 0){
+                Alert alertCancelVeterinaryAssistance = new Alert(Alert.AlertType.CONFIRMATION);
+                alertCancelVeterinaryAssistance.setTitle("Confirmación");
+                alertCancelVeterinaryAssistance.setHeaderText("¿Cancelar asistencia veterinaria vinculada?");
+                alertCancelVeterinaryAssistance.setContentText("Existe una asistencia veterinaria vinculada al " +
+                        "recordatorio. ¿Desea cancelar la asistencia veterinaria?");
+                Optional<ButtonType> resultCompleteVeterinaryAssistance = alertCancelVeterinaryAssistance.showAndWait();
+                if(resultCompleteVeterinaryAssistance.get() == ButtonType.OK){
+                    cancelVeterinaryAssistance = true;
+                }
+            }
+            boolean response = model.cancelTask(task, cancelVeterinaryAssistance);
             if(response){
                 Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
                 alertConfirmation.setTitle("Éxito");
