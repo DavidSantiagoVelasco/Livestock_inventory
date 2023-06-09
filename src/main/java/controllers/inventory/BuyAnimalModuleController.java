@@ -1,7 +1,6 @@
 package controllers.inventory;
 
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -11,7 +10,9 @@ import models.interfaces.Owner;
 
 import java.net.URL;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 
@@ -20,8 +21,6 @@ public class BuyAnimalModuleController implements Initializable {
     private Model model;
     private String sex = "";
 
-    @FXML
-    private Button btnAddAnimal;
     @FXML
     private ComboBox cbSex;
     @FXML
@@ -44,7 +43,7 @@ public class BuyAnimalModuleController implements Initializable {
     private DatePicker dpPurchaseDate;
 
     @FXML
-    private void addAnimal(ActionEvent event) {
+    private void addAnimal() {
         if(cbOwners.getValue() == null || dpPurchaseDate.getValue() == null || txtNumber.getLength() == 0 ||
                 txtAgeMonths.getLength() == 0 || txtColor.getLength() == 0 || txtPurchasePrice.getLength() == 0 ||
                 txtWeight.getLength() == 0 || txtIronBrand.getLength() == 0 || this.sex.length() == 0){
@@ -54,7 +53,14 @@ public class BuyAnimalModuleController implements Initializable {
             alert.showAndWait();
             return;
         }
-
+        LocalDate currentDate = LocalDate.now();
+        if(currentDate.isBefore(dpPurchaseDate.getValue())){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error");
+            alert.setTitle("Fecha de compra incongruente");
+            alert.setHeaderText("No puede agregar un animal con una fecha mayor a la actual");
+            alert.showAndWait();
+            return;
+        }
         Animal animalExists = model.getActiveAnimalByNumber(txtNumber.getText());
 
         if(animalExists != null){
@@ -64,7 +70,14 @@ public class BuyAnimalModuleController implements Initializable {
             alert.showAndWait();
             return;
         }
+        Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        alertConfirmation.setTitle("Confirmación");
+        alertConfirmation.setHeaderText("¿Está seguro de agregar el animal?");
 
+        Optional<ButtonType> result = alertConfirmation.showAndWait();
+        if (result.get() != ButtonType.OK){
+            return;
+        }
         String selectedOwner = (String) cbOwners.getSelectionModel().getSelectedItem();
         int idSelectedOwner = model.getOwnerIdFromOwnerInformation(selectedOwner);
 
@@ -94,12 +107,12 @@ public class BuyAnimalModuleController implements Initializable {
     }
 
     @FXML
-    private void selectSex(ActionEvent event)  {
+    private void selectSex()  {
         this.sex = cbSex.getSelectionModel().getSelectedItem().toString();
     }
 
     @FXML
-    private void selectOwner(ActionEvent event) {
+    private void selectOwner() {
         String ironBrand = model.getOwnerIronBrandFromOwnerInformation(cbOwners.getSelectionModel().getSelectedItem().toString());
         txtIronBrand.setText(ironBrand);
     }

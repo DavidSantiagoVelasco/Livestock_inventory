@@ -60,11 +60,28 @@ public class CreateCompletedVeterinaryAssistanceController implements Initializa
             alert.showAndWait();
             return;
         }
+        LocalDate currentDate = LocalDate.now();
+        if(currentDate.isBefore(dpCompletedDate.getValue())){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error");
+            alert.setTitle("Fecha de realización incongruente");
+            alert.setHeaderText("No puede agregar una asistencia veterinaria completada con una fecha mayor a la " +
+                    "actual");
+            alert.showAndWait();
+            return;
+        }
         if(cbRepeatAssistance.isSelected()){
             if(!checkDateConsistency(dpCompletedDate.getValue(), dpAssignedDate.getValue())){
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Error");
                 alert.setTitle("Inconsistencia en las fechas");
                 alert.setHeaderText("La fecha de realización no puede ser mayor a la fecha asignada");
+                alert.showAndWait();
+                dpAssignedDate.setValue(null);
+                return;
+            }
+            if(!currentDate.isBefore(dpAssignedDate.getValue())){
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Error");
+                alert.setTitle("Fecha asignada incongruente");
+                alert.setHeaderText("La fecha asignada no puede ser menor que la fecha actual");
                 alert.showAndWait();
                 dpAssignedDate.setValue(null);
                 return;

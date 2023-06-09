@@ -7,6 +7,7 @@ import models.interfaces.Task;
 import models.interfaces.VeterinaryAssistance;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Optional;
 
@@ -30,6 +31,15 @@ public class CreateAssignedVeterinaryAssistanceController {
             alert.setTitle("Llena los campos");
             alert.setHeaderText("Faltan campos por llenar");
             alert.showAndWait();
+            return;
+        }
+        LocalDate currentDate = LocalDate.now();
+        if(!currentDate.isBefore(dpAssignedDate.getValue())){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error");
+            alert.setTitle("Fecha asignada incongruente");
+            alert.setHeaderText("La fecha asignada no puede ser menor que la fecha actual");
+            alert.showAndWait();
+            dpAssignedDate.setValue(null);
             return;
         }
         Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);

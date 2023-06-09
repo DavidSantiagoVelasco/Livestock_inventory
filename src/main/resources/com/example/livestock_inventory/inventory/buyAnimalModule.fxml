@@ -35,7 +35,7 @@
    <Label layoutX="546.0" layoutY="210.0" text="Hierro" />
    <Label layoutX="68.0" layoutY="270.0" text="Sexo" />
    <Label layoutX="67.0" layoutY="331.0" text="Observaciones" />
-   <Button fx:id="btnAddAnimal" layoutX="260.0" layoutY="451.0" mnemonicParsing="false" onAction="#addAnimal" prefHeight="53.0" prefWidth="242.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Agregar" textFill="DARKSLATEGRAY">
+   <Button layoutX="260.0" layoutY="451.0" mnemonicParsing="false" onAction="#addAnimal" prefHeight="53.0" prefWidth="242.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Agregar" textFill="DARKSLATEGRAY">
       <font>
          <Font size="20.0" />
       </font>

@@ -2,15 +2,14 @@ package controllers.tasks;
 
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import models.Model;
 import models.interfaces.Task;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Optional;
 
 public class CreateTaskController {
 
@@ -29,6 +28,23 @@ public class CreateTaskController {
             alert.setTitle("Llena los campos");
             alert.setHeaderText("Faltan campos por llenar");
             alert.showAndWait();
+            return;
+        }
+        LocalDate currentDate = LocalDate.now();
+        if(!currentDate.isBefore(dpAssignedDate.getValue())){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error");
+            alert.setTitle("Fecha asignada incongruente");
+            alert.setHeaderText("La fecha asignada no puede ser menor que la fecha actual");
+            alert.showAndWait();
+            dpAssignedDate.setValue(null);
+            return;
+        }
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setTitle("Confirmación");
+        confirmation.setHeaderText("¿Está seguro que desea crear el recordatorio?");
+
+        Optional<ButtonType> result = confirmation.showAndWait();
+        if (result.get() != ButtonType.OK) {
             return;
         }
         Task task = model.createTask(txtName.getText(), txtDescription.getText(),
