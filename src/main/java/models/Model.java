@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import models.interfaces.*;
 import models.responses.FilterFinancesResponse;
+import models.responses.ReportActiveAnimalsResponse;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -224,7 +225,7 @@ public class Model {
 
             int rowsAffected = statement.executeUpdate();
             statement.close();
-            if(cancelVeterinaryAssistance){
+            if (cancelVeterinaryAssistance) {
                 PreparedStatement statementCancelVeterinaryAssistance = connection.prepareStatement("UPDATE " +
                         "veterinary_assistance SET state = 'canceled' WHERE id = ?");
                 statementCancelVeterinaryAssistance.setInt(1, task.getIdVeterinaryAssistance());
@@ -589,7 +590,7 @@ public class Model {
             }
 
             int cont = 1;
-            if(saleObservation.length() > 0){
+            if (saleObservation.length() > 0) {
                 statement.setString(cont++, saleObservation);
             }
             statement.setDouble(cont++, animal.getSaleWeight());
@@ -851,11 +852,71 @@ public class Model {
         }
     }
 
+    public int getCountActiveAnimalsBySex(char sex) {
+        Connection connection = JDBC.connection();
+        if (connection == null) {
+            return 0;
+        }
+        try {
+            int count = 0;
+            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM animals WHERE " +
+                    "sex = ? AND state = 'active'");
+            statement.setString(1, sex + "");
+
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                count = resultSet.getInt(1);
+            }
+            statement.close();
+            resultSet.close();
+            connection.close();
+            return count;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public ObservableList<ReportActiveAnimalsResponse> getReportActiveAnimals() {
+        Connection connection = JDBC.connection();
+        if (connection == null) {
+            return null;
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement("""
+                           SELECT o.name,
+                           COUNT(CASE WHEN a.sex = 'M' THEN 1 END) AS count_males,
+                           COUNT(CASE WHEN a.sex = 'H' THEN 1 END) AS count_females
+                    FROM animals a
+                    INNER JOIN owners o ON a.id_owner = o.id
+                    WHERE a.state = 'active'
+                    GROUP BY o.name;
+                                        """);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            ObservableList<ReportActiveAnimalsResponse> response = FXCollections.observableArrayList();
+
+            while (resultSet.next()) {
+                response.add(new ReportActiveAnimalsResponse(resultSet.getString("name"),
+                        resultSet.getInt("count_males"), resultSet.getInt("count_females")));
+            }
+            statement.close();
+            resultSet.close();
+            connection.close();
+            return response;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     /**
      * ========================================== Weight ======================================
      **/
 
-    public boolean addAnimalWeight(int idAnimal, String number, double weight, Date date){
+    public boolean addAnimalWeight(int idAnimal, String number, double weight, Date date) {
         Connection connection = JDBC.connection();
         if (connection == null) {
             return false;
@@ -886,7 +947,7 @@ public class Model {
         }
     }
 
-    public ObservableList<Weight> getAnimalWeights(int idAnimal){
+    public ObservableList<Weight> getAnimalWeights(int idAnimal) {
         Connection connection = JDBC.connection();
         if (connection == null) {
             return null;
@@ -1061,7 +1122,7 @@ public class Model {
      **/
 
     public VeterinaryAssistance createCompletedVeterinaryAssistance(String name, Date completionDate, Double cost,
-                                                                    String description, Date nextDate){
+                                                                    String description, Date nextDate) {
         Connection connection = JDBC.connection();
         if (connection == null) {
             return null;
@@ -1094,7 +1155,7 @@ public class Model {
         }
     }
 
-    public VeterinaryAssistance createAssignedVeterinaryAssistance(String name, Date assignedDate, String description){
+    public VeterinaryAssistance createAssignedVeterinaryAssistance(String name, Date assignedDate, String description) {
         Connection connection = JDBC.connection();
         if (connection == null) {
             return null;
@@ -1269,23 +1330,23 @@ public class Model {
         if (connection == null) {
             return false;
         }
-            String query = "UPDATE veterinary_assistance SET state = " +
-                    "'complete', ";
-            if(modifyDescription){
-                query += "description = ?, ";
-            }
-            if(modifyCost){
-                query += "cost = ?, ";
-            }
-            query = query.substring(0, query.length()-2);
-            query += " WHERE id = ?";
+        String query = "UPDATE veterinary_assistance SET state = " +
+                "'complete', ";
+        if (modifyDescription) {
+            query += "description = ?, ";
+        }
+        if (modifyCost) {
+            query += "cost = ?, ";
+        }
+        query = query.substring(0, query.length() - 2);
+        query += " WHERE id = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             int cont = 1;
-            if(modifyDescription){
+            if (modifyDescription) {
                 statement.setString(cont++, veterinaryAssistance.getDescription());
             }
-            if(modifyCost){
+            if (modifyCost) {
                 statement.setDouble(cont++, veterinaryAssistance.getCost());
             }
             statement.setInt(cont, veterinaryAssistance.getId());
@@ -1304,7 +1365,7 @@ public class Model {
         }
     }
 
-    public boolean cancelVeterinaryAssistance(VeterinaryAssistance veterinaryAssistance){
+    public boolean cancelVeterinaryAssistance(VeterinaryAssistance veterinaryAssistance) {
         Connection connection = JDBC.connection();
         if (connection == null) {
             return false;

@@ -171,6 +171,8 @@ public class ShowInventoryController implements Initializable {
     }
 
     private void setTblAnimals() {
+        filtersApplied.clear();
+        filtersApplied.add("Todos los animales activos");
         ObservableList<Animal> animals = model.getActiveAnimals();
         setTblAnimals(animals);
     }

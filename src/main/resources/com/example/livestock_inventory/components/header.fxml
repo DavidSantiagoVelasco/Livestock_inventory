@@ -4,13 +4,10 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="100.0" prefWidth="750.0" style="-fx-background-color: darkslategrey;"
-            xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controllers.components.HeaderController">
-   <Label fx:id="lblTitle" layoutX="215.0" layoutY="24.0" onMouseClicked="#openDashboard" style="-fx-cursor: hand;"
-          text="Inventario ganadero" textFill="WHITE">
+<AnchorPane prefHeight="100.0" prefWidth="1336.0" style="-fx-background-color: darkslategrey;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.components.HeaderController">
+   <Label fx:id="lblTitle" alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#openDashboard" prefHeight="100.0" prefWidth="1336.0" style="-fx-cursor: hand;" text="Inventario ganadero" textAlignment="CENTER" textFill="WHITE">
       <font>
-         <Font size="36.0"/>
+         <Font size="36.0" />
       </font>
    </Label>
 </AnchorPane>

@@ -276,7 +276,7 @@ public class ReportOptionsController implements Initializable {
             String tempFileName = fileName.substring(0, fileName.lastIndexOf('.'));
             String extension = fileName.substring(fileName.lastIndexOf('.'));
 
-            String newFileName = tempFileName + "(" + counter + ")" + extension;
+            String newFileName = tempFileName + " (" + counter + ")" + extension;
 
             newFilePath = basePath + newFileName;
             file = new File(newFilePath);
