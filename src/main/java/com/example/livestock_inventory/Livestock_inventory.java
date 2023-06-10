@@ -11,7 +11,7 @@ public class Livestock_inventory extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Livestock_inventory.class.getResource("dashboard.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1336, 700);
+        Scene scene = new Scene(fxmlLoader.load(), 1336, 680);
         stage.setScene(scene);
         stage.show();
     }

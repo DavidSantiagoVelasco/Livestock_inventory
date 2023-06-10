@@ -17,20 +17,20 @@
       <fx:include source="components/menu.fxml" />
    </left>
    <center>
-      <AnchorPane minHeight="-Infinity" prefHeight="580.0" prefWidth="200.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
-         <VBox prefHeight="668.0" prefWidth="1200.0">
-            <Label alignment="CENTER" prefHeight="80.0" prefWidth="1200.0" style="-fx-border-color: #2f4f4f; -fx-border-width: 0px 0px 1px 0px;" text="Bienvenido" textAlignment="CENTER" textFill="DARKSLATEGRAY">
+      <AnchorPane maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="580.0" prefWidth="1176.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
+         <VBox prefHeight="580.0" prefWidth="1176.0">
+            <Label alignment="CENTER" prefHeight="80.0" prefWidth="1176.0" style="-fx-border-color: #2f4f4f; -fx-border-width: 0px 0px 1px 0px;" text="Bienvenido" textAlignment="CENTER" textFill="DARKSLATEGRAY">
                <font>
                   <Font size="28.0" />
                </font>
             </Label>
-            <AnchorPane prefHeight="200.0" prefWidth="200.0">
-               <Label layoutX="223.0" layoutY="20.0" text="Recordatorios activos del mes" textFill="DARKSLATEGRAY">
+            <AnchorPane prefHeight="500.0" prefWidth="1176.0">
+               <Label layoutX="216.0" layoutY="20.0" text="Recordatorios activos del mes" textFill="DARKSLATEGRAY">
                   <font>
                      <Font size="22.0" />
                   </font>
                </Label>
-               <TableView fx:id="tblTasks" layoutX="62.0" layoutY="58.0" prefHeight="380.0" prefWidth="612.0">
+               <TableView fx:id="tblTasks" layoutX="55.0" layoutY="58.0" prefHeight="380.0" prefWidth="612.0">
                   <columns>
                      <TableColumn fx:id="colTaskName" editable="false" prefWidth="146.0" resizable="false" sortable="false" text="Nombre" />
                      <TableColumn fx:id="colTaskDescription" editable="false" prefWidth="252.0" resizable="false" sortable="false" text="Descripción" />
@@ -38,7 +38,7 @@
                      <TableColumn fx:id="colTaskAssignedDate" prefWidth="106.0" resizable="false" text="Fecha asignada" />
                   </columns>
                </TableView>
-               <AnchorPane layoutX="788.0" layoutY="58.0" prefHeight="380.0" prefWidth="350.0" style="-fx-border-color: #2f4f4f;">
+               <AnchorPane layoutX="771.0" layoutY="58.0" prefHeight="380.0" prefWidth="350.0" style="-fx-border-color: #2f4f4f;">
                   <Label layoutX="68.5" layoutY="58.0" text="Total animales activos" textFill="DARKSLATEGRAY">
                      <font>
                         <Font size="22.0" />

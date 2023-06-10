@@ -11,36 +11,36 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane prefHeight="600.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.inventory.ShowInventoryController">
-   <ComboBox fx:id="cbSexFilter" layoutX="265.0" layoutY="43.0" onAction="#selectSexFilter" prefWidth="150.0" />
-   <TextField fx:id="txtNumberFilter" layoutX="58.0" layoutY="43.0" promptText="Enter para agregar filtro" />
-   <ComboBox fx:id="cbOwnerFilter" layoutX="472.0" layoutY="43.0" onAction="#selectOwnerFilter" prefWidth="150.0" />
-   <ComboBox fx:id="cbStateFilter" layoutX="679.0" layoutY="43.0" onAction="#selectStateFilter" prefWidth="150.0" />
-   <DatePicker fx:id="dpDateFrom" layoutX="886.0" layoutY="43.0" onAction="#selectDatePicker" prefHeight="25.0" prefWidth="150.0" />
-   <DatePicker fx:id="dpDateTo" layoutX="1093.0" layoutY="43.0" onAction="#selectDatePicker" prefHeight="25.0" prefWidth="150.0" />
-   <RadioButton fx:id="rbPurchaseDateFilter" layoutX="913.0" layoutY="98.0" mnemonicParsing="false" onAction="#selectPurchaseDateFilter" text="Fecha compra" />
-   <RadioButton fx:id="rbSaleDateFilter" layoutX="1126.0" layoutY="98.0" mnemonicParsing="false" onAction="#selectSaleDateFilter" text="Fecha venta" />
-   <Button layoutX="679.0" layoutY="94.0" mnemonicParsing="false" onAction="#filter" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Filtrar" textFill="DARKSLATEGRAY" />
-   <Button layoutX="472.0" layoutY="94.0" mnemonicParsing="false" onAction="#getAnimals" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Limpiar filtros" textFill="DARKSLATEGRAY" />
-   <Button layoutX="265.0" layoutY="94.0" mnemonicParsing="false" onAction="#getAllAnimals" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Ver todos" textFill="DARKSLATEGRAY" />
-   <Button fx:id="btnDeleteAnimal" layoutX="265.0" layoutY="146.0" mnemonicParsing="false" onAction="#deleteAnimal" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: #ff4242; -fx-cursor: hand;" text="Eliminar" textFill="WHITE" visible="false" />
-   <Button fx:id="btnSellAnimal" layoutX="472.0" layoutY="146.0" mnemonicParsing="false" onAction="#sellAnimal" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: #05B2DC; -fx-cursor: hand;" text="Vender" textFill="WHITE" visible="false" />
-   <Button fx:id="btnWeights" layoutX="886.0" layoutY="146.0" mnemonicParsing="false" onAction="#showAnimalWeights" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: #ffea00; -fx-cursor: hand;" text="Ver pesos" textFill="DARKSLATEGRAY" visible="false" />
-   <Button layoutX="679.0" layoutY="146.0" mnemonicParsing="false" onAction="#generateReport" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Generar reporte" textFill="DARKSLATEGRAY" />
-   <Label layoutX="58.0" layoutY="26.0" text="Filtrar por número" />
-   <Label layoutX="265.0" layoutY="26.0" text="Filtrar por sexo" />
-   <Label layoutX="472.0" layoutY="26.0" text="Filtrar por dueño" />
-   <Label layoutX="679.0" layoutY="26.0" text="Filtrar por estado" />
-   <Label layoutX="886.0" layoutY="26.0" text="Desde" />
-   <Label layoutX="1093.0" layoutY="26.0" text="Hasta" />
-    <AnchorPane layoutY="206.0" prefHeight="62.0" prefWidth="1300.0" style="-fx-background-color: #2f4f4f;">
-        <HBox fx:id="hbFiltersContainer" prefHeight="62.0" prefWidth="1300.0">
+<AnchorPane prefHeight="680.0" prefWidth="1336.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.inventory.ShowInventoryController">
+   <ComboBox fx:id="cbSexFilter" layoutX="283.0" layoutY="43.0" onAction="#selectSexFilter" prefWidth="150.0" />
+   <TextField fx:id="txtNumberFilter" layoutX="76.0" layoutY="43.0" promptText="Enter para agregar filtro" />
+   <ComboBox fx:id="cbOwnerFilter" layoutX="490.0" layoutY="43.0" onAction="#selectOwnerFilter" prefWidth="150.0" />
+   <ComboBox fx:id="cbStateFilter" layoutX="697.0" layoutY="43.0" onAction="#selectStateFilter" prefWidth="150.0" />
+   <DatePicker fx:id="dpDateFrom" layoutX="904.0" layoutY="43.0" onAction="#selectDatePicker" prefHeight="25.0" prefWidth="150.0" />
+   <DatePicker fx:id="dpDateTo" layoutX="1111.0" layoutY="43.0" onAction="#selectDatePicker" prefHeight="25.0" prefWidth="150.0" />
+   <RadioButton fx:id="rbPurchaseDateFilter" layoutX="931.0" layoutY="98.0" mnemonicParsing="false" onAction="#selectPurchaseDateFilter" text="Fecha compra" />
+   <RadioButton fx:id="rbSaleDateFilter" layoutX="1144.0" layoutY="98.0" mnemonicParsing="false" onAction="#selectSaleDateFilter" text="Fecha venta" />
+   <Button layoutX="697.0" layoutY="94.0" mnemonicParsing="false" onAction="#filter" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Filtrar" textFill="DARKSLATEGRAY" />
+   <Button layoutX="490.0" layoutY="94.0" mnemonicParsing="false" onAction="#getAnimals" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Limpiar filtros" textFill="DARKSLATEGRAY" />
+   <Button layoutX="283.0" layoutY="94.0" mnemonicParsing="false" onAction="#getAllAnimals" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Ver todos" textFill="DARKSLATEGRAY" />
+   <Button fx:id="btnDeleteAnimal" layoutX="283.0" layoutY="146.0" mnemonicParsing="false" onAction="#deleteAnimal" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: #ff4242; -fx-cursor: hand;" text="Eliminar" textFill="WHITE" visible="false" />
+   <Button fx:id="btnSellAnimal" layoutX="490.0" layoutY="146.0" mnemonicParsing="false" onAction="#sellAnimal" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: #05B2DC; -fx-cursor: hand;" text="Vender" textFill="WHITE" visible="false" />
+   <Button fx:id="btnWeights" layoutX="904.0" layoutY="146.0" mnemonicParsing="false" onAction="#showAnimalWeights" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: #ffea00; -fx-cursor: hand;" text="Ver pesos" textFill="DARKSLATEGRAY" visible="false" />
+   <Button layoutX="697.0" layoutY="146.0" mnemonicParsing="false" onAction="#generateReport" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Generar reporte" textFill="DARKSLATEGRAY" />
+   <Label layoutX="76.0" layoutY="26.0" text="Filtrar por número" />
+   <Label layoutX="283.0" layoutY="26.0" text="Filtrar por sexo" />
+   <Label layoutX="490.0" layoutY="26.0" text="Filtrar por dueño" />
+   <Label layoutX="697.0" layoutY="26.0" text="Filtrar por estado" />
+   <Label layoutX="904.0" layoutY="26.0" text="Desde" />
+   <Label layoutX="1111.0" layoutY="26.0" text="Hasta" />
+    <AnchorPane layoutY="206.0" prefHeight="62.0" prefWidth="1336.0" style="-fx-background-color: #2f4f4f;">
+        <HBox fx:id="hbFiltersContainer" prefHeight="62.0" prefWidth="1336.0">
         </HBox>
     </AnchorPane>
-   <TableView fx:id="tblAnimals" layoutY="268.0" prefHeight="332.0" prefWidth="1300.0">
+   <TableView fx:id="tblAnimals" layoutY="268.0" prefHeight="412.0" prefWidth="1336.0">
      <columns>
        <TableColumn fx:id="colNumber" editable="false" prefWidth="85.0" resizable="false" text="Número" />
-       <TableColumn fx:id="colOwner" editable="false" prefWidth="130.0" resizable="false" text="Dueño" />
+       <TableColumn fx:id="colOwner" editable="false" prefWidth="146.0" resizable="false" text="Dueño" />
          <TableColumn fx:id="colAgeMonths" editable="false" prefWidth="60.0" resizable="false" text="E. meses" />
          <TableColumn fx:id="colColor" editable="false" resizable="false" text="Color" />
          <TableColumn fx:id="colIronBrand" editable="false" resizable="false" text="Marca hierro" />
@@ -48,7 +48,7 @@
          <TableColumn fx:id="colPurchaseWeight" editable="false" resizable="false" text="Peso compra" />
          <TableColumn fx:id="colPurchasePrice" editable="false" prefWidth="100.0" resizable="false" text="Precio compra" />
          <TableColumn fx:id="colPurchaseDate" editable="false" prefWidth="100.0" resizable="false" text="Fecha compra" />
-         <TableColumn fx:id="colObservations" editable="false" prefWidth="165.0" resizable="false" text="Observaciones" />
+         <TableColumn fx:id="colObservations" editable="false" prefWidth="185.0" resizable="false" text="Observaciones" />
          <TableColumn fx:id="colSaleWeight" editable="false" resizable="false" text="Peso venta" />
          <TableColumn fx:id="colSalePrice" editable="false" prefWidth="100.0" resizable="false" text="Precio venta" />
          <TableColumn fx:id="colSaleDate" editable="false" prefWidth="100.0" resizable="false" text="Fecha venta" />

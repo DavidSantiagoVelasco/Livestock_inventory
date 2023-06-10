@@ -6,43 +6,85 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="635.0" prefWidth="760.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
-    <AnchorPane prefHeight="100.0" prefWidth="760.0" style="-fx-background-color: darkslategrey;">
-        <Label layoutX="215.0" layoutY="24.0" text="Inventario ganadero" textFill="WHITE">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+    <AnchorPane prefHeight="100.0" prefWidth="800.0" style="-fx-background-color: darkslategrey;">
+        <Label alignment="CENTER" layoutY="24.0" prefWidth="800.0" text="Inventario ganadero" textAlignment="CENTER" textFill="WHITE">
             <font>
-                <Font size="36.0" />
+                <Font size="38.0" />
             </font>
         </Label>
     </AnchorPane>
-    <AnchorPane layoutY="100.0" prefHeight="535.0" prefWidth="760.0" style="-fx-background-color: white;">
-        <Label alignment="CENTER" prefHeight="80.0" prefWidth="760.0" style="-fx-border-color: #2f4f4f; -fx-border-width: 0px 0px 1px 0px;" text="Generar reporte" textAlignment="CENTER" textFill="DARKSLATEGRAY">
+    <AnchorPane layoutY="100.0" prefHeight="550.0" prefWidth="800.0" style="-fx-background-color: white;">
+        <Label alignment="CENTER" prefHeight="80.0" prefWidth="800.0" style="-fx-border-color: #2f4f4f; -fx-border-width: 0px 0px 1px 0px;" text="Generar reporte" textAlignment="CENTER" textFill="DARKSLATEGRAY">
             <font>
-                <Font size="24.0" />
+                <Font size="28.0" />
             </font>
         </Label>
-        <Button fx:id="btnGenerateReport" layoutX="286.0" layoutY="430.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="193.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Generar" textFill="DARKSLATEGRAY">
+        <Button fx:id="btnGenerateReport" alignment="CENTER" contentDisplay="CENTER" layoutX="300.0" layoutY="440.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="200.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Generar" textAlignment="CENTER" textFill="DARKSLATEGRAY">
+            <font>
+                <Font size="20.0" />
+            </font>
+        </Button>
+        <Label alignment="CENTER" layoutX="3.0" layoutY="80.0" prefHeight="80.0" prefWidth="800.0" text="Elija las columnas que quiere en su reporte" textAlignment="CENTER" textFill="DARKSLATEGRAY">
             <font>
                 <Font size="18.0" />
             </font>
-        </Button>
-        <Label alignment="CENTER" layoutX="3.0" layoutY="80.0" prefHeight="80.0" prefWidth="760.0" text="Elija las columnas que quiere en su reporte" textAlignment="CENTER" textFill="DARKSLATEGRAY">
-            <font>
-                <Font size="16.0" />
-            </font>
         </Label>
-        <RadioButton fx:id="rbNumber" layoutX="150.0" layoutY="157.0" mnemonicParsing="false" selected="true" text="Número" />
-        <RadioButton fx:id="rbOwner" layoutX="350.0" layoutY="157.0" mnemonicParsing="false" selected="true" text="Dueño" />
-        <RadioButton fx:id="rbAgeMonths" layoutX="545.0" layoutY="157.0" mnemonicParsing="false" text="Edad meses" />
-        <RadioButton fx:id="rbColor" layoutX="150.0" layoutY="211.0" mnemonicParsing="false" selected="true" text="Color" />
-        <RadioButton fx:id="rbIronBrand" layoutX="350.0" layoutY="211.0" mnemonicParsing="false" selected="true" text="Marca hierro" />
-        <RadioButton fx:id="rbSex" layoutX="545.0" layoutY="211.0" mnemonicParsing="false" selected="true" text="Sexo" />
-        <RadioButton fx:id="rbPurchaseWeigth" layoutX="150.0" layoutY="265.0" mnemonicParsing="false" selected="true" text="Peso compra" />
-        <RadioButton fx:id="rbPurchasePrice" layoutX="350.0" layoutY="265.0" mnemonicParsing="false" text="Precio compra" />
-        <RadioButton fx:id="rbPurchaseDate" layoutX="545.0" layoutY="265.0" mnemonicParsing="false" selected="true" text="Fecha compra" />
-        <RadioButton fx:id="rbObservations" layoutX="150.0" layoutY="319.0" mnemonicParsing="false" text="Observaciones" />
-        <RadioButton fx:id="rbSaleWeigth" layoutX="350.0" layoutY="319.0" mnemonicParsing="false" text="Peso venta" />
-        <RadioButton fx:id="rbSalePrice" layoutX="545.0" layoutY="319.0" mnemonicParsing="false" text="Precio venta" />
-        <RadioButton fx:id="rbSaleDate" layoutX="150.0" layoutY="373.0" mnemonicParsing="false" text="Fecha venta" />
-        <RadioButton fx:id="rbState" layoutX="350.0" layoutY="373.0" mnemonicParsing="false" selected="true" text="Estado" />
+        <RadioButton fx:id="rbNumber" layoutX="142.0" layoutY="167.0" mnemonicParsing="false" selected="true" text="Número">
+         <font>
+            <Font size="14.0" />
+         </font></RadioButton>
+        <RadioButton fx:id="rbOwner" layoutX="362.0" layoutY="167.0" mnemonicParsing="false" selected="true" text="Dueño">
+         <font>
+            <Font size="14.0" />
+         </font></RadioButton>
+        <RadioButton fx:id="rbAgeMonths" layoutX="577.0" layoutY="167.0" mnemonicParsing="false" text="Edad meses">
+         <font>
+            <Font size="14.0" />
+         </font></RadioButton>
+        <RadioButton fx:id="rbColor" layoutX="142.0" layoutY="221.0" mnemonicParsing="false" selected="true" text="Color">
+         <font>
+            <Font size="14.0" />
+         </font></RadioButton>
+        <RadioButton fx:id="rbIronBrand" layoutX="362.0" layoutY="221.0" mnemonicParsing="false" selected="true" text="Marca hierro">
+         <font>
+            <Font size="14.0" />
+         </font></RadioButton>
+        <RadioButton fx:id="rbSex" layoutX="577.0" layoutY="221.0" mnemonicParsing="false" selected="true" text="Sexo">
+         <font>
+            <Font size="14.0" />
+         </font></RadioButton>
+        <RadioButton fx:id="rbPurchaseWeigth" layoutX="142.0" layoutY="275.0" mnemonicParsing="false" selected="true" text="Peso compra">
+         <font>
+            <Font size="14.0" />
+         </font></RadioButton>
+        <RadioButton fx:id="rbPurchasePrice" layoutX="362.0" layoutY="275.0" mnemonicParsing="false" text="Precio compra">
+         <font>
+            <Font size="14.0" />
+         </font></RadioButton>
+        <RadioButton fx:id="rbPurchaseDate" layoutX="577.0" layoutY="275.0" mnemonicParsing="false" selected="true" text="Fecha compra">
+         <font>
+            <Font size="14.0" />
+         </font></RadioButton>
+        <RadioButton fx:id="rbObservations" layoutX="142.0" layoutY="329.0" mnemonicParsing="false" text="Observaciones">
+         <font>
+            <Font size="14.0" />
+         </font></RadioButton>
+        <RadioButton fx:id="rbSaleWeigth" layoutX="362.0" layoutY="329.0" mnemonicParsing="false" text="Peso venta">
+         <font>
+            <Font size="14.0" />
+         </font></RadioButton>
+        <RadioButton fx:id="rbSalePrice" layoutX="577.0" layoutY="329.0" mnemonicParsing="false" text="Precio venta">
+         <font>
+            <Font size="14.0" />
+         </font></RadioButton>
+        <RadioButton fx:id="rbSaleDate" layoutX="142.0" layoutY="383.0" mnemonicParsing="false" text="Fecha venta">
+         <font>
+            <Font size="14.0" />
+         </font></RadioButton>
+        <RadioButton fx:id="rbState" layoutX="362.0" layoutY="383.0" mnemonicParsing="false" selected="true" text="Estado">
+         <font>
+            <Font size="14.0" />
+         </font></RadioButton>
     </AnchorPane>
 </AnchorPane>

@@ -9,39 +9,72 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="550.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
-    <AnchorPane layoutY="-1.0" prefHeight="100.0" prefWidth="760.0" style="-fx-background-color: darkslategrey;">
-        <Label layoutX="215.0" layoutY="24.0" text="Inventario ganadero" textFill="WHITE">
+<AnchorPane prefHeight="680.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+    <AnchorPane layoutY="-1.0" prefHeight="100.0" prefWidth="850.0" style="-fx-background-color: darkslategrey;">
+        <Label alignment="CENTER" contentDisplay="CENTER" layoutY="24.0" prefWidth="850.0" text="Inventario ganadero" textAlignment="CENTER" textFill="WHITE">
             <font>
-                <Font size="36.0" />
+                <Font size="38.0" />
             </font>
         </Label>
     </AnchorPane>
-    <TextField fx:id="txtNumber" editable="false" layoutX="66.0" layoutY="152.0" />
-    <ComboBox fx:id="cbOwners" layoutX="305.0" layoutY="152.0" prefHeight="25.0" prefWidth="149.0" />
-    <TextField fx:id="txtColor" editable="false" layoutX="546.0" layoutY="152.0" />
-    <TextField fx:id="txtPurchaseWeight" editable="false" layoutX="66.0" layoutY="213.0" />
-    <TextField fx:id="txtSaleWeight" layoutX="306.0" layoutY="213.0" />
-    <TextField fx:id="txtIronBrand" editable="false" layoutX="546.0" layoutY="213.0" />
-    <TextField fx:id="txtSalePrice" layoutX="305.0" layoutY="273.0" />
-    <DatePicker fx:id="dpSaleDate" layoutX="546.0" layoutY="273.0" prefHeight="25.0" prefWidth="149.0" />
-    <TextArea fx:id="txtObservations" layoutX="66.0" layoutY="375.0" prefHeight="83.0" prefWidth="630.0" />
-    <Label layoutX="66.0" layoutY="135.0" text="Número" />
-    <Label layoutX="306.0" layoutY="135.0" text="Dueño" />
-    <Label layoutX="546.0" layoutY="135.0" text="Color" />
-    <Label layoutX="66.0" layoutY="196.0" text="Peso compra" />
-    <Label layoutX="305.0" layoutY="196.0" text="Peso venta" />
-    <Label layoutX="546.0" layoutY="196.0" text="Hierro" />
-    <Label layoutX="305.0" layoutY="314.0" text="Sexo" />
-    <Label layoutX="66.0" layoutY="358.0" text="Observaciones venta" />
-    <Button fx:id="btnSellAnimal" layoutX="259.0" layoutY="473.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="242.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Vender" textFill="DARKSLATEGRAY">
+    <TextField fx:id="txtNumber" editable="false" layoutX="91.0" layoutY="166.0" />
+    <ComboBox fx:id="cbOwners" layoutX="349.0" layoutY="166.0" prefHeight="25.0" prefWidth="149.0" />
+    <TextField fx:id="txtColor" editable="false" layoutX="607.0" layoutY="166.0" />
+    <TextField fx:id="txtPurchaseWeight" editable="false" layoutX="91.0" layoutY="237.0" />
+    <TextField fx:id="txtSaleWeight" layoutX="349.0" layoutY="237.0" />
+    <TextField fx:id="txtIronBrand" editable="false" layoutX="607.0" layoutY="237.0" />
+    <TextField fx:id="txtSalePrice" layoutX="349.0" layoutY="307.0" />
+    <DatePicker fx:id="dpSaleDate" layoutX="607.0" layoutY="307.0" prefHeight="25.0" prefWidth="149.0" />
+    <TextArea fx:id="txtObservations" layoutX="110.0" layoutY="448.0" prefHeight="83.0" prefWidth="630.0" />
+    <Label layoutX="91.0" layoutY="147.0" text="Número">
+      <font>
+         <Font size="14.0" />
+      </font></Label>
+    <Label layoutX="349.0" layoutY="147.0" text="Dueño">
+      <font>
+         <Font size="14.0" />
+      </font></Label>
+    <Label layoutX="607.0" layoutY="147.0" text="Color">
+      <font>
+         <Font size="14.0" />
+      </font></Label>
+    <Label layoutX="91.0" layoutY="218.0" text="Peso compra">
+      <font>
+         <Font size="14.0" />
+      </font></Label>
+    <Label layoutX="349.0" layoutY="218.0" text="Peso venta">
+      <font>
+         <Font size="14.0" />
+      </font></Label>
+    <Label layoutX="607.0" layoutY="218.0" text="Hierro">
+      <font>
+         <Font size="14.0" />
+      </font></Label>
+    <Label layoutX="349.0" layoutY="358.0" text="Sexo">
+      <font>
+         <Font size="14.0" />
+      </font></Label>
+    <Label layoutX="110.0" layoutY="429.0" text="Observaciones venta">
+      <font>
+         <Font size="14.0" />
+      </font></Label>
+    <Button fx:id="btnSellAnimal" layoutX="304.0" layoutY="570.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="242.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Vender" textFill="DARKSLATEGRAY">
         <font>
           <Font size="20.0" />
         </font>
     </Button>
-    <Label layoutX="546.0" layoutY="256.0" text="Fecha de venta" />
-    <Label layoutX="304.0" layoutY="256.0" text="Precio de venta" />
-    <TextField fx:id="txtSex" editable="false" layoutX="305.0" layoutY="331.0" />
-   <TextField fx:id="txtPurchasePrice" layoutX="66.0" layoutY="273.0" />
-   <Label layoutX="66.0" layoutY="256.0" text="Precio de compra" />
+    <Label layoutX="607.0" layoutY="288.0" text="Fecha de venta">
+      <font>
+         <Font size="14.0" />
+      </font></Label>
+    <Label layoutX="349.0" layoutY="288.0" text="Precio de venta">
+      <font>
+         <Font size="14.0" />
+      </font></Label>
+    <TextField fx:id="txtSex" editable="false" layoutX="349.0" layoutY="377.0" />
+   <TextField fx:id="txtPurchasePrice" layoutX="91.0" layoutY="307.0" />
+   <Label layoutX="91.0" layoutY="288.0" text="Precio de compra">
+      <font>
+         <Font size="14.0" />
+      </font></Label>
 </AnchorPane>

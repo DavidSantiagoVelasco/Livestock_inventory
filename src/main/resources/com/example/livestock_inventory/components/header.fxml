@@ -7,7 +7,7 @@
 <AnchorPane prefHeight="100.0" prefWidth="1336.0" style="-fx-background-color: darkslategrey;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.components.HeaderController">
    <Label fx:id="lblTitle" alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#openDashboard" prefHeight="100.0" prefWidth="1336.0" style="-fx-cursor: hand;" text="Inventario ganadero" textAlignment="CENTER" textFill="WHITE">
       <font>
-         <Font size="36.0" />
+         <Font size="40.0" />
       </font>
    </Label>
 </AnchorPane>

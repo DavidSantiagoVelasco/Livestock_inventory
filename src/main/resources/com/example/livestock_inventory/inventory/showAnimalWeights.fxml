@@ -5,6 +5,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="610.0" prefWidth="480.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <TextArea fx:id="txtAnimalDescription" editable="false" focusTraversable="false" layoutX="14.0" layoutY="15.0" prefHeight="130.0" prefWidth="452.0" style="-fx-background-color: transparent; -fx-border-color: transparent;" wrapText="true" />
@@ -16,5 +17,8 @@
             <TableColumn fx:id="colDate" editable="false" prefWidth="159.0" resizable="false" text="Fecha" />
         </columns>
     </TableView>
-   <Button fx:id="btnAddWeight" layoutX="165.0" layoutY="546.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: #ffea00; -fx-cursor: hand;" text="Agregar peso" textFill="DARKSLATEGRAY" />
+   <Button fx:id="btnAddWeight" layoutX="165.0" layoutY="546.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: #ffea00; -fx-cursor: hand;" text="Agregar peso" textFill="DARKSLATEGRAY">
+      <font>
+         <Font size="14.0" />
+      </font></Button>
 </AnchorPane>

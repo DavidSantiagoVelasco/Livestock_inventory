@@ -10,13 +10,25 @@
 <AnchorPane prefHeight="370.0" prefWidth="540.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
     <Label fx:id="txtHeader" alignment="CENTER" prefHeight="80.0" prefWidth="540.0" style="-fx-border-color: #2f4f4f; -fx-border-width: 0px 0px 1px 0px;" textAlignment="CENTER" textFill="DARKSLATEGRAY">
         <font>
-          <Font size="24.0" />
+          <Font size="28.0" />
         </font>
     </Label>
     <TextField fx:id="txtWeight" layoutX="195.0" layoutY="130.0" minWidth="150.0" />
-    <Label layoutX="195.0" layoutY="113.0" text="Peso" />
+    <Label layoutX="195.0" layoutY="111.0" text="Peso">
+      <font>
+         <Font size="14.0" />
+      </font></Label>
     <DatePicker fx:id="dpDate" layoutX="195.0" layoutY="215.0" prefHeight="25.0" prefWidth="150.0" />
-    <Label layoutX="195.0" layoutY="198.0" text="Fecha pesaje" />
-    <Button fx:id="btnAddWeight" layoutX="80.0" layoutY="300.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: #ffea00; -fx-cursor: hand;" text="Agregar peso" textFill="DARKSLATEGRAY" />
-    <Button fx:id="btnCancel" layoutX="310.0" layoutY="300.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: #ff4242; -fx-cursor: hand;" text="Cancelar" textFill="WHITE" />
+    <Label layoutX="195.0" layoutY="196.0" text="Fecha pesaje">
+      <font>
+         <Font size="14.0" />
+      </font></Label>
+    <Button fx:id="btnAddWeight" layoutX="80.0" layoutY="300.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: #ffea00; -fx-cursor: hand;" text="Agregar peso" textFill="DARKSLATEGRAY">
+      <font>
+         <Font size="14.0" />
+      </font></Button>
+    <Button fx:id="btnCancel" layoutX="310.0" layoutY="300.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: #ff4242; -fx-cursor: hand;" text="Cancelar" textFill="WHITE">
+      <font>
+         <Font size="14.0" />
+      </font></Button>
 </AnchorPane>
