@@ -8,26 +8,64 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="550.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.owners.ModifyOwnersController">
-    <AnchorPane layoutY="-1.0" prefHeight="100.0" prefWidth="760.0" style="-fx-background-color: darkslategrey;">
-        <Label layoutX="215.0" layoutY="24.0" text="Inventario ganadero" textFill="WHITE">
-            <font>
-                <Font size="36.0" />
-            </font>
-        </Label>
-    </AnchorPane>
-    <TextField fx:id="txtName" layoutX="106.0" layoutY="317.0" />
-    <TextField fx:id="txtPercentage" layoutX="304.0" layoutY="317.0" />
-   <TextField fx:id="txtIronBrand" layoutX="501.0" layoutY="318.0" />
-    <Label layoutX="361.0" layoutY="232.0" text="Dueño" />
-    <Label layoutX="105.0" layoutY="300.0" text="Nombre" />
-    <Label layoutX="304.0" layoutY="300.0" text="Porcentaje para el dueño" />
-    <ComboBox fx:id="cbOwners" layoutX="107.0" layoutY="250.0" onAction="#selectOwner" prefHeight="26.0" prefWidth="548.0" />
-    <Button fx:id="btnModify" layoutX="259.0" layoutY="443.0" mnemonicParsing="false" onAction="#modifyOwner" prefHeight="53.0" prefWidth="242.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Modificar" textFill="DARKSLATEGRAY">
-        <font>
-            <Font size="20.0" />
-        </font>
-    </Button>
-   <RadioButton fx:id="rbDelete" layoutX="338.0" layoutY="379.0" mnemonicParsing="false" text="Eliminar" />
-   <Label layoutX="501.0" layoutY="301.0" text="Marca hierro" />
+
+<AnchorPane prefHeight="600.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.owners.ModifyOwnersController">
+   <AnchorPane prefHeight="100.0" prefWidth="850.0" style="-fx-background-color: darkslategrey;">
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutY="24.0" prefWidth="850.0" text="Inventario ganadero"
+             textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font size="38.0"/>
+         </font>
+      </Label>
+   </AnchorPane>
+   <TextField fx:id="txtName" layoutX="130.0" layoutY="295.0" prefWidth="175.0">
+      <font>
+         <Font size="14.0"/>
+      </font>
+   </TextField>
+   <TextField fx:id="txtPercentage" layoutX="340.0" layoutY="295.0" prefWidth="175.0">
+      <font>
+         <Font size="14.0"/>
+      </font>
+   </TextField>
+   <TextField fx:id="txtIronBrand" layoutX="550.0" layoutY="296.0" prefWidth="175.0">
+      <font>
+         <Font size="14.0"/>
+      </font>
+   </TextField>
+   <Label layoutX="404.0" layoutY="182.0" text="Dueño">
+      <font>
+         <Font size="14.0"/>
+      </font>
+   </Label>
+   <Label layoutX="130.0" layoutY="276.0" text="Nombre">
+      <font>
+         <Font size="14.0"/>
+      </font>
+   </Label>
+   <Label layoutX="340.0" layoutY="276.0" text="Porcentaje para el dueño">
+      <font>
+         <Font size="14.0"/>
+      </font>
+   </Label>
+   <ComboBox fx:id="cbOwners" layoutX="150.0" layoutY="202.0" onAction="#selectOwner" prefHeight="30.0"
+             prefWidth="550.0"/>
+   <Button fx:id="btnModify" layoutX="300.0" layoutY="442.0" mnemonicParsing="false" onAction="#modifyOwner"
+           prefHeight="53.0" prefWidth="250.0" style="-fx-background-color: palegreen; -fx-cursor: hand;"
+           text="Modificar" textFill="DARKSLATEGRAY">
+      <font>
+         <Font size="20.0"/>
+      </font>
+   </Button>
+   <RadioButton fx:id="rbDelete" layoutX="387.5" layoutY="371.0" mnemonicParsing="false" text="Eliminar">
+      <font>
+         <Font size="14.0"/>
+      </font>
+   </RadioButton>
+   <Label layoutX="550.0" layoutY="277.0" text="Marca hierro">
+      <font>
+         <Font size="14.0"/>
+      </font>
+   </Label>
 </AnchorPane>

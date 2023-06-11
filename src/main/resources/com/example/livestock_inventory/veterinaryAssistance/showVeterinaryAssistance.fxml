@@ -9,22 +9,56 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane minWidth="-Infinity" prefHeight="653.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.veterinaryAssistance.ShowVeterinaryAssistanceController">
-<ComboBox fx:id="cbStateFilter" layoutX="197.0" layoutY="43.0" onAction="#selectStateFilter" prefWidth="150.0" />
-<DatePicker fx:id="dpDateFrom" layoutX="405.0" layoutY="43.0" onAction="#selectDatePicker" prefHeight="25.0" prefWidth="150.0" />
-<DatePicker fx:id="dpDateTo" layoutX="613.0" layoutY="43.0" onAction="#selectDatePicker" prefHeight="25.0" prefWidth="150.0" />
-<RadioButton fx:id="rbAssignedDateFilter" layoutX="388.0" layoutY="98.0" mnemonicParsing="false" onAction="#selectDateFilter" text="Fecha asignada" />
-<RadioButton fx:id="rbCompletedDateFilter" layoutX="524.5" layoutY="98.0" mnemonicParsing="false" onAction="#selectDateFilter" text="Fecha completada" />
-   <RadioButton fx:id="rbNextDateFilter" layoutX="676.0" layoutY="98.0" mnemonicParsing="false" onAction="#selectDateFilter" text="Fecha siguiente" />
-<Button layoutX="197.0" layoutY="153.0" mnemonicParsing="false" onAction="#getAllVeterinaryAssistance" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Ver todos" textFill="DARKSLATEGRAY" />
-<Button layoutX="405.0" layoutY="153.0" mnemonicParsing="false" onAction="#filter" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Filtrar" textFill="DARKSLATEGRAY" />
-<Button layoutX="613.0" layoutY="153.0" mnemonicParsing="false" onAction="#getVeterinaryAssistance" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Limpiar filtros" textFill="DARKSLATEGRAY" />
-<Label layoutX="197.0" layoutY="26.0" text="Filtrar por estado" />
-<Label layoutX="405.0" layoutY="26.0" text="Desde" />
-<Label layoutX="613.0" layoutY="26.0" text="Hasta" />
-   <Button fx:id="btnCompleteVeterinaryAssistance" layoutX="305.0" layoutY="206.0" mnemonicParsing="false" onAction="#completeVeterinaryAssistance" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: #05B2DC; -fx-cursor: hand;" text="Completar" textFill="DARKSLATEGRAY" visible="false" />
-   <Button fx:id="btnCancelVeterinaryAssistance" layoutX="505.0" layoutY="206.0" mnemonicParsing="false" onAction="#cancelVeterinaryAssistance" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: #ff4242; -fx-cursor: hand;" text="Cancelar" textFill="DARKSLATEGRAY" visible="false" />
+<ComboBox fx:id="cbStateFilter" layoutX="160.0" layoutY="43.0" onAction="#selectStateFilter" prefWidth="170.0" />
+<DatePicker fx:id="dpDateFrom" layoutX="395.0" layoutY="43.0" onAction="#selectDatePicker" prefHeight="25.0" prefWidth="170.0" />
+<DatePicker fx:id="dpDateTo" layoutX="630.0" layoutY="43.0" onAction="#selectDatePicker" prefHeight="25.0" prefWidth="170.0" />
+<RadioButton fx:id="rbAssignedDateFilter" layoutX="380.0" layoutY="98.0" mnemonicParsing="false" onAction="#selectDateFilter" text="Fecha asignada">
+      <font>
+         <Font size="14.0" />
+      </font></RadioButton>
+<RadioButton fx:id="rbCompletedDateFilter" layoutX="528.0" layoutY="98.0" mnemonicParsing="false" onAction="#selectDateFilter" text="Fecha completada">
+      <font>
+         <Font size="14.0" />
+      </font></RadioButton>
+   <RadioButton fx:id="rbNextDateFilter" layoutX="694.0" layoutY="98.0" mnemonicParsing="false" onAction="#selectDateFilter" text="Fecha siguiente">
+      <font>
+         <Font size="14.0" />
+      </font></RadioButton>
+<Button layoutX="160.0" layoutY="153.0" mnemonicParsing="false" onAction="#getAllVeterinaryAssistance" prefHeight="25.0" prefWidth="170.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Ver todos" textFill="DARKSLATEGRAY">
+      <font>
+         <Font size="14.0" />
+      </font></Button>
+<Button layoutX="395.0" layoutY="153.0" mnemonicParsing="false" onAction="#filter" prefHeight="25.0" prefWidth="170.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Filtrar" textFill="DARKSLATEGRAY">
+      <font>
+         <Font size="14.0" />
+      </font></Button>
+<Button layoutX="630.0" layoutY="153.0" mnemonicParsing="false" onAction="#getVeterinaryAssistance" prefHeight="25.0" prefWidth="170.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Limpiar filtros" textFill="DARKSLATEGRAY">
+      <font>
+         <Font size="14.0" />
+      </font></Button>
+<Label layoutX="160.0" layoutY="24.0" text="Filtrar por estado">
+      <font>
+         <Font size="14.0" />
+      </font></Label>
+<Label layoutX="395.0" layoutY="24.0" text="Desde">
+      <font>
+         <Font size="14.0" />
+      </font></Label>
+<Label layoutX="630.0" layoutY="24.0" text="Hasta">
+      <font>
+         <Font size="14.0" />
+      </font></Label>
+   <Button fx:id="btnCompleteVeterinaryAssistance" layoutX="305.0" layoutY="206.0" mnemonicParsing="false" onAction="#completeVeterinaryAssistance" prefHeight="25.0" prefWidth="170.0" style="-fx-background-color: #05B2DC; -fx-cursor: hand;" text="Completar" textFill="DARKSLATEGRAY" visible="false">
+      <font>
+         <Font size="14.0" />
+      </font></Button>
+   <Button fx:id="btnCancelVeterinaryAssistance" layoutX="505.0" layoutY="206.0" mnemonicParsing="false" onAction="#cancelVeterinaryAssistance" prefHeight="25.0" prefWidth="170.0" style="-fx-background-color: #ff4242; -fx-cursor: hand;" text="Cancelar" textFill="DARKSLATEGRAY" visible="false">
+      <font>
+         <Font size="14.0" />
+      </font></Button>
 <AnchorPane layoutY="259.0" minWidth="-Infinity" prefHeight="62.0" prefWidth="960.0" style="-fx-background-color: #2f4f4f;">
     <HBox fx:id="hbFiltersContainer" prefHeight="62.0" prefWidth="960.0">
     </HBox>

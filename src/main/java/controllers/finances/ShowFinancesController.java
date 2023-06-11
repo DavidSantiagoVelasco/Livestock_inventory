@@ -186,25 +186,25 @@ public class ShowFinancesController implements Initializable {
     private void addFilter(String filterType, String tittle, String information){
 
         AnchorPane filterCardOwner = new AnchorPane();
-        filterCardOwner.setPrefSize(200, 200);
+        filterCardOwner.setPrefSize(230, 230);
 
         Pane contentPane = new Pane();
-        contentPane.setPrefSize(200, 62);
+        contentPane.setPrefSize(230, 62);
         contentPane.setStyle("-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 5; -fx-background-insets: 10 10 10 10;");
 
         Label filterLabelName = new Label(tittle);
-        filterLabelName.setLayoutX(14);
+        filterLabelName.setLayoutX(22);
         filterLabelName.setLayoutY(14);
         contentPane.getChildren().add(filterLabelName);
 
         Label filterLabelInformation = new Label(information);
-        filterLabelInformation.setLayoutX(14);
+        filterLabelInformation.setLayoutX(22);
         filterLabelInformation.setLayoutY(31);
         filterLabelInformation.setStyle("-fx-text-fill: #000000b2; -fx-font-size: 10;");
         contentPane.getChildren().add(filterLabelInformation);
 
         Button closeButton = new Button("X");
-        closeButton.setLayoutX(166);
+        closeButton.setLayoutX(194);
         closeButton.setLayoutY(12);
         closeButton.setStyle("-fx-background-color: transparent; -fx-cursor: hand");
         closeButton.setTextFill(Color.RED);

@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.veterinaryAssistance.VeterinaryAssistanceController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="680.0" prefWidth="1336.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.veterinaryAssistance.VeterinaryAssistanceController">
     <top>
         <fx:include source="../components/header.fxml" />
     </top>
@@ -15,24 +15,24 @@
     </left>
     <center>
         <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
-            <Label alignment="CENTER" prefHeight="80.0" prefWidth="613.0" style="-fx-border-color: #2f4f4f; -fx-border-width: 0px 0px 1px 0px;" text="Asistencia veterinaria" textAlignment="CENTER" textFill="DARKSLATEGRAY">
+            <Label alignment="CENTER" prefHeight="80.0" prefWidth="1176.0" style="-fx-border-color: #2f4f4f; -fx-border-width: 0px 0px 1px 0px;" text="Asistencia veterinaria" textAlignment="CENTER" textFill="DARKSLATEGRAY">
                 <font>
-                    <Font size="24.0" />
+                    <Font size="28.0" />
                 </font>
             </Label>
-            <Button layoutX="172.5" layoutY="156.0" mnemonicParsing="false" onAction="#showAssistance" prefHeight="71.0" prefWidth="268.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Ver asistencias" textFill="DARKSLATEGRAY">
+            <Button layoutX="454.0" layoutY="190.0" mnemonicParsing="false" onAction="#showAssistance" prefHeight="71.0" prefWidth="268.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Ver asistencias" textFill="DARKSLATEGRAY">
                 <font>
-                    <Font size="18.0" />
+                    <Font size="20.0" />
                 </font>
             </Button>
-            <Button layoutX="41.0" layoutY="303.0" mnemonicParsing="false" onAction="#addCompletedAssistance" prefHeight="71.0" prefWidth="245.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Agregar asistencia completada" textFill="DARKSLATEGRAY">
+            <Button layoutX="192.0" layoutY="399.0" mnemonicParsing="false" onAction="#addCompletedAssistance" prefHeight="71.0" prefWidth="300.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Agregar asistencia completada" textFill="DARKSLATEGRAY">
                 <font>
-                    <Font size="14.0" />
+                    <Font size="20.0" />
                 </font>
             </Button>
-         <Button layoutX="327.0" layoutY="303.0" mnemonicParsing="false" onAction="#addScheduledAssistance" prefHeight="71.0" prefWidth="245.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Agendar asistencia" textFill="DARKSLATEGRAY">
+         <Button layoutX="684.0" layoutY="399.0" mnemonicParsing="false" onAction="#addScheduledAssistance" prefHeight="71.0" prefWidth="300.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Agendar asistencia" textFill="DARKSLATEGRAY">
             <font>
-               <Font size="14.0" />
+               <Font size="20.0" />
             </font>
          </Button>
         </AnchorPane>

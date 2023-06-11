@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.tasks.CreateTaskController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="680.0" prefWidth="1336.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.tasks.CreateTaskController">
     <top>
         <fx:include source="../components/header.fxml" />
     </top>
@@ -18,22 +18,37 @@
     </left>
     <center>
         <AnchorPane prefHeight="200.0" prefWidth="613.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
-            <Label alignment="CENTER" prefHeight="80.0" prefWidth="613.0" style="-fx-border-color: #2f4f4f; -fx-border-width: 0px 0px 1px 0px;" text="Recordatorios" textAlignment="CENTER" textFill="DARKSLATEGRAY">
+            <Label alignment="CENTER" prefHeight="80.0" prefWidth="1176.0" style="-fx-border-color: #2f4f4f; -fx-border-width: 0px 0px 1px 0px;" text="Recordatorios" textAlignment="CENTER" textFill="DARKSLATEGRAY">
                 <font>
-                    <Font size="24.0" />
+                    <Font size="28.0" />
                 </font>
             </Label>
-            <Button layoutX="210.0" layoutY="305.0" mnemonicParsing="false" onAction="#createTask" prefHeight="51.0" prefWidth="193.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Crear recordatorio" textFill="DARKSLATEGRAY">
+            <Button layoutX="488.0" layoutY="432.0" mnemonicParsing="false" onAction="#createTask" prefHeight="51.0" prefWidth="200.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Crear recordatorio" textFill="DARKSLATEGRAY">
                 <font>
-                    <Font size="18.0" />
+                    <Font size="20.0" />
                 </font>
             </Button>
-            <TextField fx:id="txtName" layoutX="40.0" layoutY="142.0" />
-            <Label layoutX="40.0" layoutY="125.0" text="Nombre" />
-            <Label layoutX="40.0" layoutY="185.0" text="Descripción" />
-            <Label layoutX="423.0" layoutY="125.0" text="Fecha asignada" />
-         <TextArea fx:id="txtDescription" layoutX="40.0" layoutY="205.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="90.0" prefWidth="533.0" wrapText="true" />
-         <DatePicker fx:id="dpAssignedDate" layoutX="423.0" layoutY="142.0" prefHeight="25.0" prefWidth="150.0" />
+            <TextField fx:id="txtName" layoutX="300.0" layoutY="142.0" prefHeight="30.0" prefWidth="175.0">
+            <font>
+               <Font size="14.0" />
+            </font></TextField>
+            <Label layoutX="300.0" layoutY="123.0" text="Nombre">
+            <font>
+               <Font size="14.0" />
+            </font></Label>
+            <Label layoutX="318.0" layoutY="246.0" text="Descripción">
+            <font>
+               <Font size="14.0" />
+            </font></Label>
+            <Label layoutX="706.0" layoutY="123.0" text="Fecha asignada">
+            <font>
+               <Font size="14.0" />
+            </font></Label>
+         <TextArea fx:id="txtDescription" layoutX="318.0" layoutY="266.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="90.0" prefWidth="540.0" wrapText="true">
+            <font>
+               <Font size="14.0" />
+            </font></TextArea>
+         <DatePicker fx:id="dpAssignedDate" layoutX="706.0" layoutY="142.0" prefHeight="30.0" prefWidth="175.0" />
         </AnchorPane>
     </center>
 </BorderPane>
