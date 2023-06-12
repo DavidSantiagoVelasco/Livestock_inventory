@@ -1,7 +1,6 @@
 package controllers.owners;
 
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -9,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.Model;
 import models.interfaces.Owner;
@@ -27,10 +27,6 @@ public class OwnersController implements Initializable {
     @FXML
     private TextField txtIronBrand;
     @FXML
-    private Button btnNewOwner;
-    @FXML
-    private Button btnModifyOwners;
-    @FXML
     private TableView<Owner> tblOwners;
     @FXML
     private TableColumn<Owner, String> colOwnerId;
@@ -43,7 +39,7 @@ public class OwnersController implements Initializable {
 
 
     @FXML
-    public void newOwner(ActionEvent event) {
+    public void newOwner() {
         if(txtName.getLength() == 0 || txtPercentage.getLength() == 0 || txtIronBrand.getLength() == 0){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error");
             alert.setTitle("Llena los campos");
@@ -65,16 +61,17 @@ public class OwnersController implements Initializable {
     }
 
     @FXML
-    private void modifyOwners(ActionEvent event){
+    private void modifyOwners(){
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/livestock_inventory/owners/modifyOwners.fxml"));
             Parent inventoryParent = loader.load();
             Scene inventoryScene = new Scene(inventoryParent);
             Stage stage = new Stage();
-
+            stage.setTitle("Modificar dueños");
+            stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(inventoryScene);
             stage.show();
-
         }catch (java.io.IOException e){
             e.printStackTrace();
         }

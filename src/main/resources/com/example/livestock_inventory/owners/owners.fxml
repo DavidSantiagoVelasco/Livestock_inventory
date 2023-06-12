@@ -31,7 +31,7 @@
                <TableColumn fx:id="colOwnerIronBrand" editable="false" minWidth="0.0" prefWidth="90.0" resizable="false" sortable="false" text="Marca Hierro" />
                  </columns>
              </TableView>
-         <Button fx:id="btnNewOwner" layoutX="488.0" layoutY="411.0" mnemonicParsing="false" onAction="#newOwner" prefHeight="51.0" prefWidth="200.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Crear nuevo" textFill="DARKSLATEGRAY">
+         <Button layoutX="488.0" layoutY="411.0" mnemonicParsing="false" onAction="#newOwner" prefHeight="51.0" prefWidth="200.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Crear nuevo" textFill="DARKSLATEGRAY">
             <font>
                <Font size="20.0" />
             </font>
@@ -52,7 +52,7 @@
             <font>
                <Font size="14.0" />
             </font></Label>
-         <Button fx:id="btnModifyOwners" layoutX="488.0" layoutY="495.0" mnemonicParsing="false" onAction="#modifyOwners" prefHeight="51.0" prefWidth="200.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Modificar dueños" textFill="DARKSLATEGRAY">
+         <Button layoutX="488.0" layoutY="495.0" mnemonicParsing="false" onAction="#modifyOwners" prefHeight="51.0" prefWidth="200.0" style="-fx-background-color: palegreen; -fx-cursor: hand;" text="Modificar dueños" textFill="DARKSLATEGRAY">
             <font>
                <Font size="20.0" />
             </font>

@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class TasksController {
@@ -21,6 +22,8 @@ public class TasksController {
             Stage stage = new Stage();
             stage.setTitle("Recordatorios");
             stage.setScene(inventoryScene);
+            stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);
             stage.show();
         }catch (java.io.IOException e){
             e.printStackTrace();

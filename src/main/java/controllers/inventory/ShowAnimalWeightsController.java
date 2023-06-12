@@ -71,7 +71,7 @@ public class ShowAnimalWeightsController implements Initializable {
                     alertError.showAndWait();
                     return;
                 }
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/livestock_inventory/inventory/AddAnimalWeight.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/livestock_inventory/inventory/addAnimalWeight.fxml"));
                 AddAnimalWeightController addAnimalWeightController = new AddAnimalWeightController(animal);
                 loader.setController(addAnimalWeightController);
                 Parent root = loader.load();
