@@ -49,9 +49,9 @@
          <Font size="14.0"/>
       </font>
    </Label>
-   <ComboBox fx:id="cbOwners" layoutX="150.0" layoutY="202.0" onAction="#selectOwner" prefHeight="30.0"
+   <ComboBox fx:id="cbOwners" layoutX="150.0" layoutY="202.0" prefHeight="30.0"
              prefWidth="550.0"/>
-   <Button fx:id="btnModify" layoutX="300.0" layoutY="442.0" mnemonicParsing="false" onAction="#modifyOwner"
+   <Button layoutX="300.0" layoutY="442.0" mnemonicParsing="false" onAction="#modifyOwner"
            prefHeight="53.0" prefWidth="250.0" style="-fx-background-color: palegreen; -fx-cursor: hand;"
            text="Modificar" textFill="DARKSLATEGRAY">
       <font>

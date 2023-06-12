@@ -7,8 +7,8 @@ import com.itextpdf.layout.Style;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.property.HorizontalAlignment;
-import com.itextpdf.layout.property.TextAlignment;
+import com.itextpdf.layout.properties.HorizontalAlignment;
+import com.itextpdf.layout.properties.TextAlignment;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -60,9 +60,9 @@ public class Dashboard implements Initializable {
 
         tblTasks.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2 && tblTasks.getSelectionModel().getSelectedItem() != null) {
-                TablePosition pos = tblTasks.getSelectionModel().getSelectedCells().get(0);
+                TablePosition<Task, ?> pos = tblTasks.getSelectionModel().getSelectedCells().get(0);
                 int row = pos.getRow();
-                TableColumn col = pos.getTableColumn();
+                TableColumn<Task, ?> col = pos.getTableColumn();
                 Task task = tblTasks.getItems().get(row);
                 if (col == colTaskDescription) {
                     String observations = task.getDescription();
@@ -140,9 +140,9 @@ public class Dashboard implements Initializable {
             int totalAnimals = 0;
 
             for (ReportActiveAnimalsResponse reportActiveAnimalsResponse : response) {
-                table.addCell(new Cell().add(new Paragraph(reportActiveAnimalsResponse.getName())));
-                table.addCell(new Cell().add(new Paragraph(reportActiveAnimalsResponse.getMales() + "")));
-                table.addCell(new Cell().add(new Paragraph(reportActiveAnimalsResponse.getFemales() + "")));
+                table.addCell(new Cell().add(new Paragraph(reportActiveAnimalsResponse.name())));
+                table.addCell(new Cell().add(new Paragraph(reportActiveAnimalsResponse.males() + "")));
+                table.addCell(new Cell().add(new Paragraph(reportActiveAnimalsResponse.females() + "")));
                 table.addCell(new Cell().add(new Paragraph(reportActiveAnimalsResponse.getTotalAnimals() + "")));
                 totalAnimals += reportActiveAnimalsResponse.getTotalAnimals();
             }

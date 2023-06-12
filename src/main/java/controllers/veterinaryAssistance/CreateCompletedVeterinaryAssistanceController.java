@@ -92,6 +92,9 @@ public class CreateCompletedVeterinaryAssistanceController implements Initializa
         confirmation.setHeaderText("¿Está seguro que desea crear la asistencia veterinaria?");
 
         Optional<ButtonType> result = confirmation.showAndWait();
+        if(result.isEmpty()){
+            return;
+        }
         if (result.get() == ButtonType.OK) {
             VeterinaryAssistance veterinaryAssistance = model.createCompletedVeterinaryAssistance(txtName.getText(),
                     new Date(dpCompletedDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()),

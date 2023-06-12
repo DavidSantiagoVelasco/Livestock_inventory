@@ -36,7 +36,7 @@ public class ShowVeterinaryAssistanceController implements Initializable {
     private final Model model = new Model();
 
     @FXML
-    private ComboBox cbStateFilter;
+    private ComboBox<String> cbStateFilter;
     @FXML
     private DatePicker dpDateFrom;
     @FXML
@@ -86,9 +86,9 @@ public class ShowVeterinaryAssistanceController implements Initializable {
 
         tblVeterinaryAssistance.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2 && tblVeterinaryAssistance.getSelectionModel().getSelectedItem() != null) {
-                TablePosition pos = tblVeterinaryAssistance.getSelectionModel().getSelectedCells().get(0);
+                TablePosition<VeterinaryAssistance, ?> pos = tblVeterinaryAssistance.getSelectionModel().getSelectedCells().get(0);
                 int row = pos.getRow();
-                TableColumn col = pos.getTableColumn();
+                TableColumn<VeterinaryAssistance, ?> col = pos.getTableColumn();
                 VeterinaryAssistance veterinaryAssistance = tblVeterinaryAssistance.getItems().get(row);
                 if (col == colDescription) {
                     String description = veterinaryAssistance.getDescription();
@@ -130,7 +130,7 @@ public class ShowVeterinaryAssistanceController implements Initializable {
         if(currentFilterCard != null){
             filters.remove(currentFilterCard);
         }
-        addFilter("FilterState", "Filtrar por estado", cbStateFilter.getValue().toString());
+        addFilter("FilterState", "Filtrar por estado", cbStateFilter.getValue());
     }
 
     @FXML
@@ -187,7 +187,7 @@ public class ShowVeterinaryAssistanceController implements Initializable {
             alert.showAndWait();
             return;
         }
-        String stateString = cbStateFilter.getValue() != null ? cbStateFilter.getValue().toString() : "";
+        String stateString = cbStateFilter.getValue() != null ? cbStateFilter.getValue() : "";
         EventState eventState = null;
         if(stateString.length() > 0){
             switch (stateString) {
@@ -292,7 +292,7 @@ public class ShowVeterinaryAssistanceController implements Initializable {
         alert.setHeaderText("¿Está seguro de querer cancelar la asistencia veterinaria?");
 
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK){
+        if (result.isPresent() && result.get() == ButtonType.OK){
             boolean response = model.cancelVeterinaryAssistance(veterinaryAssistance);
             if(response){
                 Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);

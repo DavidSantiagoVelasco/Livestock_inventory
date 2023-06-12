@@ -85,10 +85,10 @@ public class OwnersController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        colOwnerId.setCellValueFactory(new PropertyValueFactory("id"));
-        colOwnerName.setCellValueFactory(new PropertyValueFactory("name"));
-        colOwnerPercentage.setCellValueFactory(new PropertyValueFactory("percentage"));
-        colOwnerIronBrand.setCellValueFactory(new PropertyValueFactory("ironBrand"));
+        colOwnerId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        colOwnerName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        colOwnerPercentage.setCellValueFactory(new PropertyValueFactory<>("percentage"));
+        colOwnerIronBrand.setCellValueFactory(new PropertyValueFactory<>("ironBrand"));
 
         TextFormatter<String> textFormatter = new TextFormatter<>(change -> {
             String newText = change.getControlNewText();

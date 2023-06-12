@@ -2,7 +2,6 @@ module com.example.livestock_inventory {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.sql;
-    requires io;
     requires kernel;
     requires layout;
 

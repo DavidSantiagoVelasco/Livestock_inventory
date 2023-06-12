@@ -14,11 +14,11 @@ public class Animal {
     private final char sex;
     private final double purchasePrice;
     private final Date purchaseDate;
-    private String observations;
+    private final String observations;
     private double saleWeight;
     private double salePrice;
     private Date saleDate;
-    private AnimalState state;
+    private final AnimalState state;
 
     private Owner ownerInformation;
 

@@ -22,9 +22,9 @@ public class BuyAnimalModuleController implements Initializable {
     private String sex = "";
 
     @FXML
-    private ComboBox cbSex;
+    private ComboBox<String> cbSex;
     @FXML
-    private ComboBox cbOwners;
+    private ComboBox<String> cbOwners;
     @FXML
     private TextField txtAgeMonths;
     @FXML
@@ -75,10 +75,13 @@ public class BuyAnimalModuleController implements Initializable {
         alertConfirmation.setHeaderText("¿Está seguro de agregar el animal?");
 
         Optional<ButtonType> result = alertConfirmation.showAndWait();
+        if(result.isEmpty()){
+            return;
+        }
         if (result.get() != ButtonType.OK){
             return;
         }
-        String selectedOwner = (String) cbOwners.getSelectionModel().getSelectedItem();
+        String selectedOwner = cbOwners.getSelectionModel().getSelectedItem();
         int idSelectedOwner = model.getOwnerIdFromOwnerInformation(selectedOwner);
 
         Animal animal = model.createAnimal(idSelectedOwner, txtNumber.getText(), Integer.parseInt(txtAgeMonths.getText()),
@@ -108,12 +111,12 @@ public class BuyAnimalModuleController implements Initializable {
 
     @FXML
     private void selectSex()  {
-        this.sex = cbSex.getSelectionModel().getSelectedItem().toString();
+        this.sex = cbSex.getSelectionModel().getSelectedItem();
     }
 
     @FXML
     private void selectOwner() {
-        String ironBrand = model.getOwnerIronBrandFromOwnerInformation(cbOwners.getSelectionModel().getSelectedItem().toString());
+        String ironBrand = model.getOwnerIronBrandFromOwnerInformation(cbOwners.getSelectionModel().getSelectedItem());
         txtIronBrand.setText(ironBrand);
     }
 

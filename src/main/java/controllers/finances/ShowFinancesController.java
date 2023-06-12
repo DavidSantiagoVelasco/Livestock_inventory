@@ -30,7 +30,7 @@ public class ShowFinancesController implements Initializable {
     private final Model model = new Model();
 
     @FXML
-    private ComboBox cbTypeFinance;
+    private ComboBox<String> cbTypeFinance;
     @FXML
     private DatePicker dpDateFrom;
     @FXML
@@ -67,12 +67,12 @@ public class ShowFinancesController implements Initializable {
 
         tblFinances.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2 && tblFinances.getSelectionModel().getSelectedItem() != null) {
-                TablePosition pos = tblFinances.getSelectionModel().getSelectedCells().get(0);
+                TablePosition<Finance, ?> pos = tblFinances.getSelectionModel().getSelectedCells().get(0);
                 int row = pos.getRow();
-                TableColumn col = pos.getTableColumn();
+                TableColumn<Finance, ?> col = pos.getTableColumn();
                 Finance selectedFinance = tblFinances.getItems().get(row);
                 if (col == colDescription) {
-                    String description = selectedFinance.getDescription();
+                    String description = selectedFinance.description();
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Descripción del registro");
                     alert.setContentText(description);
@@ -108,7 +108,7 @@ public class ShowFinancesController implements Initializable {
         if(currentFilterCard != null){
             filters.remove(currentFilterCard);
         }
-        addFilter("FilterType", "Filtrar por tipo", cbTypeFinance.getValue().toString());
+        addFilter("FilterType", "Filtrar por tipo", cbTypeFinance.getValue());
     }
 
     @FXML
@@ -120,7 +120,7 @@ public class ShowFinancesController implements Initializable {
             alert.showAndWait();
             return;
         }
-        String financesType = cbTypeFinance.getValue() != null ? cbTypeFinance.getValue().toString() : "";
+        String financesType = cbTypeFinance.getValue() != null ? cbTypeFinance.getValue() : "";
         if (financesType.length() > 0) {
             switch (financesType) {
                 case "Ingreso" -> financesType = "income";
@@ -136,10 +136,10 @@ public class ShowFinancesController implements Initializable {
             txtTotalExpenses.setText("$0");
             return;
         }
-        tblFinances.setItems(filterFinances.getFinances());
+        tblFinances.setItems(filterFinances.finances());
         DecimalFormat decimalFormat = new DecimalFormat("$#,###.###");
-        txtTotalIncomes.setText(decimalFormat.format(filterFinances.getTotalIncomes()));
-        txtTotalExpenses.setText(decimalFormat.format(filterFinances.getTotalExpenses()));
+        txtTotalIncomes.setText(decimalFormat.format(filterFinances.totalIncomes()));
+        txtTotalExpenses.setText(decimalFormat.format(filterFinances.totalExpenses()));
     }
 
     @FXML

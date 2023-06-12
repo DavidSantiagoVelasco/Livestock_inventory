@@ -42,11 +42,11 @@ public class ShowInventoryController implements Initializable {
     @FXML
     private TextField txtNumberFilter;
     @FXML
-    private ComboBox cbOwnerFilter;
+    private ComboBox<String> cbOwnerFilter;
     @FXML
-    private ComboBox cbSexFilter;
+    private ComboBox<String> cbSexFilter;
     @FXML
-    private ComboBox cbStateFilter;
+    private ComboBox<String> cbStateFilter;
     @FXML
     private DatePicker dpDateFrom;
     @FXML
@@ -123,9 +123,9 @@ public class ShowInventoryController implements Initializable {
 
         tblAnimals.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2 && tblAnimals.getSelectionModel().getSelectedItem() != null) {
-                TablePosition pos = tblAnimals.getSelectionModel().getSelectedCells().get(0);
+                TablePosition<Animal, ?> pos = tblAnimals.getSelectionModel().getSelectedCells().get(0);
                 int row = pos.getRow();
-                TableColumn col = pos.getTableColumn();
+                TableColumn<Animal, ?> col = pos.getTableColumn();
                 Animal selectedAnimal = tblAnimals.getItems().get(row);
                 if (col == colObservations) {
                     String observations = selectedAnimal.getObservations();
@@ -344,7 +344,7 @@ public class ShowInventoryController implements Initializable {
         if(currentFilterCard != null){
             filters.remove(currentFilterCard);
         }
-        String[] split = cbOwnerFilter.getValue().toString().split(" \\| Porcentaje:");
+        String[] split = cbOwnerFilter.getValue().split(" \\| Porcentaje:");
         String ownerInformation = split[0];
         if (ownerInformation.length() > 35) {
             ownerInformation = ownerInformation.substring(0, 35);
@@ -368,7 +368,7 @@ public class ShowInventoryController implements Initializable {
         if (currentFilterCard != null) {
             filters.remove(currentFilterCard);
         }
-        addFilter("FilterSex", "Filtrar por sexo", cbSexFilter.getValue().toString());
+        addFilter("FilterSex", "Filtrar por sexo", cbSexFilter.getValue());
     }
 
     @FXML
@@ -387,7 +387,7 @@ public class ShowInventoryController implements Initializable {
         if(currentFilterCard != null){
             filters.remove(currentFilterCard);
         }
-        addFilter("FilterState", "Filtrar por estado", cbStateFilter.getValue().toString());
+        addFilter("FilterState", "Filtrar por estado", cbStateFilter.getValue());
     }
 
     private void selectNumberFilter() {
@@ -436,17 +436,17 @@ public class ShowInventoryController implements Initializable {
             }
             filtersApplied.add("Animales que incluyan " + txtNumberFilter.getText() + " en su número");
         }
-        int idOwner = cbOwnerFilter.getValue() != null ? model.getOwnerIdFromOwnerInformation(cbOwnerFilter.getValue().toString()) : -1;
+        int idOwner = cbOwnerFilter.getValue() != null ? model.getOwnerIdFromOwnerInformation(cbOwnerFilter.getValue()) : -1;
         if(idOwner != -1){
-            filtersApplied.add("Animales de: " + model.getOwnerNameFromOwnerInformation(cbOwnerFilter.getValue().toString()));
+            filtersApplied.add("Animales de: " + model.getOwnerNameFromOwnerInformation(cbOwnerFilter.getValue()));
         }
-        String sex = cbSexFilter.getValue() != null ? cbSexFilter.getValue().toString().charAt(0)+"" : "";
+        String sex = cbSexFilter.getValue() != null ? cbSexFilter.getValue().charAt(0)+"" : "";
         if(sex.equals("M")){
             filtersApplied.add("Sexo: Machos");
         } else if (sex.equals("H")) {
             filtersApplied.add("Sexo: Hembras");
         }
-        String stateString = cbStateFilter.getValue() != null ? cbStateFilter.getValue().toString() : "";
+        String stateString = cbStateFilter.getValue() != null ? cbStateFilter.getValue() : "";
         AnimalState animalState = null;
         if(stateString.length() > 0){
             switch (stateString) {
@@ -518,6 +518,9 @@ public class ShowInventoryController implements Initializable {
         alert.setHeaderText("¿Está seguro que desea eliminar el animal?");
 
         Optional<ButtonType> result = alert.showAndWait();
+        if(result.isEmpty()){
+            return;
+        }
         if (result.get() == ButtonType.OK){
             Animal animal = tblAnimals.getSelectionModel().getSelectedItem();
             if(animal.getState().toString().equals(AnimalState.death.toString())){

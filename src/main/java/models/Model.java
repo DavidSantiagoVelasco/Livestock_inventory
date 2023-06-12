@@ -461,7 +461,7 @@ public class Model {
         }
     }
 
-    public void setOwnersInformation(ComboBox cbOwners) {
+    public void setOwnersInformation(ComboBox<String> cbOwners) {
         ObservableList<Owner> owners = getActiveOwners();
         ObservableList<String> ownersInformation = FXCollections.observableArrayList();
         for (Owner owner : owners) {

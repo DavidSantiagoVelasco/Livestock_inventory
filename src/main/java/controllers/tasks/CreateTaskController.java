@@ -44,6 +44,9 @@ public class CreateTaskController {
         confirmation.setHeaderText("¿Está seguro que desea crear el recordatorio?");
 
         Optional<ButtonType> result = confirmation.showAndWait();
+        if(result.isEmpty()){
+            return;
+        }
         if (result.get() != ButtonType.OK) {
             return;
         }

@@ -47,6 +47,9 @@ public class CreateAssignedVeterinaryAssistanceController {
         confirmation.setHeaderText("¿Está seguro que desea crear la asistencia veterinaria?");
 
         Optional<ButtonType> result = confirmation.showAndWait();
+        if(result.isEmpty()){
+            return;
+        }
         if (result.get() == ButtonType.OK) {
             VeterinaryAssistance veterinaryAssistance = model.createAssignedVeterinaryAssistance(txtName.getText(),
                     new Date(dpAssignedDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()),

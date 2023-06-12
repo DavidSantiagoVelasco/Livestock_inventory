@@ -25,7 +25,7 @@ public class SellAnimalController implements Initializable {
     @FXML
     private TextField txtNumber;
     @FXML
-    private ComboBox cbOwners;
+    private ComboBox<String> cbOwners;
     @FXML
     private TextField txtColor;
     @FXML
@@ -103,8 +103,11 @@ public class SellAnimalController implements Initializable {
         alert.setHeaderText("¿Está seguro que desea liquidar el animal?");
 
         Optional<ButtonType> result = alert.showAndWait();
+        if(result.isEmpty()){
+            return;
+        }
         if (result.get() == ButtonType.OK){
-            int id = model.getOwnerIdFromOwnerInformation(cbOwners.getValue().toString());
+            int id = model.getOwnerIdFromOwnerInformation(cbOwners.getValue());
             Owner owner = model.getOwnerById(id);
             double income;
             if(owner.getPercentage() == 0){
@@ -130,8 +133,7 @@ public class SellAnimalController implements Initializable {
             }
 
             Optional<ButtonType> liquidationResult = alertIncome.showAndWait();
-
-            if(liquidationResult.get() == ButtonType.OK){
+            if(liquidationResult.isPresent() && liquidationResult.get() == ButtonType.OK){
 
                 String saleObservations = txtObservations.getText();
                 if(saleObservations.length() > 0){

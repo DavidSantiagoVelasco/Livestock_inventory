@@ -21,7 +21,7 @@ public class CreateFinanceController implements Initializable {
     @FXML
     private TextArea txtDescription;
     @FXML
-    private ComboBox cbFinanceType;
+    private ComboBox<String> cbFinanceType;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

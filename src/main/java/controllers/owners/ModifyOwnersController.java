@@ -1,7 +1,6 @@
 package controllers.owners;
 
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -23,18 +22,12 @@ public class ModifyOwnersController implements Initializable {
     @FXML
     private TextField txtIronBrand;
     @FXML
-    private ComboBox cbOwners;
-    @FXML
-    private Button btnModify;
+    private ComboBox<String> cbOwners;
     @FXML
     private RadioButton rbDelete;
 
     @FXML
-    private void selectOwner(ActionEvent event) {
-    }
-
-    @FXML
-    private void modifyOwner(ActionEvent event){
+    private void modifyOwner(){
         if(cbOwners.getValue() == null){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error");
             alert.setTitle("Seleccione el dueño");
@@ -62,13 +55,16 @@ public class ModifyOwnersController implements Initializable {
         alert.setHeaderText("¿Está seguro que desea modificar el dueño?");
 
         Optional<ButtonType> result = alert.showAndWait();
+        if(result.isEmpty()){
+            return;
+        }
         if (result.get() == ButtonType.OK){
             modifyOwnerNameOrPercentage();
         }
     }
 
     private void modifyOwnerNameOrPercentage(){
-        String selectedOwner = (String) cbOwners.getSelectionModel().getSelectedItem();
+        String selectedOwner = cbOwners.getSelectionModel().getSelectedItem();
         int idSelectedOwner = model.getOwnerIdFromOwnerInformation(selectedOwner);
         String response = "Éxito modificando ";
         if(txtName.getLength() > 0){
@@ -105,13 +101,16 @@ public class ModifyOwnersController implements Initializable {
         alert.setHeaderText("¿Está seguro que desea eliminar el dueño?");
 
         Optional<ButtonType> result = alert.showAndWait();
+        if(result.isEmpty()){
+            return;
+        }
         if (result.get() == ButtonType.OK){
             deleteOwner();
         }
     }
 
     private void deleteOwner(){
-        String selectedOwner = (String) cbOwners.getSelectionModel().getSelectedItem();
+        String selectedOwner = cbOwners.getSelectionModel().getSelectedItem();
         int idSelected = model.getOwnerIdFromOwnerInformation(selectedOwner);
         ObservableList<Animal> animals = model.getAnimalsByOwnerId(idSelected);
         if(animals == null || animals.size() == 0){

@@ -30,7 +30,7 @@ public class ShowTasksController implements Initializable {
     private Model model;
 
     @FXML
-    private ComboBox cbStateFilter;
+    private ComboBox<String> cbStateFilter;
     @FXML
     private DatePicker dpDateFrom;
     @FXML
@@ -75,9 +75,9 @@ public class ShowTasksController implements Initializable {
 
         tblTasks.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2 && tblTasks.getSelectionModel().getSelectedItem() != null) {
-                TablePosition pos = tblTasks.getSelectionModel().getSelectedCells().get(0);
+                TablePosition<Task, ?> pos = tblTasks.getSelectionModel().getSelectedCells().get(0);
                 int row = pos.getRow();
-                TableColumn col = pos.getTableColumn();
+                TableColumn<Task, ?> col = pos.getTableColumn();
                 Task selectedTask = tblTasks.getItems().get(row);
                 if (col == colDescription) {
                     String description = selectedTask.getDescription();
@@ -124,7 +124,7 @@ public class ShowTasksController implements Initializable {
         if(currentFilterCard != null){
             filters.remove(currentFilterCard);
         }
-        addFilter("FilterState", "Filtrar por estado", cbStateFilter.getValue().toString());
+        addFilter("FilterState", "Filtrar por estado", cbStateFilter.getValue());
     }
 
     @FXML
@@ -201,7 +201,7 @@ public class ShowTasksController implements Initializable {
             alert.showAndWait();
             return;
         }
-        String stateString = cbStateFilter.getValue() != null ? cbStateFilter.getValue().toString() : "";
+        String stateString = cbStateFilter.getValue() != null ? cbStateFilter.getValue() : "";
         EventState eventState = null;
         if(stateString.length() > 0){
             switch (stateString) {
@@ -269,6 +269,9 @@ public class ShowTasksController implements Initializable {
         alert.setHeaderText("¿Está seguro de querer completar el recordatorio?");
 
         Optional<ButtonType> result = alert.showAndWait();
+        if(result.isEmpty()){
+            return;
+        }
         if (result.get() == ButtonType.OK){
             if(task.getIdVeterinaryAssistance() != 0){
                 Alert alertInformation = new Alert(Alert.AlertType.INFORMATION);
@@ -322,6 +325,9 @@ public class ShowTasksController implements Initializable {
         alert.setHeaderText("¿Está seguro de querer cancelar el recordatorio?");
 
         Optional<ButtonType> result = alert.showAndWait();
+        if(result.isEmpty()){
+            return;
+        }
         if (result.get() == ButtonType.OK){
             boolean cancelVeterinaryAssistance = false;
             if(task.getIdVeterinaryAssistance() != 0){
@@ -331,7 +337,7 @@ public class ShowTasksController implements Initializable {
                 alertCancelVeterinaryAssistance.setContentText("Existe una asistencia veterinaria vinculada al " +
                         "recordatorio. ¿Desea cancelar la asistencia veterinaria?");
                 Optional<ButtonType> resultCompleteVeterinaryAssistance = alertCancelVeterinaryAssistance.showAndWait();
-                if(resultCompleteVeterinaryAssistance.get() == ButtonType.OK){
+                if(resultCompleteVeterinaryAssistance.isPresent() && resultCompleteVeterinaryAssistance.get() == ButtonType.OK){
                     cancelVeterinaryAssistance = true;
                 }
             }

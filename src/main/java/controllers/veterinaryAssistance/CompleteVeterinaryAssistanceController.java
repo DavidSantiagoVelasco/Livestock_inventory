@@ -93,6 +93,9 @@ public class CompleteVeterinaryAssistanceController implements Initializable {
         alertConfirm.setHeaderText("¿Está seguro de querer completar la asistencia veterinaria?");
 
         Optional<ButtonType> result = alertConfirm.showAndWait();
+        if(result.isEmpty()){
+            return;
+        }
         if (result.get() != ButtonType.OK) {
             return;
         }
